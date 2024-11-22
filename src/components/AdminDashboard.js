@@ -42,7 +42,9 @@ const AdminDashboard = () => {
   // Fetch all tickets from the API
   const fetchTickets = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/tickets/ticket");
+      const response = await axios.get(
+        "https://tms-server-saeo.onrender.com/tickets/ticket"
+      );
       setTickets(response.data);
     } catch (error) {
       console.error("Error fetching tickets:", error);
@@ -126,7 +128,9 @@ const AdminDashboard = () => {
   // Delete ticket
   const handleDelete = async (ticketId) => {
     try {
-      await axios.delete(`http://localhost:5000/tickets/delete/${ticketId}`);
+      await axios.delete(
+        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+      );
       toast.success("Ticket deleted successfully!");
 
       fetchTickets();
@@ -139,7 +143,7 @@ const AdminDashboard = () => {
     if (!selectedTicket) return;
     try {
       await axios.put(
-        `http://localhost:5000/tickets/update/${selectedTicket._id}`,
+        `https://tms-server-saeo.onrender.com/tickets/update/${selectedTicket._id}`,
         {
           status,
           assignedTo: opsManager,
@@ -157,7 +161,7 @@ const AdminDashboard = () => {
   // // Handle ticket closure
   // const handleCloseTicket = async (ticketId) => {
   //   try {
-  //     await axios.put(`http://localhost:5000/tickets/update/${ticketId}`, {
+  //     await axios.put(`https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`, {
   //       status: "Closed",
   //       assignedTo: "",
   //     });

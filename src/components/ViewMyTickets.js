@@ -19,7 +19,9 @@ const ViewMyTickets = () => {
   // Fetch user tickets from the API
   const fetchMyTickets = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/tickets/ticket");
+      const response = await axios.get(
+        "https://tms-server-saeo.onrender.com/tickets/ticket"
+      );
       setTickets(response.data);
       setError(null);
     } catch (error) {
@@ -96,7 +98,7 @@ const ViewMyTickets = () => {
                   </Card.Text>
                   {ticket.serialNumberImage && (
                     <img
-                      src={`http://localhost:5000/uploads/${ticket.serialNumberImage}`}
+                      src={`https://tms-server-saeo.onrender.com/uploads/${ticket.serialNumberImage}`}
                       alt="Serial Number"
                       style={{
                         maxWidth: "100%",

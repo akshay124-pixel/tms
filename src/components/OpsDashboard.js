@@ -84,9 +84,12 @@ const OpsManagerDashboard = () => {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/tickets/ticket", {
-        params: { opsManagerId: "ops@gmail.com" },
-      });
+      const response = await axios.get(
+        "https://tms-server-saeo.onrender.com/tickets/ticket",
+        {
+          params: { opsManagerId: "ops@gmail.com" },
+        }
+      );
       setTickets(response.data);
     } catch (error) {
       toast.error("Failed to fetch tickets. Please try again.");
@@ -99,7 +102,7 @@ const OpsManagerDashboard = () => {
   const fetchServiceAgents = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/tickets/role/serviceAgent",
+        "https://tms-server-saeo.onrender.com/tickets/role/serviceAgent",
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -113,9 +116,12 @@ const OpsManagerDashboard = () => {
   // Assign or unassign agent and update UI
   const updateTicketAssignment = async (ticketId, userId = null) => {
     try {
-      await axios.put(`http://localhost:5000/tickets/update/${ticketId}`, {
-        assignedTo: userId,
-      });
+      await axios.put(
+        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        {
+          assignedTo: userId,
+        }
+      );
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
           ticket._id === ticketId
@@ -136,9 +142,12 @@ const OpsManagerDashboard = () => {
   // Update ticket call status
   const handleUpdateCall = async (ticketId, call) => {
     try {
-      await axios.put(`http://localhost:5000/tickets/update/${ticketId}`, {
-        call,
-      });
+      await axios.put(
+        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        {
+          call,
+        }
+      );
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
           ticket._id === ticketId ? { ...ticket, call } : ticket
@@ -153,9 +162,12 @@ const OpsManagerDashboard = () => {
   // Handle updating ticket type
   const handleUpdateType = async (ticketId, Type) => {
     try {
-      await axios.put(`http://localhost:5000/tickets/update/${ticketId}`, {
-        Type,
-      });
+      await axios.put(
+        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        {
+          Type,
+        }
+      );
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
           ticket._id === ticketId ? { ...ticket, Type } : ticket
@@ -170,7 +182,9 @@ const OpsManagerDashboard = () => {
   // Delete ticket and update UI
   const handleDelete = async (ticketId) => {
     try {
-      await axios.delete(`http://localhost:5000/tickets/delete/${ticketId}`);
+      await axios.delete(
+        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+      );
       setTickets((prevTickets) =>
         prevTickets.filter((ticket) => ticket._id !== ticketId)
       );
@@ -228,7 +242,7 @@ const OpsManagerDashboard = () => {
 
       // API call to update ticket
       const response = await axios.put(
-        `http://localhost:5000/tickets/update/${ticketId}`,
+        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
         payload
       );
 

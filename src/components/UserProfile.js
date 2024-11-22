@@ -24,9 +24,12 @@ const UserProfile = () => {
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/user/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://tms-server-saeo.onrender.com/user/profile",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (response.data.user) {
         setUser(response.data.user);

@@ -14,7 +14,7 @@ import CountUp from "react-countup";
 import debounce from "lodash.debounce";
 import axios from "axios";
 import "../App.css";
-import { Pie } from "react-chartjs-2";
+// import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { toast } from "react-toastify";
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -37,22 +37,35 @@ const OpsManagerDashboard = () => {
 
   // Pie Chart States
   const [closedPendingStats, setClosedPendingStats] = useState({
-    closed: 0,
-    pending: 0,
+    // closed: 0,
+    // pending: 0,
   });
   const [assignResolveStats, setAssignResolveStats] = useState({
-    assigned: 0,
-    notAssigned: 0,
-    resolved: 0,
+    // assigned: 0,
+    // notAssigned: 0,
+    // resolved: 0,
   });
   const [repairReplacementStats, setRepairReplacementStats] = useState({
-    repair: 0,
-    replacement: 0,
+    // repair: 0,
+    // replacement: 0,
   });
   // Ticket and Service Agent States
   const [tickets, setTickets] = useState([]);
   const [serviceAgents, setServiceAgents] = useState([]);
-  const [filter, setFilter] = useState({ status: "", priority: "" });
+  const [filter, setFilter] = useState({
+    status: "",
+    priority: "",
+    call: "",
+    assignedTo: "",
+    Type: "",
+    tat: "",
+  });
+  const [tatStats, setTatStats] = useState({
+    threeToFour: 0,
+    fiveToEight: 0,
+    fourteenPlus: 0,
+  });
+
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -194,15 +207,38 @@ const OpsManagerDashboard = () => {
     }
   };
 
+  // New
+
+  // End
   // Filter tickets based on status, priority, and search term
-  const filterTickets = () =>
-    tickets.filter((ticket) => {
+  const filterTickets = () => {
+    return tickets.filter((ticket) => {
       const matchesStatus = filter.status
         ? ticket.status === filter.status
         : true;
       const matchesPriority = filter.priority
         ? ticket.priority === filter.priority
         : true;
+      const matchesAssigned = filter.assignedTo
+        ? ticket.assignedTo === filter.assignedTo
+        : true;
+      const matchesType = filter.Type ? ticket.Type === filter.Type : true;
+      const matchesCall = filter.call ? ticket.call === filter.call : true;
+
+      // Apply TAT filter
+      const matchesTAT = () => {
+        const currentDate = new Date();
+        const createdAt = new Date(ticket.createdAt); // Ensure ticket has createdAt field
+        const ageInDays = Math.ceil(
+          (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+        );
+
+        if (filter.tat === "3-4 Days") return ageInDays >= 3 && ageInDays <= 4;
+        if (filter.tat === "5-8 Days") return ageInDays >= 5 && ageInDays <= 8;
+        if (filter.tat === "14+ Days") return ageInDays >= 14;
+        return true; // Default: No TAT filter applied
+      };
+
       const matchesSearchTerm =
         searchTerm &&
         (ticket.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -213,10 +249,35 @@ const OpsManagerDashboard = () => {
           ticket.trackingId.toLowerCase().includes(searchTerm.toLowerCase()));
 
       return (
-        matchesStatus && matchesPriority && (!searchTerm || matchesSearchTerm)
+        matchesStatus &&
+        matchesPriority &&
+        matchesAssigned &&
+        matchesType &&
+        matchesCall &&
+        matchesTAT() && // Apply TAT filter here
+        (!searchTerm || matchesSearchTerm)
       );
     });
+  };
 
+  // Function to handle filter changes (and reset other filters when a new one is clicked)
+  const handleFilterChange = (filterType, value) => {
+    setFilter((prevFilter) => {
+      const newFilter = { ...prevFilter };
+
+      // Reset all filters and apply the new one
+      Object.keys(newFilter).forEach((key) => {
+        if (key !== filterType) {
+          newFilter[key] = ""; // Reset all other filters
+        }
+      });
+
+      newFilter[filterType] = value; // Set the selected filter
+      return newFilter;
+    });
+  };
+
+  // End Tat Filtering
   // Helper function to clear message after 3 seconds
   // const clearMessage = () => {
   //   setTimeout(() => {
@@ -296,7 +357,6 @@ const OpsManagerDashboard = () => {
     fetchServiceAgents();
   }, []); // Empty dependency array ensures this effect runs only once
 
-  // Updating statistics whenever tickets change
   useEffect(() => {
     if (!tickets || tickets.length === 0) {
       // Reset stats if tickets are empty
@@ -313,8 +373,43 @@ const OpsManagerDashboard = () => {
         received: 0,
         notReceived: 0,
       });
+      setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
       return;
     }
+
+    const currentDate = new Date();
+
+    // Calculate TAT statistics
+    const threeToFour = tickets.filter((ticket) => {
+      const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
+      const ageInDays = Math.ceil(
+        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+      );
+      return ageInDays >= 3 && ageInDays <= 4;
+    }).length;
+
+    const fiveToEight = tickets.filter((ticket) => {
+      const createdAt = new Date(ticket.createdAt);
+      const ageInDays = Math.ceil(
+        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+      );
+      return ageInDays >= 5 && ageInDays <= 8;
+    }).length;
+
+    const fourteenPlus = tickets.filter((ticket) => {
+      const createdAt = new Date(ticket.createdAt);
+      const ageInDays = Math.ceil(
+        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+      );
+      return ageInDays >= 14;
+    }).length;
+
+    // Update TAT stats
+    setTatStats({
+      threeToFour,
+      fiveToEight,
+      fourteenPlus,
+    });
 
     // Calculate Closed and Pending stats
     const closed = tickets.filter(
@@ -329,7 +424,12 @@ const OpsManagerDashboard = () => {
     ).length;
 
     // Update Closed vs Pending stats
-    setClosedPendingStats({ closed, pending, resolved, inprogress });
+    setClosedPendingStats({
+      closed,
+      pending,
+      resolved,
+      inprogress,
+    });
 
     // Update statistics for Repair and Replacement
     const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
@@ -345,73 +445,84 @@ const OpsManagerDashboard = () => {
 
     setRepairReplacementStats({ repair, replacement, received, notReceived });
 
-    // Calculate Assigned, Not Assigned, and Resolved stats
     const assigned = tickets.filter(
       (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
     ).length;
+
     const notAssigned = tickets.filter(
       (ticket) => ticket.assignedTo === "Not Assigned"
     ).length;
+    const softwareCalls = tickets.filter(
+      (ticket) => ticket.call === "Software Call"
+    ).length;
+    const hardwareCalls = tickets.filter(
+      (ticket) => ticket.call === "Hardware Call"
+    ).length;
 
     // Update Assigned vs Not Assigned stats
-    setAssignResolveStats({ assigned, notAssigned });
+    setAssignResolveStats({
+      assigned,
+      notAssigned,
+      softwareCalls,
+      hardwareCalls,
+    });
   }, [tickets]);
 
-  // Pie chart data for Closed vs Pending vs Resolved
-  const closedPendingData = {
-    labels: ["Closed", "Pending", "Resolved", "In Progress"],
-    datasets: [
-      {
-        data: [
-          closedPendingStats.closed,
-          closedPendingStats.pending,
-          closedPendingStats.resolved,
-          closedPendingStats.inprogress,
-        ],
-        backgroundColor: ["#6CCF70", "#FFC658", "#5BA4FF", "#FF6E6E"], // Softer yet vibrant colors
-        hoverBackgroundColor: ["#8FE89A", "#FFD88A", "#85C1FF", "#FF9191"], // Subtle pastel-like transitions
-      },
-    ],
-  };
+  // // Pie chart data for Closed vs Pending vs Resolved
+  // const closedPendingData = {
+  //   labels: ["Closed", "Pending", "Resolved", "In Progress"],
+  //   datasets: [
+  //     {
+  //       data: [
+  //         closedPendingStats.closed,
+  //         closedPendingStats.pending,
+  //         closedPendingStats.resolved,
+  //         closedPendingStats.inprogress,
+  //       ],
+  //       backgroundColor: ["#6CCF70", "#FFC658", "#5BA4FF", "#FF6E6E"], // Softer yet vibrant colors
+  //       hoverBackgroundColor: ["#8FE89A", "#FFD88A", "#85C1FF", "#FF9191"], // Subtle pastel-like transitions
+  //     },
+  //   ],
+  // };
 
-  // Pie chart data for Repair, Replacement, Received, Not Received
-  const RepairReplacementData = {
-    labels: ["Replacement", "Repair", "Received", "Not Received"],
-    datasets: [
-      {
-        data: [
-          repairReplacementStats.replacement,
-          repairReplacementStats.repair,
-          repairReplacementStats.received,
-          repairReplacementStats.notReceived,
-        ],
-        backgroundColor: [
-          "#FFB84D", // Replacement (Warm Gold)
-          "#00B5B8", // Repair (Teal)
-          "#00D84A", // Received (Vibrant Lime Green)
-          "#D9534F", // Not Received (Rich Red)
-        ],
-        hoverBackgroundColor: [
-          "#FF9A00", // Hover for Replacement (Darker Gold)
-          "#00A2A3", // Hover for Repair (Darker Teal)
-          "#00B033", // Hover for Received (Darker Lime Green)
-          "#C9302C", // Hover for Not Received (Darker Red)
-        ],
-      },
-    ],
-  };
+  // // Pie chart data for Repair, Replacement, Received, Not Received
+  // const RepairReplacementData = {
+  //   labels: ["Replacement", "Repair", "Received", "Not Received"],
+  //   datasets: [
+  //     {
+  //       data: [
+  //         repairReplacementStats.replacement,
+  //         repairReplacementStats.repair,
+  //         repairReplacementStats.received,
+  //         repairReplacementStats.notReceived,
+  //       ],
+  //       backgroundColor: [
+  //         "#FFB84D", // Replacement (Warm Gold)
+  //         "#00B5B8", // Repair (Teal)
+  //         "#00D84A", // Received (Vibrant Lime Green)
+  //         "#D9534F", // Not Received (Rich Red)
+  //       ],
+  //       hoverBackgroundColor: [
+  //         "#FF9A00", // Hover for Replacement (Darker Gold)
+  //         "#00A2A3", // Hover for Repair (Darker Teal)
+  //         "#00B033", // Hover for Received (Darker Lime Green)
+  //         "#C9302C", // Hover for Not Received (Darker Red)
+  //       ],
+  //     },
+  //   ],
+  // };
 
-  // Pie chart data for Assigned vs Not Assigned
-  const assignResolveData = {
-    labels: ["Assigned", "Not Assigned"],
-    datasets: [
-      {
-        data: [assignResolveStats.assigned, assignResolveStats.notAssigned],
-        backgroundColor: ["#FF6F61", "#A2DFF7"], // Warm coral and light sky blue
-        hoverBackgroundColor: ["#FF9F89", "#72C7D4"], // Soft peach and pastel blue
-      },
-    ],
-  };
+  // // Pie chart data for Assigned vs Not Assigned
+  // const assignResolveData = {
+  //   labels: ["Assigned", "Not Assigned"],
+  //   datasets: [
+  //     {
+  //       data: [assignResolveStats.assigned, assignResolveStats.notAssigned],
+  //       backgroundColor: ["#FF6F61", "#A2DFF7"], // Warm coral and light sky blue
+  //       hoverBackgroundColor: ["#FF9F89", "#72C7D4"], // Soft peach and pastel blue
+  //     },
+  //   ],
+  // };
 
   return (
     <Container className="mt-5">
@@ -446,46 +557,393 @@ const OpsManagerDashboard = () => {
           boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <div className="col-md-4 mb-3 mb-md-0">
-          <h3 style={{ fontWeight: "600", fontSize: "1.5rem" }}>
+        {/* Header Section */}
+        <div className="col-md-12 mb-3">
+          <h3
+            style={{
+              fontWeight: "600",
+              fontSize: "1.5rem",
+              marginBottom: "0.5rem",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             Dashboard Overview
           </h3>
-          <p style={{ fontSize: "0.9rem", color: "white" }}>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              color: "white",
+              marginBottom: "0",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             Monitor ticket statistics and trends at a glance.
           </p>
         </div>
-        <div className="col-md-8 d-flex justify-content-around">
-          <div className="summary-card text-center">
-            <p className="metric-title mb-1">Total Tickets</p>
-            <h4 className="metric-value">
-              <CountUp end={tickets.length} duration={2} />
+
+        {/* Metrics Section */}
+        <div className="col-md-12 d-flex flex-wrap justify-content-around">
+          {/* Ticket Statistics */}
+          <div className="metric-section">
+            <h4
+              className="section-title"
+              // style={{
+              //   display: "flex",
+              //   justifyContent: "center",
+              //   alignItems: "center",
+              // }}
+            >
+              Ticket Statistics
             </h4>
+            <div className="d-flex flex-wrap justify-content-around">
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange(tickets.length)}
+              >
+                <p
+                  className="metric-title "
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Total Tickets
+                </p>
+                <h4 className="metric-value">
+                  <CountUp end={tickets.length} duration={2} />
+                </h4>
+              </div>
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("status", "Closed")}
+              >
+                <p
+                  className="metric-title "
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Closed Tickets
+                </p>
+                <h4 className="metric-value">
+                  <CountUp end={closedPendingStats.closed} duration={2} />
+                </h4>
+              </div>
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("status", "Open")}
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Pending Tickets
+                </p>
+                <h4 className="metric-value">
+                  <CountUp end={closedPendingStats.pending} duration={2} />
+                </h4>
+              </div>
+            </div>
           </div>
-          <div className="summary-card text-center">
-            <p className="metric-title mb-1">Closed Tickets</p>
-            <h4 className="metric-value">
-              <CountUp end={closedPendingStats.closed} duration={2} />
+
+          {/* Call Types */}
+          <div className="metric-section">
+            <h4
+              className="section-title"
+              // style={{
+              //   display: "flex",
+              //   justifyContent: "center",
+              //   alignItems: "center",
+              // }}
+            >
+              Call Types
             </h4>
+            <div className="d-flex flex-wrap justify-content-around">
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("call", "Software Call")}
+              >
+                <p
+                  className="metric-title "
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Software Calls
+                </p>
+                <h4 className="metric-value">
+                  <CountUp
+                    end={assignResolveStats.softwareCalls}
+                    duration={2}
+                  />
+                </h4>
+              </div>
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("call", "Hardware Call")}
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Hardware Calls
+                </p>
+                <h4 className="metric-value">
+                  <CountUp
+                    end={assignResolveStats.hardwareCalls}
+                    duration={2}
+                  />
+                </h4>
+              </div>
+            </div>
           </div>
-          <div className="summary-card text-center">
-            <p className="metric-title mb-1">Pending Tickets</p>
-            <h4 className="metric-value">
-              <CountUp end={closedPendingStats.pending} duration={2} />
+
+          {/* Assignment Status */}
+          <div className="metric-section">
+            <h4
+              className="section-title"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Assignment Status
             </h4>
+            <div className="d-flex flex-wrap justify-content-around">
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange(assignResolveStats.assigned)}
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Assigned Tickets
+                </p>
+                <h4>
+                  <CountUp end={assignResolveStats.assigned} duration={2} />
+                </h4>
+              </div>
+              <div
+                className="summary-card text-center"
+                onClick={() =>
+                  handleFilterChange(assignResolveStats.notAssigned)
+                }
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Not Assigned Tickets
+                </p>
+                <h4 className="metric-value">
+                  <CountUp end={assignResolveStats.notAssigned} duration={2} />
+                </h4>
+              </div>
+            </div>
+          </div>
+
+          {/* Repair/Replacement Status */}
+          <div className="metric-section">
+            <h4
+              className="section-title"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Repair & Replacement
+            </h4>
+            <div className="d-flex flex-wrap justify-content-around">
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("Type", "Repair")}
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Repair Requests
+                </p>
+                <h4 className="metric-value">
+                  <CountUp end={repairReplacementStats.repair} duration={2} />
+                </h4>
+              </div>
+              <div
+                className="summary-card text-center"
+                onClick={() => handleFilterChange("Type", "Replacement")}
+              >
+                <p
+                  className="metric-title mb-1"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Replacement Requests
+                </p>
+                <h4 className="metric-value">
+                  <CountUp
+                    end={repairReplacementStats.replacement}
+                    duration={2}
+                  />
+                </h4>
+              </div>
+            </div>
+          </div>
+
+          {/* Receiving Status */}
+          <div className="col-md-14 d-flex flex-wrap justify-content-around">
+            <div className="metric-section">
+              <h4
+                className="section-title"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Receiving Status
+              </h4>
+              <div className="d-flex flex-wrap justify-content-around">
+                <div
+                  className="summary-card text-center"
+                  onClick={() => handleFilterChange("Type", "Received")}
+                >
+                  <p
+                    className="metric-title mb-1"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    Received Tickets
+                  </p>
+                  <h4 className="metric-value">
+                    <CountUp
+                      end={repairReplacementStats.received}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div
+                  className="summary-card text-center"
+                  onClick={() => handleFilterChange("Type", "Not Received")}
+                >
+                  <p
+                    className="metric-title mb-1"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    Not Received Tickets
+                  </p>
+                  <h4 className="metric-value">
+                    <CountUp
+                      end={repairReplacementStats.notReceived}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <div className="metric-section">
+              <h4
+                className="section-title"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Ticket Age Metrics
+              </h4>
+
+              <div className="d-flex flex-wrap justify-content-around">
+                {/* 3–4 Days Filter */}
+                <div
+                  className="summary-card text-center"
+                  onClick={() => handleFilterChange("tat", "3-4 Days")}
+                >
+                  <p className="metric-title">3–4 Days</p>
+                  <h4 className="metric-value">
+                    <CountUp end={tatStats.threeToFour} duration={2} />
+                  </h4>
+                </div>
+
+                {/* 5–8 Days Filter */}
+                <div
+                  className="summary-card text-center"
+                  onClick={() => handleFilterChange("tat", "5-8 Days")}
+                >
+                  <p className="metric-title">5–8 Days</p>
+                  <h4 className="metric-value">
+                    <CountUp end={tatStats.fiveToEight} duration={2} />
+                  </h4>
+                </div>
+
+                {/* 14 Days or More Filter */}
+                <div
+                  className="summary-card text-center"
+                  onClick={() => handleFilterChange("tat", "14+ Days")}
+                >
+                  <p className="metric-title mb-1">14 Days or More</p>
+                  <h4 className="metric-value">
+                    <CountUp end={tatStats.fourteenPlus} duration={2} />
+                  </h4>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       {/* Hero Section End */}
       {/* Hero Section  End Here*/}
       {/* Pies */}
-      <div className="mt-5 d-flex justify-content-center">
+      {/* <div className="mt-5 d-flex justify-content-center">
         <Card className="w-100 border-0 rounded-3">
           <Card.Body>
             <Card.Title className="text-center fs-4 mb-4 font-weight-bold">
-              {/* Add a title here if needed */}
+           
             </Card.Title>
             <div className="d-flex flex-wrap justify-content-between align-items-center">
-              {/* Closed vs Pending Pie Chart */}
+         
               <div className="pie-chart-container col-14 col-sm-6 col-md-4 col-lg-4 mb-4">
                 <div className="chart-wrapper mx-auto">
                   <Pie
@@ -499,12 +957,11 @@ const OpsManagerDashboard = () => {
                         },
                       },
                     }}
-                    height={300} // Set the height of the pie chart here
+                    height={300} 
                   />
                 </div>
               </div>
 
-              {/* Assigned, Not Assigned, Resolved Pie Chart */}
               <div className="pie-chart-container col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div className="chart-wrapper mx-auto">
                   <Pie
@@ -518,12 +975,12 @@ const OpsManagerDashboard = () => {
                         },
                       },
                     }}
-                    height={300} // Set the height of the pie chart here
+                    height={300} 
                   />
                 </div>
               </div>
 
-              {/* Repair vs Replacement Pie Chart */}
+          
               <div className="pie-chart-container col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
                 <div className="chart-wrapper mx-auto">
                   <Pie
@@ -537,14 +994,14 @@ const OpsManagerDashboard = () => {
                         },
                       },
                     }}
-                    height={300} // Set the height of the pie chart here
+                    height={300} 
                   />
                 </div>
               </div>
             </div>
           </Card.Body>
         </Card>
-      </div>
+      </div> */}
       {/* Pies */}
       {/* Forms */}
       <Form className="mb-4 ">

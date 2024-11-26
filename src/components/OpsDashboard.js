@@ -716,6 +716,7 @@ const OpsManagerDashboard = () => {
           </div>
 
           {/* Assignment Status */}
+          {/* Assignment Status */}
           <div className="metric-section">
             <h4
               className="section-title"
@@ -730,7 +731,12 @@ const OpsManagerDashboard = () => {
             <div className="d-flex flex-wrap justify-content-around">
               <div
                 className="summary-card text-center"
-                onClick={() => handleFilterChange(assignResolveStats.assigned)}
+                onClick={() =>
+                  handleFilterChange(
+                    "assignedTo",
+                    `${"assignedTo" !== "Not Assigned"}`
+                  )
+                }
               >
                 <p
                   className="metric-title mb-1"
@@ -748,9 +754,7 @@ const OpsManagerDashboard = () => {
               </div>
               <div
                 className="summary-card text-center"
-                onClick={() =>
-                  handleFilterChange(assignResolveStats.notAssigned)
-                }
+                onClick={() => handleFilterChange("assignedTo", "Not Assigned")}
               >
                 <p
                   className="metric-title mb-1"

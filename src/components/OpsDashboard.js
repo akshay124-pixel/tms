@@ -623,7 +623,7 @@ const OpsManagerDashboard = () => {
                 onClick={() => handleFilterChange("status", "Closed")}
               >
                 <p
-                  className="metric-title "
+                  className="metric-title mb-1 "
                   style={{
                     display: "flex",
                     justifyContent: "center",

@@ -1265,7 +1265,17 @@ const OpsManagerDashboard = () => {
         {/* Table */}
         <Row>
           {loading ? (
-            <Spinner animation="border" variant="primary" />
+            <div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 9999,
+              }}
+            >
+              <Spinner animation="border" variant="primary" />
+            </div>
           ) : (
             <Card className="mb-4 shadow-lg">
               <Card.Body>

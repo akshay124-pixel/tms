@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import CountUp from "react-countup";
 import axios from "axios";
+import debounce from "lodash.debounce";
 // import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { FaEye } from "react-icons/fa"; // Import icons
@@ -31,20 +32,7 @@ const AdminDashboard = () => {
   const operationsManagers = ["OPS Manager"];
   const [historyVisible, setHistoryVisible] = useState({});
   const [loading, setLoading] = useState(false);
-  const [closedPendingStats, setClosedPendingStats] = useState({
-    closed: 0,
-    pending: 0,
-  });
-  const [assignResolveStats, setAssignResolveStats] = useState({
-    assigned: 0,
-    notAssigned: 0,
-    resolved: 0,
-  });
-  const [tatStats, setTatStats] = useState({
-    threeToFour: 0,
-    fiveToEight: 0,
-    fourteenPlus: 0,
-  });
+
   const [filter, setFilter] = useState({
     status: "",
     priority: "",
@@ -53,12 +41,24 @@ const AdminDashboard = () => {
     Type: "",
     tat: "",
   });
-  // Pie Chart States
+  const [isSticky, setIsSticky] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = debounce((term) => setSearchTerm(term), 300);
 
-  const [repairReplacementStats, setRepairReplacementStats] = useState({
-    // repair: 0,
-    // replacement: 0,
-  });
+  const resetFilters = () => {
+    setFilter({
+      status: "",
+      priority: "",
+      call: "",
+      ageInDays: "",
+    });
+    console.log("Filters reset.");
+  };
+
+  // const [repairReplacementStats, setRepairReplacementStats] = useState({
+  //   // repair: 0,
+  //   // replacement: 0,
+  // });
   // Fetch all tickets from the API
   const fetchTickets = async () => {
     try {
@@ -77,66 +77,77 @@ const AdminDashboard = () => {
       [ticketId]: !prev[ticketId], // Toggle history visibility for this ticket
     }));
   };
-  // Calculate ticket statistics
-  const calculateStatistics = () => {
-    const totalTickets = tickets.length;
-    const pendingTickets = tickets.filter(
-      (ticket) => ticket.status === "Open"
-    ).length;
-    const closedTickets = tickets.filter(
-      (ticket) => ticket.status === "Closed"
-    ).length;
-    const assignedTickets = tickets.filter(
-      (ticket) => ticket.assignedTo
-    ).length;
+  // // Calculate ticket statistics
+  // const calculateStatistics = () => {
+  //   const totalTickets = tickets.length;
+  //   const pendingTickets = tickets.filter(
+  //     (ticket) => ticket.status === "Open"
+  //   ).length;
+  //   const closedTickets = tickets.filter(
+  //     (ticket) => ticket.status === "Closed"
+  //   ).length;
+  //   const assignedTickets = tickets.filter(
+  //     (ticket) => ticket.assignedTo
+  //   ).length;
 
-    return [
-      {
-        name: "Pending",
-        value: pendingTickets,
-        label: `${pendingTickets} Pending`,
-      },
-      {
-        name: "Closed",
-        value: closedTickets,
-        label: `${closedTickets} Closed`,
-      },
-      {
-        name: "Assigned",
-        value: assignedTickets,
-        label: `${assignedTickets} Assigned`,
-      },
-      {
-        name: "Total Tickets",
-        value: totalTickets,
-        label: `${totalTickets} Total`,
-      },
-    ];
-  };
+  //   return [
+  //     {
+  //       name: "Pending",
+  //       value: pendingTickets,
+  //       label: `${pendingTickets} Pending`,
+  //     },
+  //     {
+  //       name: "Closed",
+  //       value: closedTickets,
+  //       label: `${closedTickets} Closed`,
+  //     },
+  //     {
+  //       name: "Assigned",
+  //       value: assignedTickets,
+  //       label: `${assignedTickets} Assigned`,
+  //     },
+  //     {
+  //       name: "Total Tickets",
+  //       value: totalTickets,
+  //       label: `${totalTickets} Total`,
+  //     },
+  //   ];
+  // };
 
-  // Calculate resolved and pending statistics for the second pie chart
-  const calculateResolvePendingStatistics = () => {
-    const resolvedTickets = tickets.filter(
-      (ticket) => ticket.status === "Resolved"
-    ).length;
-    const pendingTickets = tickets.filter(
-      (ticket) => ticket.status === "Open" || ticket.status === "In Progress"
-    ).length;
+  // // Calculate resolved and pending statistics for the second pie chart
+  // const calculateResolvePendingStatistics = () => {
+  //   const resolvedTickets = tickets.filter(
+  //     (ticket) => ticket.status === "Resolved"
+  //   ).length;
+  //   const pendingTickets = tickets.filter(
+  //     (ticket) => ticket.status === "Open" || ticket.status === "In Progress"
+  //   ).length;
 
-    return [
-      {
-        name: "Resolved",
-        value: resolvedTickets,
-        label: `${resolvedTickets} Resolved`,
-      },
-      {
-        name: "Pending",
-        value: pendingTickets,
-        label: `${pendingTickets} Pending`,
-      },
-    ];
-  };
+  //   return [
+  //     {
+  //       name: "Resolved",
+  //       value: resolvedTickets,
+  //       label: `${resolvedTickets} Resolved`,
+  //     },
+  //     {
+  //       name: "Pending",
+  //       value: pendingTickets,
+  //       label: `${pendingTickets} Pending`,
+  //     },
+  //   ];
+  // };
+  // Scroll event listener to toggle sticky state
+  useEffect(() => {
+    const onScroll = () => {
+      setIsSticky(window.scrollY > 50);
+    };
 
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
   // Open modal for updating ticket
   const handleShow = (ticket) => {
     setSelectedTicket(ticket);
@@ -177,6 +188,15 @@ const AdminDashboard = () => {
       console.error("Error updating ticket:", error);
     }
   };
+
+  // Function to calculate ticket age in days
+  const calculateTicketAge = (createdAt) => {
+    if (!createdAt) return "N/A"; // Handle cases where createdAt is missing
+    const createdDate = new Date(createdAt); // Parse the createdAt date
+    const today = new Date(); // Get today's date
+    const diffTime = today.getTime() - createdDate.getTime(); // Time difference in milliseconds
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))); // Convert to days and ensure non-negative
+  };
   // Filtering
   // Filter tickets based on status, priority, and search term
   const filterTickets = () => {
@@ -195,17 +215,51 @@ const AdminDashboard = () => {
 
       // Apply TAT filter
       const matchesTAT = () => {
+        if (!ticket.createdAt) return false; // Skip tickets without createdAt field
         const currentDate = new Date();
-        const createdAt = new Date(ticket.createdAt); // Ensure ticket has createdAt field
+        const createdAt = new Date(ticket.createdAt);
         const ageInDays = Math.ceil(
           (currentDate - createdAt) / (1000 * 60 * 60 * 24)
         );
 
-        if (filter.tat === "3-4 Days") return ageInDays >= 3 && ageInDays <= 4;
-        if (filter.tat === "5-8 Days") return ageInDays >= 5 && ageInDays <= 8;
-        if (filter.tat === "14+ Days") return ageInDays >= 14;
-        return true; // Default: No TAT filter applied
+        switch (filter.tat) {
+          case "0-2Days":
+            return ageInDays >= 0 && ageInDays <= 2;
+          case "3-4Days":
+            return ageInDays >= 3 && ageInDays <= 4;
+          case "5-8Days":
+            return ageInDays >= 5 && ageInDays <= 8;
+          case "8-14Days":
+            return ageInDays >= 8 && ageInDays <= 14;
+          case ">14Days":
+            return ageInDays > 14;
+          default:
+            return true;
+        }
       };
+
+      const matchesSearchTerm =
+        searchTerm &&
+        (ticket.customerName
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+          ticket.billNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ticket.contactNumber
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      const matchesAgeInDays = filter.ageInDays
+        ? (() => {
+            if (!ticket.createdAt) return false;
+            const currentDate = new Date();
+            const createdAt = new Date(ticket.createdAt);
+            const ageInDays = Math.ceil(
+              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+            );
+            return ageInDays === Number(filter.ageInDays);
+          })()
+        : true;
 
       return (
         matchesStatus &&
@@ -213,7 +267,9 @@ const AdminDashboard = () => {
         matchesAssigned &&
         matchesType &&
         matchesCall &&
-        matchesTAT()
+        matchesTAT() &&
+        matchesAgeInDays &&
+        (!searchTerm || matchesSearchTerm)
       );
     });
   };
@@ -257,118 +313,194 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchTickets();
   }, []);
-  // Updating statistics whenever tickets change
-  // Updating statistics whenever tickets change
+
+  // New Calulation
+  const [openCalls, setOpenCalls] = useState({
+    hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+    software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+  });
+
+  const [closedCalls, setClosedCalls] = useState({
+    hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+    software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+  });
+
   useEffect(() => {
     if (!tickets || tickets.length === 0) {
-      // Reset stats if tickets are empty
-      setClosedPendingStats({
-        closed: 0,
-        pending: 0,
-        resolved: 0,
-        inprogress: 0,
+      setOpenCalls({
+        hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+        software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
       });
-      setAssignResolveStats({ assigned: 0, notAssigned: 0 });
-      setRepairReplacementStats({
-        repair: 0,
-        replacement: 0,
-        received: 0,
-        notReceived: 0,
+      setClosedCalls({
+        hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+        software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
       });
-      setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
       return;
     }
 
-    const currentDate = new Date();
+    const calculateAgeInDays = (createdAt) => {
+      const createdDate = new Date(createdAt);
+      return isNaN(createdDate)
+        ? Number.MAX_SAFE_INTEGER
+        : Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+    };
 
-    // Calculate TAT statistics
-    const threeToFour = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 3 && ageInDays <= 4;
-    }).length;
+    const calculateCallStats = (tickets, callType, validStatuses) => {
+      const result = {
+        "0-2Days": 0,
+        "3-7Days": 0,
+        "8-14Days": 0,
+        ">14Days": 0,
+      };
+      tickets.forEach((ticket) => {
+        if (ticket.call === callType && validStatuses.includes(ticket.status)) {
+          const ageInDays = calculateAgeInDays(ticket.createdAt);
+          if (ageInDays <= 2) result["0-2Days"]++;
+          else if (ageInDays <= 7) result["3-7Days"]++;
+          else if (ageInDays <= 14) result["8-14Days"]++;
+          else result[">14Days"]++;
+        }
+      });
+      return result;
+    };
 
-    const fiveToEight = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt);
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 5 && ageInDays <= 8;
-    }).length;
-
-    const fourteenPlus = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt);
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 14;
-    }).length;
-
-    // Update TAT stats
-    setTatStats({
-      threeToFour,
-      fiveToEight,
-      fourteenPlus,
+    // Accumulate "Open," "In Progress," and "Resolved" for openCalls
+    setOpenCalls({
+      hardware: calculateCallStats(tickets, "Hardware Call", [
+        "Open",
+        "In Progress",
+        "Resolved",
+      ]),
+      software: calculateCallStats(tickets, "Software Call", [
+        "Open",
+        "In Progress",
+        "Resolved",
+      ]),
     });
 
-    // Calculate Closed and Pending stats
-    const closed = tickets.filter(
-      (ticket) => ticket.status === "Closed"
-    ).length;
-    const pending = tickets.filter((ticket) => ticket.status === "Open").length;
-    const inprogress = tickets.filter(
-      (ticket) => ticket.status === "In Progress"
-    ).length;
-    const resolved = tickets.filter(
-      (ticket) => ticket.status === "Resolved"
-    ).length;
-
-    // Update Closed vs Pending stats
-    setClosedPendingStats({
-      closed,
-      pending,
-      resolved,
-      inprogress,
-    });
-
-    // Update statistics for Repair and Replacement
-    const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
-    const replacement = tickets.filter(
-      (ticket) => ticket.Type === "Replacement"
-    ).length;
-    const received = tickets.filter(
-      (ticket) => ticket.Type === "Received"
-    ).length; // Fixed the Type check
-    const notReceived = tickets.filter(
-      (ticket) => ticket.Type === "Not Received"
-    ).length; // Fixed the Type check
-
-    setRepairReplacementStats({ repair, replacement, received, notReceived });
-
-    const assigned = tickets.filter(
-      (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
-    ).length;
-
-    const notAssigned = tickets.filter(
-      (ticket) => ticket.assignedTo === "Not Assigned"
-    ).length;
-    const softwareCalls = tickets.filter(
-      (ticket) => ticket.call === "Software Call"
-    ).length;
-    const hardwareCalls = tickets.filter(
-      (ticket) => ticket.call === "Hardware Call"
-    ).length;
-
-    // Update Assigned vs Not Assigned stats
-    setAssignResolveStats({
-      assigned,
-      notAssigned,
-      softwareCalls,
-      hardwareCalls,
+    // Only include "Closed" tickets for closedCalls
+    setClosedCalls({
+      hardware: calculateCallStats(tickets, "Hardware Call", ["Closed"]),
+      software: calculateCallStats(tickets, "Software Call", ["Closed"]),
     });
   }, [tickets]);
+
+  // New Calulation End
+
+  // Updating statistics whenever tickets change
+  // Updating statistics whenever tickets change
+
+  // Old Calulation
+  // useEffect(() => {
+  //   if (!tickets || tickets.length === 0) {
+  //     // Reset stats if tickets are empty
+  //     setClosedPendingStats({
+  //       closed: 0,
+  //       pending: 0,
+  //       resolved: 0,
+  //       inprogress: 0,
+  //     });
+  //     setAssignResolveStats({ assigned: 0, notAssigned: 0 });
+  //     setRepairReplacementStats({
+  //       repair: 0,
+  //       replacement: 0,
+  //       received: 0,
+  //       notReceived: 0,
+  //     });
+  //     setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
+  //     return;
+  //   }
+
+  //   const currentDate = new Date();
+
+  //   // Calculate TAT statistics
+  //   const threeToFour = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 3 && ageInDays <= 4;
+  //   }).length;
+
+  //   const fiveToEight = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt);
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 5 && ageInDays <= 8;
+  //   }).length;
+
+  //   const fourteenPlus = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt);
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 14;
+  //   }).length;
+
+  //   // Update TAT stats
+  //   setTatStats({
+  //     threeToFour,
+  //     fiveToEight,
+  //     fourteenPlus,
+  //   });
+
+  //   // Calculate Closed and Pending stats
+  //   const closed = tickets.filter(
+  //     (ticket) => ticket.status === "Closed"
+  //   ).length;
+  //   const pending = tickets.filter((ticket) => ticket.status === "Open").length;
+  //   const inprogress = tickets.filter(
+  //     (ticket) => ticket.status === "In Progress"
+  //   ).length;
+  //   const resolved = tickets.filter(
+  //     (ticket) => ticket.status === "Resolved"
+  //   ).length;
+
+  //   // Update Closed vs Pending stats
+  //   setClosedPendingStats({
+  //     closed,
+  //     pending,
+  //     resolved,
+  //     inprogress,
+  //   });
+
+  //   // Update statistics for Repair and Replacement
+  //   const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
+  //   const replacement = tickets.filter(
+  //     (ticket) => ticket.Type === "Replacement"
+  //   ).length;
+  //   const received = tickets.filter(
+  //     (ticket) => ticket.Type === "Received"
+  //   ).length; // Fixed the Type check
+  //   const notReceived = tickets.filter(
+  //     (ticket) => ticket.Type === "Not Received"
+  //   ).length; // Fixed the Type check
+
+  //   setRepairReplacementStats({ repair, replacement, received, notReceived });
+
+  //   const assigned = tickets.filter(
+  //     (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
+  //   ).length;
+
+  //   const notAssigned = tickets.filter(
+  //     (ticket) => ticket.assignedTo === "Not Assigned"
+  //   ).length;
+  //   const softwareCalls = tickets.filter(
+  //     (ticket) => ticket.call === "Software Call"
+  //   ).length;
+  //   const hardwareCalls = tickets.filter(
+  //     (ticket) => ticket.call === "Hardware Call"
+  //   ).length;
+
+  //   // Update Assigned vs Not Assigned stats
+  //   setAssignResolveStats({
+  //     assigned,
+  //     notAssigned,
+  //     softwareCalls,
+  //     hardwareCalls,
+  //   });
+  // }, [tickets]);
   // // Pie chart data for Closed vs Pending
   // const closedPendingData = {
   //   labels: ["Closed", "Pending", "Resolved", "In Progress"],
@@ -398,15 +530,16 @@ const AdminDashboard = () => {
   //   ],
   // };
 
-  // Data for the pie charts
-  const data = calculateStatistics();
-  const resolvePendingData = calculateResolvePendingStatistics();
+  // // Data for the pie charts
+  // const data = calculateStatistics();
+  // const resolvePendingData = calculateResolvePendingStatistics();
+  // Old Calulation End
 
   // Sort tickets by priority
-  const sortedTickets = [...tickets].sort((a, b) => {
-    const priorityOrder = { Low: 1, Normal: 2, High: 3 };
-    return priorityOrder[a.priority] - priorityOrder[b.priority];
-  });
+  // const sortedTickets = [...tickets].sort((a, b) => {
+  //   const priorityOrder = { Low: 1, Normal: 2, High: 3 };
+  //   return priorityOrder[a.priority] - priorityOrder[b.priority];
+  // });
 
   return (
     <Container className="mt-5">
@@ -425,447 +558,576 @@ const AdminDashboard = () => {
         Admin Dashboard: Manage Everything Seamlessly
       </h2>
 
-      {/* Hero Section */}
+      {/* New Hero Section */}
       <div
-        className="d-flex flex-wrap justify-content-between align-items-center mb-4"
+        className="dashboard-container"
         style={{
           background: "linear-gradient(90deg, #6a11cb, #2575fc)",
           padding: "1.5rem",
           borderRadius: "12px",
+
           color: "white",
           boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
         }}
       >
         {/* Header Section */}
-        <div className="col-md-12 mb-3">
-          <h3
-            style={{
-              fontWeight: "600",
-              fontSize: "1.5rem",
-              marginBottom: "0.5rem",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Dashboard Overview
-          </h3>
-          <p
-            style={{
-              fontSize: "0.9rem",
-              color: "white",
-              marginBottom: "0",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Monitor ticket statistics and trends at a glance.
-          </p>
+        <div className="text-center ">
+          <h5 style={{ fontWeight: "700" }}>Dashboard Overview</h5>
+          {/* <p>
+            Analyze and monitor ticket statistics by categories and age ranges.
+          </p> */}
         </div>
 
-        {/* Metrics Section */}
-        <div className="col-md-12 d-flex flex-wrap justify-content-around">
-          {/* Ticket Statistics */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
-              // style={{
-              //   display: "flex",
-              //   justifyContent: "center",
-              //   alignItems: "center",
-              // }}
-            >
-              Ticket Statistics
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange(tickets.length)}
-              >
-                <p
-                  className="metric-title "
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Total Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={tickets.length} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("status", "Closed")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Closed Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={closedPendingStats.closed} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("status", "Open")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Pending Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={closedPendingStats.pending} duration={2} />
-                </h4>
-              </div>
-            </div>
-          </div>
-
-          {/* Call Types */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
-              // style={{
-              //   display: "flex",
-              //   justifyContent: "center",
-              //   alignItems: "center",
-              // }}
-            >
-              Call Types
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("call", "Software Call")}
-              >
-                <p
-                  className="metric-title "
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Software Calls
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={assignResolveStats.softwareCalls}
-                    duration={2}
-                  />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("call", "Hardware Call")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Hardware Calls
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={assignResolveStats.hardwareCalls}
-                    duration={2}
-                  />
-                </h4>
-              </div>
-            </div>
-          </div>
-
-          {/* Assignment Status */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
+        {/* Open Calls Section */}
+        <div className="section mb-5">
+          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+            Open Calls
+            <span
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                marginLeft: "10px",
+                fontSize: "1.2rem",
+                fontWeight: "600",
               }}
             >
-              Assignment Status
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange(assignResolveStats.assigned)}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Assigned Tickets
-                </p>
-                <h4>
-                  <CountUp end={assignResolveStats.assigned} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() =>
-                  handleFilterChange(assignResolveStats.notAssigned)
+              Total :
+              <CountUp
+                style={{ marginLeft: "5px" }}
+                end={
+                  openCalls.hardware["0-2Days"] +
+                  openCalls.hardware["3-7Days"] +
+                  openCalls.hardware["8-14Days"] +
+                  openCalls.hardware[">14Days"] +
+                  openCalls.software["0-2Days"] +
+                  openCalls.software["3-7Days"] +
+                  openCalls.software["8-14Days"] +
+                  openCalls.software[">14Days"]
                 }
+                duration={2}
+              />
+            </span>
+          </h3>
+          <div className="d-flex flex-wrap justify-content-between">
+            {/* 0-2 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                0–2 Days
+              </h4>
+              <div className="d-flex">
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "0-2Days")}
                 >
-                  Not Assigned Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={assignResolveStats.notAssigned} duration={2} />
-                </h4>
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware["0-2Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "0-2Days")}
+                >
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software["0-2Days"]} duration={2} />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* 3-7 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                3–7 Days
+              </h4>
+              <div className="d-flex">
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "3-7Days")}
+                >
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware["3-7Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "3-7Days")}
+                >
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software["3-7Days"]} duration={2} />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* 8-14 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                8–14 Days
+              </h4>
+              <div className="d-flex">
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "8-14Days")}
+                >
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={openCalls.hardware["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "8-14Days")}
+                >
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={openCalls.software["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* >14 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                14 Days
+              </h4>
+              <div className="d-flex">
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "14 Days")}
+                >
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware[">14Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div
+                  className="summary-card text-center "
+                  onClick={() => handleFilterChange("tat", "14 Days")}
+                >
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software[">14Days"]} duration={2} />
+                  </h4>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Repair/Replacement Status */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
+        {/* Closed Calls Section */}
+        <div className="section" style={{ marginTop: "-30px" }}>
+          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+            Closed Calls
+            <span
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                marginLeft: "10px",
+
+                fontSize: "1.2rem",
+                fontWeight: "600",
               }}
             >
-              Repair & Replacement
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("Type", "Repair")}
+              Total :
+              <CountUp
+                style={{ marginLeft: "5px" }}
+                end={
+                  closedCalls.hardware["0-2Days"] +
+                  closedCalls.hardware["3-7Days"] +
+                  closedCalls.hardware["8-14Days"] +
+                  closedCalls.hardware[">14Days"] +
+                  closedCalls.software["0-2Days"] +
+                  closedCalls.software["3-7Days"] +
+                  closedCalls.software["8-14Days"] +
+                  closedCalls.software[">14Days"]
+                }
+                duration={2}
+              />
+            </span>
+          </h3>
+          <div className="d-flex flex-wrap justify-content-between">
+            {/* 0-2 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Repair Requests
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={repairReplacementStats.repair} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("Type", "Replacement")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Replacement Requests
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={repairReplacementStats.replacement}
-                    duration={2}
-                  />
-                </h4>
+                0–2 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["0-2Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["0-2Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
               </div>
             </div>
+
+            {/* 3-7 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {" "}
+                3–7 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["3-7Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["3-7Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* 8-14 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                8–14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* >14 Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {" "}
+                14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware[">14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software[">14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+            {/* Total Tickets Section */}
           </div>
-
-          {/* Receiving Status */}
-          <div className="col-md-14 d-flex flex-wrap justify-content-around">
-            <div className="metric-section">
-              <h4
-                className="section-title"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Receiving Status
-              </h4>
-              <div className="d-flex flex-wrap justify-content-around">
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("Type", "Received")}
-                >
-                  <p
-                    className="metric-title mb-1"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    Received Tickets
-                  </p>
-                  <h4 className="metric-value">
-                    <CountUp
-                      end={repairReplacementStats.received}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("Type", "Not Received")}
-                >
-                  <p
-                    className="metric-title mb-1"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    Not Received Tickets
-                  </p>
-                  <h4 className="metric-value">
-                    <CountUp
-                      end={repairReplacementStats.notReceived}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="metric-section">
-              <h4
-                className="section-title"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Ticket Age Metrics
-              </h4>
-
-              <div className="d-flex flex-wrap justify-content-around">
-                {/* 3–4 Days Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "3-4 Days")}
-                >
-                  <p className="metric-title">3–4 Days</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.threeToFour} duration={2} />
-                  </h4>
-                </div>
-
-                {/* 5–8 Days Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "5-8 Days")}
-                >
-                  <p className="metric-title">5–8 Days</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.fiveToEight} duration={2} />
-                  </h4>
-                </div>
-
-                {/* 14 Days or More Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "14+ Days")}
-                >
-                  <p className="metric-title mb-1">14 Days or More</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.fourteenPlus} duration={2} />
-                  </h4>
-                </div>
-              </div>
-            </div>
+          <div
+            className="total-summary "
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              // padding: "0.5rem",
+              marginTop: "10px",
+              textAlign: "center",
+              color: "white",
+            }}
+          >
+            <h3 style={{ fontWeight: "700" }}>Total Tickets :</h3>
+            <h4 style={{ marginLeft: "10px" }}>
+              <CountUp
+                end={
+                  // Total number of tickets (open + closed)
+                  openCalls.hardware["0-2Days"] +
+                  openCalls.hardware["3-7Days"] +
+                  openCalls.hardware["8-14Days"] +
+                  openCalls.hardware[">14Days"] +
+                  openCalls.software["0-2Days"] +
+                  openCalls.software["3-7Days"] +
+                  openCalls.software["8-14Days"] +
+                  openCalls.software[">14Days"] +
+                  closedCalls.hardware["0-2Days"] +
+                  closedCalls.hardware["3-7Days"] +
+                  closedCalls.hardware["8-14Days"] +
+                  closedCalls.hardware[">14Days"] +
+                  closedCalls.software["0-2Days"] +
+                  closedCalls.software["3-7Days"] +
+                  closedCalls.software["8-14Days"] +
+                  closedCalls.software[">14Days"]
+                }
+                duration={2}
+              />
+            </h4>
           </div>
         </div>
       </div>
-      {/* Hero Section End */}
-      {/* Ticket Statistics Section */}
-      <Card className="mb-4 shadow-sm no-border">
-        <Card.Body>
-          <Row>
-            {/* Pies */}
 
-            {/* <div className="mt-4 d-flex justify-content-center">
-              <Card className="w-100 border-0 rounded-3">
-                <Card.Body>
-                  <Card.Title
-                    className="text-center mb-4"
+      {/* Search  */}
+      <Form className="mb-4">
+        <Row>
+          <div
+            className={`search-bar-container ${isSticky ? "sticky" : ""}`}
+            style={{
+              position: isSticky ? "fixed" : "relative",
+              top: 0,
+              left: 0,
+              zIndex: 1000,
+              width: "100vw",
+              backgroundColor: isSticky
+                ? "rgba(255, 255, 255, 0.7)"
+                : "transparent",
+              transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+              backdropFilter: isSticky ? "blur(10px)" : "none",
+              padding: isSticky ? "10px 15px" : "15px 0",
+              boxShadow: isSticky ? "0 4px 15px rgba(0, 0, 0, 0.1)" : "none",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div className="container-fluid">
+              <div className="row align-items-center">
+                {/* Search Input */}
+                <div className="col-12 col-lg-4 mb-3 mb-lg-0">
+                  <Form.Control
+                    type="text"
+                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No."
+                    onChange={(e) => handleSearch(e.target.value)}
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "bold",
+                      borderRadius: "50px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
                     }}
-                  ></Card.Title>
-                  <div className="row g-4 justify-content-between">
-                  
-                    <div className="col-12 col-md-6 text-center">
-                      <div className="w-75 mx-auto">
-                        <Pie data={closedPendingData} />
-                      </div>
-                    </div>
+                  />
+                </div>
 
-                   
-                    <div className="col-12 col-md-6 text-center">
-                      <div className="w-75 mx-auto">
-                        <Pie data={assignResolveData} />
-                      </div>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </div> */}
+                {/* Filter by Status */}
+                <div className="col-6 col-lg-2">
+                  <Form.Select
+                    onChange={(e) =>
+                      setFilter({ ...filter, status: e.target.value })
+                    }
+                    value={filter.status}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <option value="">Filter by Status</option>
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                  </Form.Select>
+                </div>
 
-            {/* Pies */}
-          </Row>
-        </Card.Body>
-      </Card>
+                {/* Filter by Priority */}
+                <div className="col-6 col-lg-2">
+                  <Form.Select
+                    onChange={(e) =>
+                      setFilter({ ...filter, priority: e.target.value })
+                    }
+                    value={filter.priority}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <option value="">Filter by Priority</option>
+                    <option value="High">High</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Low">Low</option>
+                  </Form.Select>
+                </div>
+
+                {/* Filter by Call Type */}
+                <div className="col-6 col-lg-2">
+                  <Form.Select
+                    onChange={(e) =>
+                      setFilter({ ...filter, call: e.target.value })
+                    }
+                    value={filter.call}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <option value="">Filter by Call Type</option>
+                    <option value="Hardware Call">Hardware Call</option>
+                    <option value="Software Call">Software Call</option>
+                  </Form.Select>
+                </div>
+
+                {/* Filter by Age in Days */}
+                <div className="col-6 col-lg-2">
+                  <Form.Control
+                    type="number"
+                    placeholder="Age in Days"
+                    onChange={(e) =>
+                      setFilter({ ...filter, ageInDays: e.target.value })
+                    }
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>{" "}
+            {/* Reset Filters Button */}
+            <div className="col-8 col-lg-1 d-flex justify-content-center">
+              <Button
+                onClick={resetFilters}
+                className="reset-button"
+                style={{
+                  borderRadius: "30px",
+                  padding: "10px 20px",
+                  backgroundColor: "transparent",
+                  color: "#fff",
+                  border: "none",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <svg
+                  className="svg-icon"
+                  style={{
+                    width: "1.8em",
+                    height: "1.8em",
+                    verticalAlign: "middle",
+                    fill: "currentColor",
+                    overflow: "hidden",
+                    transition: "transform 0.6s ease", // Smooth transition for rotation
+                  }}
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M683.6 288.4l-21.2 26.2c-12 14.8-2.6 36.9 16.3 38.7l165.9 15.4c21.9 2 38.8-18.8 32.3-39.8l-49.6-159c-5.7-18.2-29.3-22.7-41.2-7.9l-32.9 40.6c-85.1-62.9-194.4-89.5-305.7-67.7C290 165.7 166.1 295.6 142.7 454.4c-35.4 239.2 149.1 444.7 381.5 444.7 159.8 0 301.2-98 358.9-243.9 9.3-23.4 4.8-51.5-15.1-66.9-31.2-24.2-73.4-10.4-86.3 23.3-48.2 126.3-183.8 203.5-325.3 169.1C352.3 755.3 271 668 252.8 562.4c-30-173.9 103.1-324.7 271.4-324.7 58.2-0.1 113.5 18.1 159.4 50.7z"
+                    fill="#3259CE"
+                  />
+                </svg>
+              </Button>
+            </div>
+          </div>
+        </Row>
+      </Form>
+
+      {/* Search End  */}
 
       <Card className="mb-4 shadow-lg">
         <Card.Body>
-          <h4>All Customer Tickets</h4>
+          {/* <h4>All Customer Tickets</h4> */}
           <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>
-                <th>Customer Name</th>
-                <th>Description</th>
-                <th>Product Type</th>
-                <th>Serial Number</th>
-                <th>Priority</th>
+                <th>Date</th>
+                <th style={{ width: "120px" }}>Tracking ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th style={{ width: "8%" }}>Age</th>
+                <th>Priorty</th>
                 <th>Status</th>
-                <th>Assigned To</th>
-                <th>Actions</th> {/* Actions Column */}
+                <th>Assigned</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -878,10 +1140,29 @@ const AdminDashboard = () => {
               ) : filterTickets().length > 0 ? (
                 filterTickets().map((ticket) => (
                   <tr key={ticket._id}>
+                    {/* Date */}
+                    <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                    {/* Tracking ID */}
+                    <td
+                      style={{
+                        width: "120px", // Fixed width
+                        maxWidth: "120px", // Prevents growing beyond this width
+                        overflowX: "auto", // Enables horizontal scrolling
+                        // whiteSpace: "nowrap", // Prevents text from wrapping
+                      }}
+                    >
+                      {ticket.trackingId}
+                    </td>
+                    {/* Customer Name */}
                     <td>{ticket.customerName}</td>
-                    <td>{ticket.description}</td>
+                    {/* Product Type */}
                     <td>{ticket.productType}</td>
-                    <td>{ticket.serialNumber}</td>
+                    {/* Age of Ticket */}
+                    <td style={{ width: "8%" }}>
+                      {calculateTicketAge(ticket.createdAt)} Days
+                    </td>
+
+                    {/* Status */}
                     <td>
                       <Badge
                         pill
@@ -1007,9 +1288,7 @@ const AdminDashboard = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center text-muted">
-                    No tickets available.
-                  </td>
+                  <td colSpan="12">No tickets available.</td>
                 </tr>
               )}
             </tbody>
@@ -1161,7 +1440,7 @@ const AdminDashboard = () => {
                       <strong>Date:</strong>{" "}
                       {new Date(entry.date).toLocaleDateString()}{" "}
                       {new Date(entry.date).toLocaleTimeString()} <br />
-                      <strong>Updated By:</strong> {entry.username || "Unknown"}{" "}
+                      <strong>Updated By:</strong> {entry.username || "Admin"}{" "}
                       <br />
                       <strong>Remarks:</strong>{" "}
                       {entry.remarks || "No remarks provided"}

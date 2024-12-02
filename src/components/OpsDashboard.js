@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Card,
@@ -9,11 +9,13 @@ import {
   Modal,
   Spinner,
   Badge,
+  Table,
 } from "react-bootstrap";
 import CountUp from "react-countup";
 import debounce from "lodash.debounce";
 import axios from "axios";
 import "../App.css";
+import { FaEye } from "react-icons/fa";
 // import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { toast } from "react-toastify";
@@ -21,6 +23,25 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const OpsManagerDashboard = () => {
   const [isSticky, setIsSticky] = useState(false);
+
+  //Automtaiclly Closeing
+
+  const closeCard = () => setShowCard(false);
+  const cardRef = useRef();
+  // Close the card when clicked outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (cardRef.current && !cardRef.current.contains(event.target)) {
+        closeCard(); // Close the card if click is outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup the event listener when the component unmounts
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  //Automtaiclly CloseingEnd
 
   // Scroll event listener to toggle sticky state
   useEffect(() => {
@@ -35,20 +56,20 @@ const OpsManagerDashboard = () => {
     };
   }, []);
 
-  // Pie Chart States
-  const [closedPendingStats, setClosedPendingStats] = useState({
-    // closed: 0,
-    // pending: 0,
-  });
-  const [assignResolveStats, setAssignResolveStats] = useState({
-    // assigned: 0,
-    // notAssigned: 0,
-    // resolved: 0,
-  });
-  const [repairReplacementStats, setRepairReplacementStats] = useState({
-    // repair: 0,
-    // replacement: 0,
-  });
+  // // Pie Chart States
+  // const [closedPendingStats, setClosedPendingStats] = useState({
+  //   // closed: 0,
+  //   // pending: 0,
+  // });
+  // const [assignResolveStats, setAssignResolveStats] = useState({
+  //   // assigned: 0,
+  //   // notAssigned: 0,
+  //   // resolved: 0,
+  // });
+  // const [repairReplacementStats, setRepairReplacementStats] = useState({
+  //   // repair: 0,
+  //   // replacement: 0,
+  // });
   // Ticket and Service Agent States
   const [tickets, setTickets] = useState([]);
   const [serviceAgents, setServiceAgents] = useState([]);
@@ -57,14 +78,19 @@ const OpsManagerDashboard = () => {
     priority: "",
     call: "",
     assignedTo: "",
+    ageInDays: "",
     Type: "",
     tat: "",
   });
-  const [tatStats, setTatStats] = useState({
-    threeToFour: 0,
-    fiveToEight: 0,
-    fourteenPlus: 0,
-  });
+  const resetFilters = () => {
+    setFilter({
+      status: "",
+      priority: "",
+      call: "",
+      ageInDays: "",
+    });
+    console.log("Filters reset.");
+  };
 
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -152,45 +178,19 @@ const OpsManagerDashboard = () => {
     }
   };
 
-  // Update ticket call status
-  const handleUpdateCall = async (ticketId, call) => {
-    try {
-      await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
-        {
-          call,
-        }
-      );
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket._id === ticketId ? { ...ticket, call } : ticket
-        )
-      );
-      toast.success("Call updated successfully!");
-    } catch (error) {
-      toast.error("Failed to update call. Please try again.");
-    }
+  // State to control whether the card is visible or not
+  const [showCard, setShowCard] = useState(false);
+  const handleShowCard = (ticket) => {
+    setSelectedTicket(ticket);
+    setShowCard(true);
   };
 
-  // Handle updating ticket type
-  const handleUpdateType = async (ticketId, Type) => {
-    try {
-      await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
-        {
-          Type,
-        }
-      );
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket._id === ticketId ? { ...ticket, Type } : ticket
-        )
-      );
-      toast.success("Type updated successfully!");
-    } catch (error) {
-      toast.error("Failed to update Type. Please try again.");
-    }
+  const handleCloseCard = () => {
+    setShowCard(false);
+    setSelectedTicket(null);
   };
+
+  // Function to toggle the card visibility
 
   // Delete ticket and update UI
   const handleDelete = async (ticketId) => {
@@ -207,9 +207,106 @@ const OpsManagerDashboard = () => {
     }
   };
 
-  // New
+  // End Tat Filtering
+  // Helper function to clear message after 3 seconds
+  // const clearMessage = () => {
+  //   setTimeout(() => {
+  //     setMessage({ content: null, variant: null });
+  //   }, 3000);
+  // };
 
-  // End
+  const handleUpdateTicket = async (e, ticketId) => {
+    e.preventDefault();
+
+    // Set the ticket as updating
+    setUpdatingTickets((prev) => ({ ...prev, [ticketId]: true }));
+
+    const updatedTicketDetails = ticketDetails[ticketId];
+
+    // Check if the ticket details are available before making the update
+    if (!updatedTicketDetails) {
+      toast.error("Ticket details not found.");
+      return;
+    }
+
+    try {
+      // Prepare payload based on the current ticket details
+      const payload = {
+        Type: updatedTicketDetails.Type || "Repair", // Default "Repair" if no Type selected
+        callType: updatedTicketDetails.callType || "Hardware Call", // Default "Hardware Call" if no callType selected
+        assignedTo: updatedTicketDetails.assignedTo || "", // Ensure an empty string if no agent is assigned
+        status: updatedTicketDetails.status || "Open", // Default to "Open" if no status selected
+        remarks: updatedTicketDetails.remarks || "", // Remarks field from ticketDetails
+      };
+
+      // API call to update ticket
+      const response = await axios.put(
+        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        payload
+      );
+
+      if (response.status === 200) {
+        // Update the tickets state with new ticket details after successful update
+        setTickets((prevTickets) =>
+          prevTickets.map((ticket) =>
+            ticket._id === ticketId
+              ? {
+                  ...ticket,
+                  status: payload.status,
+                  remarks: payload.remarks,
+                  callType: payload.callType,
+                  Type: payload.Type,
+                  assignedTo: payload.assignedTo,
+                }
+              : ticket
+          )
+        );
+
+        // Show success toast
+        toast.success("Ticket updated successfully!");
+
+        // Reset the ticket details state after update (if needed)
+        setTicketDetails((prevState) => ({
+          ...prevState,
+          [ticketId]: { ...updatedTicketDetails, remarks: "" }, // Reset only the remarks
+        }));
+      } else {
+        toast.error("Failed to update ticket. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+      toast.error("Failed to update ticket. Please try again.");
+    } finally {
+      // Set the ticket as not updating after the operation is complete
+      setUpdatingTickets((prev) => ({ ...prev, [ticketId]: false }));
+    }
+  };
+
+  const handleInputChange = (e, ticketId, field) => {
+    const value = e.target.value;
+
+    setTicketDetails((prevState) => ({
+      ...prevState,
+      [ticketId]: {
+        ...prevState[ticketId],
+        [field]: value,
+      },
+    }));
+  };
+
+  // Fetch tickets and service agents on mount
+  useEffect(() => {
+    fetchTickets();
+    fetchServiceAgents();
+  }, []); // Empty dependency array ensures this effect runs only once
+  // Function to calculate ticket age in days
+  const calculateTicketAge = (createdAt) => {
+    if (!createdAt) return "N/A"; // Handle cases where createdAt is missing
+    const createdDate = new Date(createdAt); // Parse the createdAt date
+    const today = new Date(); // Get today's date
+    const diffTime = today.getTime() - createdDate.getTime(); // Time difference in milliseconds
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))); // Convert to days and ensure non-negative
+  };
   // Filter tickets based on status, priority, and search term
   const filterTickets = () => {
     return tickets.filter((ticket) => {
@@ -227,26 +324,51 @@ const OpsManagerDashboard = () => {
 
       // Apply TAT filter
       const matchesTAT = () => {
+        if (!ticket.createdAt) return false; // Skip tickets without createdAt field
         const currentDate = new Date();
-        const createdAt = new Date(ticket.createdAt); // Ensure ticket has createdAt field
+        const createdAt = new Date(ticket.createdAt);
         const ageInDays = Math.ceil(
           (currentDate - createdAt) / (1000 * 60 * 60 * 24)
         );
 
-        if (filter.tat === "3-4 Days") return ageInDays >= 3 && ageInDays <= 4;
-        if (filter.tat === "5-8 Days") return ageInDays >= 5 && ageInDays <= 8;
-        if (filter.tat === "14+ Days") return ageInDays >= 14;
-        return true; // Default: No TAT filter applied
+        switch (filter.tat) {
+          case "0-2Days":
+            return ageInDays >= 0 && ageInDays <= 2;
+          case "3-4Days":
+            return ageInDays >= 3 && ageInDays <= 4;
+          case "5-8Days":
+            return ageInDays >= 5 && ageInDays <= 8;
+          case "8-14Days":
+            return ageInDays >= 8 && ageInDays <= 14;
+          case ">14Days":
+            return ageInDays > 14;
+          default:
+            return true;
+        }
       };
 
       const matchesSearchTerm =
         searchTerm &&
-        (ticket.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.billNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (ticket.customerName
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+          ticket.billNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.contactNumber
-            .toLowerCase()
+            ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          ticket.trackingId.toLowerCase().includes(searchTerm.toLowerCase()));
+          ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      const matchesAgeInDays = filter.ageInDays
+        ? (() => {
+            if (!ticket.createdAt) return false;
+            const currentDate = new Date();
+            const createdAt = new Date(ticket.createdAt);
+            const ageInDays = Math.ceil(
+              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+            );
+            return ageInDays === Number(filter.ageInDays);
+          })()
+        : true;
 
       return (
         matchesStatus &&
@@ -254,219 +376,213 @@ const OpsManagerDashboard = () => {
         matchesAssigned &&
         matchesType &&
         matchesCall &&
-        matchesTAT() && // Apply TAT filter here
+        matchesTAT() &&
+        matchesAgeInDays &&
         (!searchTerm || matchesSearchTerm)
       );
     });
   };
 
   // Function to handle filter changes (and reset other filters when a new one is clicked)
-  const handleFilterChange = (filterType, value) => {
-    setFilter((prevFilter) => {
-      const newFilter = { ...prevFilter };
+  // const handleFilterChange = (filterType, value) => {
+  //   setFilter((prevFilter) => {
+  //     const newFilter = { ...prevFilter };
 
-      // Reset all filters and apply the new one
-      Object.keys(newFilter).forEach((key) => {
-        if (key !== filterType) {
-          newFilter[key] = ""; // Reset all other filters
-        }
-      });
+  //     // Reset all filters and apply the new one
+  //     Object.keys(newFilter).forEach((key) => {
+  //       if (key !== filterType) {
+  //         newFilter[key] = ""; // Reset all other filters
+  //       }
+  //     });
 
-      newFilter[filterType] = value; // Set the selected filter
-      return newFilter;
-    });
-  };
-
-  // End Tat Filtering
-  // Helper function to clear message after 3 seconds
-  // const clearMessage = () => {
-  //   setTimeout(() => {
-  //     setMessage({ content: null, variant: null });
-  //   }, 3000);
+  //     newFilter[filterType] = value; // Set the selected filter
+  //     return newFilter;
+  //   });
   // };
+  // State for open calls
+  const [openCalls, setOpenCalls] = useState({
+    hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+    software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+  });
 
-  // Update
-  const handleUpdateTicket = async (e, ticketId) => {
-    e.preventDefault();
-
-    // Set the ticket as updating
-    setUpdatingTickets((prev) => ({ ...prev, [ticketId]: true }));
-
-    const updatedTicketDetails = ticketDetails[ticketId];
-
-    try {
-      // Prepare payload
-      const payload = {
-        status: updatedTicketDetails.status || "Open", // Default to "Open" if no status is selected
-        remarks: updatedTicketDetails.remarks,
-      };
-
-      // API call to update ticket
-      const response = await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
-        payload
-      );
-
-      if (response.status === 200) {
-        // Update the tickets state with new remarks and status
-        setTickets((prevTickets) =>
-          prevTickets.map((ticket) =>
-            ticket._id === ticketId
-              ? {
-                  ...ticket,
-                  status: payload.status,
-                  remarks: payload.remarks,
-                }
-              : ticket
-          )
-        );
-
-        toast.success("Ticket updated successfully!");
-
-        // Reset the ticket details state after update
-        setTicketDetails((prevState) => ({
-          ...prevState,
-          [ticketId]: { status: payload.status, remarks: "" }, // Reset remarks field
-        }));
-      } else {
-        toast.error("Failed to update ticket. Please try again.");
-      }
-    } catch (error) {
-      toast.error("Failed to update ticket. Please try again.");
-    } finally {
-      // Set the ticket as not updating after the operation
-      setUpdatingTickets((prev) => ({ ...prev, [ticketId]: false }));
-    }
-  };
-
-  // Handle input changes for remarks or status
-  const handleInputChange = (e, ticketId, field) => {
-    const value = e.target.value;
-    setTicketDetails((prevState) => ({
-      ...prevState,
-      [ticketId]: {
-        ...prevState[ticketId],
-        [field]: value,
-      },
-    }));
-  };
-
-  // Fetch tickets and service agents on mount
-  useEffect(() => {
-    fetchTickets();
-    fetchServiceAgents();
-  }, []); // Empty dependency array ensures this effect runs only once
+  // State for closed calls
+  const [closedCalls, setClosedCalls] = useState({
+    hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+    software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+  });
 
   useEffect(() => {
     if (!tickets || tickets.length === 0) {
-      // Reset stats if tickets are empty
-      setClosedPendingStats({
-        closed: 0,
-        pending: 0,
-        resolved: 0,
-        inprogress: 0,
+      setOpenCalls({
+        hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+        software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
       });
-      setAssignResolveStats({ assigned: 0, notAssigned: 0 });
-      setRepairReplacementStats({
-        repair: 0,
-        replacement: 0,
-        received: 0,
-        notReceived: 0,
+      setClosedCalls({
+        hardware: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
+        software: { "0-2Days": 0, "3-7Days": 0, "8-14Days": 0, ">14Days": 0 },
       });
-      setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
       return;
     }
 
-    const currentDate = new Date();
+    const calculateAgeInDays = (createdAt) => {
+      const createdDate = new Date(createdAt);
+      return isNaN(createdDate)
+        ? Number.MAX_SAFE_INTEGER
+        : Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+    };
 
-    // Calculate TAT statistics
-    const threeToFour = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 3 && ageInDays <= 4;
-    }).length;
+    const calculateCallStats = (tickets, callType, validStatuses) => {
+      const result = {
+        "0-2Days": 0,
+        "3-7Days": 0,
+        "8-14Days": 0,
+        ">14Days": 0,
+      };
+      tickets.forEach((ticket) => {
+        if (ticket.call === callType && validStatuses.includes(ticket.status)) {
+          const ageInDays = calculateAgeInDays(ticket.createdAt);
+          if (ageInDays <= 2) result["0-2Days"]++;
+          else if (ageInDays <= 7) result["3-7Days"]++;
+          else if (ageInDays <= 14) result["8-14Days"]++;
+          else result[">14Days"]++;
+        }
+      });
+      return result;
+    };
 
-    const fiveToEight = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt);
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 5 && ageInDays <= 8;
-    }).length;
-
-    const fourteenPlus = tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt);
-      const ageInDays = Math.ceil(
-        (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-      );
-      return ageInDays >= 14;
-    }).length;
-
-    // Update TAT stats
-    setTatStats({
-      threeToFour,
-      fiveToEight,
-      fourteenPlus,
+    // Accumulate "Open," "In Progress," and "Resolved" for openCalls
+    setOpenCalls({
+      hardware: calculateCallStats(tickets, "Hardware Call", [
+        "Open",
+        "In Progress",
+        "Resolved",
+      ]),
+      software: calculateCallStats(tickets, "Software Call", [
+        "Open",
+        "In Progress",
+        "Resolved",
+      ]),
     });
 
-    // Calculate Closed and Pending stats
-    const closed = tickets.filter(
-      (ticket) => ticket.status === "Closed"
-    ).length;
-    const pending = tickets.filter((ticket) => ticket.status === "Open").length;
-    const inprogress = tickets.filter(
-      (ticket) => ticket.status === "In Progress"
-    ).length;
-    const resolved = tickets.filter(
-      (ticket) => ticket.status === "Resolved"
-    ).length;
-
-    // Update Closed vs Pending stats
-    setClosedPendingStats({
-      closed,
-      pending,
-      resolved,
-      inprogress,
-    });
-
-    // Update statistics for Repair and Replacement
-    const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
-    const replacement = tickets.filter(
-      (ticket) => ticket.Type === "Replacement"
-    ).length;
-    const received = tickets.filter(
-      (ticket) => ticket.Type === "Received"
-    ).length; // Fixed the Type check
-    const notReceived = tickets.filter(
-      (ticket) => ticket.Type === "Not Received"
-    ).length; // Fixed the Type check
-
-    setRepairReplacementStats({ repair, replacement, received, notReceived });
-
-    const assigned = tickets.filter(
-      (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
-    ).length;
-
-    const notAssigned = tickets.filter(
-      (ticket) => ticket.assignedTo === "Not Assigned"
-    ).length;
-    const softwareCalls = tickets.filter(
-      (ticket) => ticket.call === "Software Call"
-    ).length;
-    const hardwareCalls = tickets.filter(
-      (ticket) => ticket.call === "Hardware Call"
-    ).length;
-
-    // Update Assigned vs Not Assigned stats
-    setAssignResolveStats({
-      assigned,
-      notAssigned,
-      softwareCalls,
-      hardwareCalls,
+    // Only include "Closed" tickets for closedCalls
+    setClosedCalls({
+      hardware: calculateCallStats(tickets, "Hardware Call", ["Closed"]),
+      software: calculateCallStats(tickets, "Software Call", ["Closed"]),
     });
   }, [tickets]);
+
+  // Old  Calculation
+  // useEffect(() => {
+  //   if (!tickets || tickets.length === 0) {
+  //     // Reset stats if tickets are empty
+  //     setClosedPendingStats({
+  //       closed: 0,
+  //       pending: 0,
+  //       resolved: 0,
+  //       inprogress: 0,
+  //     });
+  //     setAssignResolveStats({ assigned: 0, notAssigned: 0 });
+  //     setRepairReplacementStats({
+  //       repair: 0,
+  //       replacement: 0,
+  //       received: 0,
+  //       notReceived: 0,
+  //     });
+  //     setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
+  //     return;
+  //   }
+
+  //   const currentDate = new Date();
+
+  //   // Calculate TAT statistics
+  //   const threeToFour = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 3 && ageInDays <= 4;
+  //   }).length;
+
+  //   const fiveToEight = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt);
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 5 && ageInDays <= 8;
+  //   }).length;
+
+  //   const fourteenPlus = tickets.filter((ticket) => {
+  //     const createdAt = new Date(ticket.createdAt);
+  //     const ageInDays = Math.ceil(
+  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+  //     );
+  //     return ageInDays >= 14;
+  //   }).length;
+
+  //   // Update TAT stats
+  //   setTatStats({
+  //     threeToFour,
+  //     fiveToEight,
+  //     fourteenPlus,
+  //   });
+
+  //   // Calculate Closed and Pending stats
+  //   const closed = tickets.filter(
+  //     (ticket) => ticket.status === "Closed"
+  //   ).length;
+  //   const pending = tickets.filter((ticket) => ticket.status === "Open").length;
+  //   const inprogress = tickets.filter(
+  //     (ticket) => ticket.status === "In Progress"
+  //   ).length;
+  //   const resolved = tickets.filter(
+  //     (ticket) => ticket.status === "Resolved"
+  //   ).length;
+
+  //   // Update Closed vs Pending stats
+  //   setClosedPendingStats({
+  //     closed,
+  //     pending,
+  //     resolved,
+  //     inprogress,
+  //   });
+
+  //   // Update statistics for Repair and Replacement
+  //   const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
+  //   const replacement = tickets.filter(
+  //     (ticket) => ticket.Type === "Replacement"
+  //   ).length;
+  //   const received = tickets.filter(
+  //     (ticket) => ticket.Type === "Received"
+  //   ).length; // Fixed the Type check
+  //   const notReceived = tickets.filter(
+  //     (ticket) => ticket.Type === "Not Received"
+  //   ).length; // Fixed the Type check
+
+  //   setRepairReplacementStats({ repair, replacement, received, notReceived });
+
+  //   const assigned = tickets.filter(
+  //     (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
+  //   ).length;
+
+  //   const notAssigned = tickets.filter(
+  //     (ticket) => ticket.assignedTo === "Not Assigned"
+  //   ).length;
+  //   const softwareCalls = tickets.filter(
+  //     (ticket) => ticket.call === "Software Call"
+  //   ).length;
+  //   const hardwareCalls = tickets.filter(
+  //     (ticket) => ticket.call === "Hardware Call"
+  //   ).length;
+
+  //   // Update Assigned vs Not Assigned stats
+  //   setAssignResolveStats({
+  //     assigned,
+  //     notAssigned,
+  //     softwareCalls,
+  //     hardwareCalls,
+  //   });
+  // }, [tickets]);
+  // Old  Calculation End
 
   // // Pie chart data for Closed vs Pending vs Resolved
   // const closedPendingData = {
@@ -537,7 +653,7 @@ const OpsManagerDashboard = () => {
           textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
           fontFamily: "'Poppins', sans-serif",
           fontWeight: "bold",
-          fontSize: "2.5rem",
+          fontSize: "1.7rem",
         }}
       >
         Ops Manager: Streamline Ticket Management
@@ -548,395 +664,374 @@ const OpsManagerDashboard = () => {
       )}{" "} */}
       {/* Hero Section */}
       <div
-        className="d-flex flex-wrap justify-content-between align-items-center mb-4"
+        className="dashboard-container"
         style={{
           background: "linear-gradient(90deg, #6a11cb, #2575fc)",
           padding: "1.5rem",
           borderRadius: "12px",
+
           color: "white",
           boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
         }}
       >
         {/* Header Section */}
-        <div className="col-md-12 mb-3">
-          <h3
-            style={{
-              fontWeight: "600",
-              fontSize: "1.5rem",
-              marginBottom: "0.5rem",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Dashboard Overview
-          </h3>
-          <p
-            style={{
-              fontSize: "0.9rem",
-              color: "white",
-              marginBottom: "0",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Monitor ticket statistics and trends at a glance.
-          </p>
+        <div className="text-center ">
+          <h5 style={{ fontWeight: "700" }}>Dashboard Overview</h5>
+          {/* <p>
+            Analyze and monitor ticket statistics by categories and age ranges.
+          </p> */}
         </div>
 
-        {/* Metrics Section */}
-        <div className="col-md-12 d-flex flex-wrap justify-content-around">
-          {/* Ticket Statistics */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
-              // style={{
-              //   display: "flex",
-              //   justifyContent: "center",
-              //   alignItems: "center",
-              // }}
-            >
-              Ticket Statistics
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange(tickets.length)}
-              >
-                <p
-                  className="metric-title "
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Total Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={tickets.length} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("status", "Closed")}
-              >
-                <p
-                  className="metric-title mb-1 "
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Closed Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={closedPendingStats.closed} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("status", "Open")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Pending Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={closedPendingStats.pending} duration={2} />
-                </h4>
-              </div>
-            </div>
-          </div>
-
-          {/* Call Types */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
-              // style={{
-              //   display: "flex",
-              //   justifyContent: "center",
-              //   alignItems: "center",
-              // }}
-            >
-              Call Types
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("call", "Software Call")}
-              >
-                <p
-                  className="metric-title "
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Software Calls
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={assignResolveStats.softwareCalls}
-                    duration={2}
-                  />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("call", "Hardware Call")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Hardware Calls
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={assignResolveStats.hardwareCalls}
-                    duration={2}
-                  />
-                </h4>
-              </div>
-            </div>
-          </div>
-
-          {/* Assignment Status */}
-          {/* Assignment Status */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
+        {/* Open Calls Section */}
+        <div className="section mb-5">
+          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+            Open Calls
+            <span
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                marginLeft: "10px",
+                fontSize: "1.2rem",
+                fontWeight: "600",
               }}
             >
-              Assignment Status
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() =>
-                  handleFilterChange(
-                    "assignedTo",
-                    `${"assignedTo" !== "Not Assigned"}`
-                  )
+              Total :
+              <CountUp
+                style={{ marginLeft: "5px" }}
+                end={
+                  openCalls.hardware["0-2Days"] +
+                  openCalls.hardware["3-7Days"] +
+                  openCalls.hardware["8-14Days"] +
+                  openCalls.hardware[">14Days"] +
+                  openCalls.software["0-2Days"] +
+                  openCalls.software["3-7Days"] +
+                  openCalls.software["8-14Days"] +
+                  openCalls.software[">14Days"]
                 }
+                duration={2}
+              />
+            </span>
+          </h3>
+          <div className="d-flex flex-wrap justify-content-between">
+            {/* 0-2Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Assigned Tickets
-                </p>
-                <h4>
-                  <CountUp end={assignResolveStats.assigned} duration={2} />
-                </h4>
+                0–2 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware["0-2Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software["0-2Days"]} duration={2} />
+                  </h4>
+                </div>
               </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("assignedTo", "Not Assigned")}
+            </div>
+
+            {/* 3-7Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Not Assigned Tickets
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={assignResolveStats.notAssigned} duration={2} />
-                </h4>
+                3–7 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware["3-7Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software["3-7Days"]} duration={2} />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* 8-14Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                8–14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={openCalls.hardware["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={openCalls.software["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* >14Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.hardware[">14Days"]} duration={2} />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp end={openCalls.software[">14Days"]} duration={2} />
+                  </h4>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Repair/Replacement Status */}
-          <div className="metric-section">
-            <h4
-              className="section-title"
+        {/* Closed Calls Section */}
+        <div className="section" style={{ marginTop: "-30px" }}>
+          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+            Closed Calls
+            <span
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                marginLeft: "10px",
+
+                fontSize: "1.2rem",
+                fontWeight: "600",
               }}
             >
-              Repair & Replacement
-            </h4>
-            <div className="d-flex flex-wrap justify-content-around">
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("Type", "Repair")}
+              Total :
+              <CountUp
+                style={{ marginLeft: "5px" }}
+                end={
+                  closedCalls.hardware["0-2Days"] +
+                  closedCalls.hardware["3-7Days"] +
+                  closedCalls.hardware["8-14Days"] +
+                  closedCalls.hardware[">14Days"] +
+                  closedCalls.software["0-2Days"] +
+                  closedCalls.software["3-7Days"] +
+                  closedCalls.software["8-14Days"] +
+                  closedCalls.software[">14Days"]
+                }
+                duration={2}
+              />
+            </span>
+          </h3>
+          <div className="d-flex flex-wrap justify-content-between">
+            {/* 0-2Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Repair Requests
-                </p>
-                <h4 className="metric-value">
-                  <CountUp end={repairReplacementStats.repair} duration={2} />
-                </h4>
-              </div>
-              <div
-                className="summary-card text-center"
-                onClick={() => handleFilterChange("Type", "Replacement")}
-              >
-                <p
-                  className="metric-title mb-1"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Replacement Requests
-                </p>
-                <h4 className="metric-value">
-                  <CountUp
-                    end={repairReplacementStats.replacement}
-                    duration={2}
-                  />
-                </h4>
+                0–2 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["0-2Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["0-2Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
               </div>
             </div>
+
+            {/* 3-7Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {" "}
+                3–7 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["3-7Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["3-7Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* 8-14Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                8–14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software["8-14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+
+            {/* >14Days */}
+            <div className="metric-section">
+              <h4
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {" "}
+                14 Days
+              </h4>
+              <div className="d-flex">
+                <div className="summary-card text-center ">
+                  <p>Hardware Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.hardware[">14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+                <div className="summary-card text-center ">
+                  <p>Software Calls</p>
+                  <h4>
+                    <CountUp
+                      end={closedCalls.software[">14Days"]}
+                      duration={2}
+                    />
+                  </h4>
+                </div>
+              </div>
+            </div>
+            {/* Total Tickets Section */}
           </div>
-
-          {/* Receiving Status */}
-          <div className="col-md-14 d-flex flex-wrap justify-content-around">
-            <div className="metric-section">
-              <h4
-                className="section-title"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Receiving Status
-              </h4>
-              <div className="d-flex flex-wrap justify-content-around">
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("Type", "Received")}
-                >
-                  <p
-                    className="metric-title mb-1"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    Received Tickets
-                  </p>
-                  <h4 className="metric-value">
-                    <CountUp
-                      end={repairReplacementStats.received}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("Type", "Not Received")}
-                >
-                  <p
-                    className="metric-title mb-1"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    Not Received Tickets
-                  </p>
-                  <h4 className="metric-value">
-                    <CountUp
-                      end={repairReplacementStats.notReceived}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="metric-section">
-              <h4
-                className="section-title"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Ticket Age Metrics
-              </h4>
-
-              <div className="d-flex flex-wrap justify-content-around">
-                {/* 3–4 Days Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "3-4 Days")}
-                >
-                  <p className="metric-title">3–4 Days</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.threeToFour} duration={2} />
-                  </h4>
-                </div>
-
-                {/* 5–8 Days Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "5-8 Days")}
-                >
-                  <p className="metric-title">5–8 Days</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.fiveToEight} duration={2} />
-                  </h4>
-                </div>
-
-                {/* 14 Days or More Filter */}
-                <div
-                  className="summary-card text-center"
-                  onClick={() => handleFilterChange("tat", "14+ Days")}
-                >
-                  <p className="metric-title mb-1">14 Days or More</p>
-                  <h4 className="metric-value">
-                    <CountUp end={tatStats.fourteenPlus} duration={2} />
-                  </h4>
-                </div>
-              </div>
-            </div>
+          <div
+            className="total-summary "
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              // padding: "0.5rem",
+              marginTop: "10px",
+              textAlign: "center",
+              color: "white",
+            }}
+          >
+            <h3 style={{ fontWeight: "700" }}>Total Tickets :</h3>
+            <h4 style={{ marginLeft: "10px" }}>
+              <CountUp
+                end={
+                  // Total number of tickets (open + closed)
+                  openCalls.hardware["0-2Days"] +
+                  openCalls.hardware["3-7Days"] +
+                  openCalls.hardware["8-14Days"] +
+                  openCalls.hardware[">14Days"] +
+                  openCalls.software["0-2Days"] +
+                  openCalls.software["3-7Days"] +
+                  openCalls.software["8-14Days"] +
+                  openCalls.software[">14Days"] +
+                  closedCalls.hardware["0-2Days"] +
+                  closedCalls.hardware["3-7Days"] +
+                  closedCalls.hardware["8-14Days"] +
+                  closedCalls.hardware[">14Days"] +
+                  closedCalls.software["0-2Days"] +
+                  closedCalls.software["3-7Days"] +
+                  closedCalls.software["8-14Days"] +
+                  closedCalls.software[">14Days"]
+                }
+                duration={2}
+              />
+            </h4>
           </div>
         </div>
       </div>
-
       {/* Hero Section End */}
       {/* Hero Section  End Here*/}
       {/* Pies */}
@@ -1008,54 +1103,50 @@ const OpsManagerDashboard = () => {
       </div> */}
       {/* Pies */}
       {/* Forms */}
-      <Form className="mb-4 ">
+      <Form className="mb-4">
         <Row>
           <div
             className={`search-bar-container ${isSticky ? "sticky" : ""}`}
             style={{
               position: isSticky ? "fixed" : "relative",
               top: 0,
-              left: 0, // Ensures the sticky element spans from the left edge
+              left: 0,
               zIndex: 1000,
-              width: "100vw", // Full width of the viewport
+              width: "100vw",
               backgroundColor: isSticky
                 ? "rgba(255, 255, 255, 0.7)"
                 : "transparent",
-              transition: "background-color 0.3s ease",
+              transition: "background-color 0.3s ease, box-shadow 0.3s ease",
               backdropFilter: isSticky ? "blur(10px)" : "none",
-              padding: "15px 0",
+              padding: isSticky ? "10px 15px" : "15px 0",
               boxShadow: isSticky ? "0 4px 15px rgba(0, 0, 0, 0.1)" : "none",
-              display: "flex", // Flexbox for alignment
-              justifyContent: "center", // Center contents horizontally
-              alignItems: "center", // Center contents vertically if needed
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <div className="container-fluid">
               <div className="row align-items-center">
                 {/* Search Input */}
-                <div className="col-12 col-lg-6 mb-3 mb-lg-0">
+                <div className="col-12 col-lg-4 mb-3 mb-lg-0">
                   <Form.Control
                     type="text"
-                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No. or Bill No."
+                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No."
                     onChange={(e) => handleSearch(e.target.value)}
                     style={{
-                      border: "1px solid #ddd",
                       borderRadius: "50px",
                       padding: "10px 20px",
                       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
-                      maxWidth: "100%", // Ensures the search bar takes full width within its column
                     }}
                   />
                 </div>
 
                 {/* Filter by Status */}
-                <div className="col-6 col-lg-3">
+                <div className="col-6 col-lg-2">
                   <Form.Select
                     onChange={(e) =>
                       setFilter({ ...filter, status: e.target.value })
                     }
                     value={filter.status}
-                    aria-label="Filter by Status"
                     style={{
                       border: "1px solid #ddd",
                       borderRadius: "30px",
@@ -1072,13 +1163,12 @@ const OpsManagerDashboard = () => {
                 </div>
 
                 {/* Filter by Priority */}
-                <div className="col-6 col-lg-3">
+                <div className="col-6 col-lg-2">
                   <Form.Select
                     onChange={(e) =>
                       setFilter({ ...filter, priority: e.target.value })
                     }
                     value={filter.priority}
-                    aria-label="Filter by Priority"
                     style={{
                       border: "1px solid #ddd",
                       borderRadius: "30px",
@@ -1092,325 +1182,477 @@ const OpsManagerDashboard = () => {
                     <option value="Low">Low</option>
                   </Form.Select>
                 </div>
+
+                {/* Filter by Call Type */}
+                <div className="col-6 col-lg-2">
+                  <Form.Select
+                    onChange={(e) =>
+                      setFilter({ ...filter, call: e.target.value })
+                    }
+                    value={filter.call}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <option value="">Filter by Call Type</option>
+                    <option value="Hardware Call">Hardware Call</option>
+                    <option value="Software Call">Software Call</option>
+                  </Form.Select>
+                </div>
+
+                {/* Filter by Age in Days */}
+                <div className="col-6 col-lg-2">
+                  <Form.Control
+                    type="number"
+                    placeholder="Age in Days"
+                    onChange={(e) =>
+                      setFilter({ ...filter, ageInDays: e.target.value })
+                    }
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "30px",
+                      padding: "10px 20px",
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+                    }}
+                  />
+                </div>
               </div>
+            </div>{" "}
+            {/* Reset Filters Button */}
+            <div className="col-8 col-lg-1 d-flex justify-content-center">
+              <Button
+                onClick={resetFilters}
+                className="reset-button"
+                style={{
+                  borderRadius: "30px",
+                  padding: "10px 20px",
+                  backgroundColor: "transparent",
+                  color: "#fff",
+                  border: "none",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <svg
+                  className="svg-icon"
+                  style={{
+                    width: "1.8em",
+                    height: "1.8em",
+                    verticalAlign: "middle",
+                    fill: "currentColor",
+                    overflow: "hidden",
+                    transition: "transform 0.6s ease", // Smooth transition for rotation
+                  }}
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M683.6 288.4l-21.2 26.2c-12 14.8-2.6 36.9 16.3 38.7l165.9 15.4c21.9 2 38.8-18.8 32.3-39.8l-49.6-159c-5.7-18.2-29.3-22.7-41.2-7.9l-32.9 40.6c-85.1-62.9-194.4-89.5-305.7-67.7C290 165.7 166.1 295.6 142.7 454.4c-35.4 239.2 149.1 444.7 381.5 444.7 159.8 0 301.2-98 358.9-243.9 9.3-23.4 4.8-51.5-15.1-66.9-31.2-24.2-73.4-10.4-86.3 23.3-48.2 126.3-183.8 203.5-325.3 169.1C352.3 755.3 271 668 252.8 562.4c-30-173.9 103.1-324.7 271.4-324.7 58.2-0.1 113.5 18.1 159.4 50.7z"
+                    fill="#3259CE"
+                  />
+                </svg>
+              </Button>
             </div>
           </div>
         </Row>
       </Form>
+
       {/* Forms End */}
-      <Row>
-        {loading ? (
-          <Spinner animation="border" variant="primary" />
-        ) : filterTickets().length > 0 ? (
-          filterTickets().map((ticket) => (
-            <Col md={4} key={ticket._id} className="mb-4">
-              <Card className="shadow-lg">
-                <Card.Body>
-                  <Card.Title>
-                    <strong>Customer Name: </strong>
-                    {ticket.customerName}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "9px", // Adjust the top position as needed
-                        right: "0", // Fix the div to the right side
-                        marginRight: "6px",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {" "}
-                      {/* DELETE */}
-                      <>
-                        <button
-                          className="deleteButton"
-                          onClick={() => handleDelete(ticket._id)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 50 59"
-                            className="bin"
-                          >
-                            <path
-                              fill="#B5BAC1"
-                              d="M0 7.5C0 5.01472 2.01472 3 4.5 3H45.5C47.9853 3 50 5.01472 50 7.5V7.5C50 8.32843 49.3284 9 48.5 9H1.5C0.671571 9 0 8.32843 0 7.5V7.5Z"
-                            />
-                            <path
-                              fill="#B5BAC1"
-                              d="M17 3C17 1.34315 18.3431 0 20 0H29.3125C30.9694 0 32.3125 1.34315 32.3125 3V3H17V3Z"
-                            />
-                            <path
-                              fill="#B5BAC1"
-                              d="M2.18565 18.0974C2.08466 15.821 3.903 13.9202 6.18172 13.9202H43.8189C46.0976 13.9202 47.916 15.821 47.815 18.0975L46.1699 55.1775C46.0751 57.3155 44.314 59.0002 42.1739 59.0002H7.8268C5.68661 59.0002 3.92559 57.3155 3.83073 55.1775L2.18565 18.0974ZM18.0003 49.5402C16.6196 49.5402 15.5003 48.4209 15.5003 47.0402V24.9602C15.5003 23.5795 16.6196 22.4602 18.0003 22.4602C19.381 22.4602 20.5003 23.5795 20.5003 24.9602V47.0402C20.5003 48.4209 19.381 49.5402 18.0003 49.5402ZM29.5003 47.0402C29.5003 48.4209 30.6196 49.5402 32.0003 49.5402C33.381 49.5402 34.5003 48.4209 34.5003 47.0402V24.9602C34.5003 23.5795 33.381 22.4602 32.0003 22.4602C30.6196 22.4602 29.5003 23.5795 29.5003 24.9602V47.0402Z"
-                              clipRule="evenodd"
-                              fillRule="evenodd"
-                            />
-                            <path
-                              fill="#B5BAC1"
-                              d="M2 13H48L47.6742 21.28H2.32031L2 13Z"
-                            />
-                          </svg>
-                          <span className="tooltip">Delete</span>
-                        </button>
-                      </>
-                      {/* DELETE */}
-                    </div>
-                  </Card.Title>
-                  <hr />
-                  <Card.Text>
-                    <strong>Description: </strong>
-                    {ticket.description}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Assigned Agent:</strong>{" "}
-                    {ticket.assignedTo || "Not Assigned"}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Priority:</strong>{" "}
-                    <Badge
-                      bg={
-                        ticket.priority === "High"
-                          ? "danger"
-                          : ticket.priority === "Normal"
-                          ? "warning"
-                          : "info"
-                      }
-                    >
-                      {ticket.priority}
-                    </Badge>
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Status:</strong>{" "}
-                    <Badge
-                      bg={
-                        ticket.status === "Open"
-                          ? "primary" // Blue for "Open"
-                          : ticket.status === "In Progress"
-                          ? "info" // Light blue for "In Progress"
-                          : ticket.status === "Resolved"
-                          ? "success" // Green for "Resolved"
-                          : ticket.status === "Closed"
-                          ? "secondary" // Grey for "Closed"
-                          : "dark" // Fallback color
-                      }
-                      style={{
-                        fontSize: "14px", // Slightly larger font for better readability
-                        padding: "5px 10px", // Add some padding for better styling
-                        borderRadius: "10px", // Rounded badge for modern look
-                        marginLeft: "10px", // Add space after "Status"
-                        textTransform: "capitalize", // Make the text properly cased
-                      }}
-                    >
-                      {ticket.status}
-                    </Badge>
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Type:</strong>{" "}
-                    <Badge
-                      bg={
-                        ticket.Type === "Repair"
-                          ? "primary" // Blue for "Repair"
-                          : ticket.Type === "Replacement"
-                          ? "info" // Light blue for "Replacement"
-                          : ticket.Type === "Received"
-                          ? "success" // Green for "Received"
-                          : "secondary" // Default badge color if none of the above"
-                      }
-                      style={{
-                        fontSize: "14px", // Slightly larger font for better readability
-                        padding: "5px 10px", // Add some padding for better styling
-                        borderRadius: "10px", // Rounded badge for modern look
-                        marginLeft: "10px", // Add space after "Status"
-                        textTransform: "capitalize", // Make the text properly cased
-                      }}
-                    >
-                      {ticket.Type}
-                    </Badge>
-                  </Card.Text>
-
-                  {/* Call Update Dropdown */}
-
-                  <Form.Select
-                    className="custom-dropdown"
-                    aria-label="Update Call"
-                    onChange={(e) =>
-                      handleUpdateType(ticket?._id, e.target.value)
-                    }
-                    value={ticket?.Type || ""}
-                    disabled={!ticket?._id} // Disable dropdown if there's no ticket._id
+      <div>
+        {/* Table */}
+        <Row>
+          {loading ? (
+            <Spinner animation="border" variant="primary" />
+          ) : (
+            <Card className="mb-4 shadow-lg">
+              <Card.Body>
+                <Col md={12}>
+                  <Table
+                    responsive
+                    striped
+                    bordered
+                    hover
+                    className="text-center"
                   >
-                    <option value="" disabled>
-                      -- Select If Replacement --
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th style={{ width: "120px" }}>Tracking ID</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th style={{ width: "8%" }}>Age</th>
+                        <th>Priorty</th>
+                        <th>Status</th>
+                        <th>Assigned</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filterTickets().length > 0 ? (
+                        filterTickets().map((ticket) => (
+                          <tr key={ticket._id}>
+                            {/* Date */}
+                            <td>
+                              {new Date(ticket.createdAt).toLocaleDateString()}
+                            </td>
+                            {/* Tracking ID */}
+                            <td
+                              style={{
+                                width: "120px", // Fixed width
+                                maxWidth: "120px", // Prevents growing beyond this width
+                                overflowX: "auto", // Enables horizontal scrolling
+                                // whiteSpace: "nowrap", // Prevents text from wrapping
+                              }}
+                            >
+                              {ticket.trackingId}
+                            </td>
+                            {/* Customer Name */}
+                            <td>{ticket.customerName}</td>
+                            {/* Product Type */}
+                            <td>{ticket.productType}</td>
+                            {/* Age of Ticket */}
+                            <td style={{ width: "8%" }}>
+                              {calculateTicketAge(ticket.createdAt)} Days
+                            </td>
+                            <td>
+                              <Badge
+                                bg={
+                                  ticket.priority === "High"
+                                    ? "danger"
+                                    : ticket.priority === "Normal"
+                                    ? "warning"
+                                    : "info"
+                                }
+                              >
+                                {ticket.priority}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge
+                                bg={
+                                  ticket.status === "Open"
+                                    ? "primary"
+                                    : ticket.status === "In Progress"
+                                    ? "info"
+                                    : ticket.status === "Resolved"
+                                    ? "success"
+                                    : "secondary"
+                                }
+                              >
+                                {ticket.status}
+                              </Badge>
+                            </td>{" "}
+                            <td>{ticket.assignedTo || "Not Assigned"}</td>
+                            <td>
+                              <Row>
+                                {/* View Details  */}{" "}
+                                <Col className="d-flex justify-content-between">
+                                  <Button
+                                    variant="primary"
+                                    className="mx"
+                                    style={{
+                                      width: "40px",
+                                      height: "40px",
+                                      borderRadius: "22px",
+                                    }}
+                                    onClick={() => {
+                                      setSelectedTicket(ticket);
+                                      setShowModal(true);
+                                    }}
+                                  >
+                                    <FaEye style={{ marginBottom: "3px" }} />
+                                  </Button>
+                                  {/* View Details End */}{" "}
+                                  {/* View card Button */}
+                                  <button
+                                    className="editBtn mx-2"
+                                    onClick={() => handleShowCard(ticket)}
+                                  >
+                                    <svg height="1em" viewBox="0 0 512 512">
+                                      <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path>
+                                    </svg>
+                                  </button>
+                                  {/* View card Buttons End */}
+                                  {/* Delete Button */}
+                                  <button
+                                    className="bin-button mx"
+                                    onClick={() => handleDelete(ticket._id)}
+                                  >
+                                    <svg
+                                      class="bin-top"
+                                      viewBox="0 0 39 7"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <line
+                                        y1="5"
+                                        x2="39"
+                                        y2="5"
+                                        stroke="white"
+                                        stroke-width="4"
+                                      ></line>
+                                      <line
+                                        x1="12"
+                                        y1="1.5"
+                                        x2="26.0357"
+                                        y2="1.5"
+                                        stroke="white"
+                                        stroke-width="3"
+                                      ></line>
+                                    </svg>
+                                    <svg
+                                      class="bin-bottom"
+                                      viewBox="0 0 33 39"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <mask
+                                        id="path-1-inside-1_8_19"
+                                        fill="white"
+                                      >
+                                        <path d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"></path>
+                                      </mask>
+                                      <path
+                                        d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
+                                        fill="white"
+                                        mask="url(#path-1-inside-1_8_19)"
+                                      ></path>
+                                      <path
+                                        d="M12 6L12 29"
+                                        stroke="white"
+                                        stroke-width="4"
+                                      ></path>
+                                      <path
+                                        d="M21 6V29"
+                                        stroke="white"
+                                        stroke-width="4"
+                                      ></path>
+                                    </svg>
+                                  </button>
+                                </Col>
+                              </Row>
+                              {/* End Delete Button */}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="12">
+                            No tickets found for the selected criteria.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                </Col>
+              </Card.Body>{" "}
+            </Card>
+          )}
+        </Row>
+
+        {/* Table End */}
+
+        {/* Floating Card (Popup Effect) */}
+        {showCard && selectedTicket && (
+          <div className="popup-card my-5">
+            <div className="popup-card-content" ref={cardRef}>
+              <Button
+                variant="outline-danger"
+                onClick={handleCloseCard}
+                className="close-btn "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0px"
+                  y="0px"
+                  width="45"
+                  height="45"
+                  viewBox="0 0 48 48"
+                >
+                  <path
+                    fill="#f44336"
+                    d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"
+                  ></path>
+                  <path
+                    fill="#fff"
+                    d="M29.656,15.516l2.828,2.828l-14.14,14.14l-2.828-2.828L29.656,15.516z"
+                  ></path>
+                  <path
+                    fill="#fff"
+                    d="M32.484,29.656l-2.828,2.828l-14.14-14.14l2.828-2.828L32.484,29.656z"
+                  ></path>
+                </svg>
+              </Button>
+              <div>
+                <h4>
+                  <strong style={{ color: "green" }}>Customer Name: </strong>
+                  {selectedTicket.customerName}
+                </h4>
+                <hr />
+                <p>
+                  <strong>Description: </strong>
+                  {selectedTicket.description}
+                </p>
+                <p>
+                  <strong>Assigned Agent:</strong>{" "}
+                  {selectedTicket.assignedTo || "Not Assigned"}
+                </p>
+                <p>
+                  <strong>Priority:</strong>{" "}
+                  <Badge
+                    bg={
+                      selectedTicket.priority === "High"
+                        ? "danger"
+                        : selectedTicket.priority === "Normal"
+                        ? "warning"
+                        : "info"
+                    }
+                  >
+                    {selectedTicket.priority}
+                  </Badge>
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <Badge
+                    bg={
+                      selectedTicket.status === "Open"
+                        ? "primary"
+                        : selectedTicket.status === "In Progress"
+                        ? "info"
+                        : selectedTicket.status === "Resolved"
+                        ? "success"
+                        : "secondary"
+                    }
+                  >
+                    {selectedTicket.status}
+                  </Badge>
+                </p>
+                <p>
+                  <strong>Type:</strong>{" "}
+                  <Badge
+                    bg={
+                      selectedTicket.Type === "Repair"
+                        ? "primary"
+                        : selectedTicket.Type === "Replacement"
+                        ? "info"
+                        : selectedTicket.Type === "Received"
+                        ? "success"
+                        : "secondary"
+                    }
+                  >
+                    {selectedTicket.Type}
+                  </Badge>
+                </p>
+
+                {/* Dropdowns and Form */}
+                <Form.Select
+                  className="custom-dropdown"
+                  aria-label="Update Replacement"
+                  onChange={(e) =>
+                    handleInputChange(e, selectedTicket._id, "Type")
+                  }
+                  value={
+                    ticketDetails[selectedTicket._id]?.Type ||
+                    selectedTicket.Type
+                  }
+                >
+                  <option value="" disabled>
+                    -- Select If Replacement --
+                  </option>
+                  <option value="Not Received">Not Received</option>
+                  <option value="Received">Received</option>
+                </Form.Select>
+                <Form.Select
+                  className="my-2"
+                  aria-label="Update Call Type"
+                  onChange={(e) =>
+                    handleInputChange(e, selectedTicket._id, "callType")
+                  }
+                  value={
+                    ticketDetails[selectedTicket._id]?.callType ||
+                    selectedTicket.callType
+                  }
+                >
+                  <option value="" disabled>
+                    -- Select Call Type --
+                  </option>
+                  <option value="Hardware Call">Hardware Call</option>
+                  <option value="Software Call">Software Call</option>
+                </Form.Select>
+                <Form.Select
+                  aria-label="Select Service Agent"
+                  onChange={(e) =>
+                    handleInputChange(e, selectedTicket._id, "assignedTo")
+                  }
+                  value={
+                    ticketDetails[selectedTicket._id]?.assignedTo ||
+                    selectedTicket?.assignedTo ||
+                    ""
+                  }
+                  className="mt-2"
+                >
+                  <option value="">Assign Service Agent</option>
+                  {serviceAgents.map((agent) => (
+                    <option key={agent._id} value={agent.username}>
+                      {agent.username}
                     </option>
-                    <option value="Not Received">Not Received</option>
-                    <option value="Received">Received</option>
-                  </Form.Select>
-                  <Form.Select
-                    className="my-2"
-                    aria-label="Update Call"
-                    onChange={(e) =>
-                      handleUpdateCall(ticket._id, e.target.value)
-                    }
-                    value={ticket.call}
-                  >
-                    <option value="" disabled>
-                      -- Select Call Type --
-                    </option>
-                    <option value="Hardware Call">Hardware Call</option>
-                    <option value="Software Call">Software Call</option>
-                  </Form.Select>
+                  ))}
+                </Form.Select>
 
-                  {/* Assign/Unassign Agent */}
-                  <Form.Select
-                    aria-label="Select Service Agent"
-                    onChange={(e) =>
-                      updateTicketAssignment(ticket._id, e.target.value)
-                    }
-                    value={ticket.assignedTo || ""}
-                    className="mt-2"
-                  >
-                    <option value="">Assign Service Agent</option>
-                    {serviceAgents.map((agent) => (
-                      <option key={agent._id} value={agent.username}>
-                        {agent.username}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  {/* Status Update Dropdown */}
-                  <Form.Select
-                    className="my-2"
-                    aria-label="Update Status"
-                    onChange={(e) => handleInputChange(e, ticket._id, "status")}
-                    value={ticketDetails[ticket._id]?.status || ticket.status}
-                  >
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Resolved">Resolved</option>
-                    <option value="Closed">Closed</option>
-                  </Form.Select>
+                <Form.Select
+                  className="my-2"
+                  aria-label="Update Status"
+                  onChange={(e) =>
+                    handleInputChange(e, selectedTicket._id, "status")
+                  }
+                  value={
+                    ticketDetails[selectedTicket._id]?.status ||
+                    selectedTicket.status
+                  }
+                >
+                  <option value="Open">Open</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Resolved">Resolved</option>
+                  <option value="Closed">Closed</option>
+                </Form.Select>
 
-                  {/* Remarks and status Form */}
-
-                  <form onSubmit={(e) => handleUpdateTicket(e, ticket._id)}>
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control my-2"
-                        style={{
-                          margin: "0 auto",
-                          border: "1px solid #ddd", // Soft grey solid border
-                          borderRadius: "5px", // Slightly rounded corners
-                        }}
-                        placeholder="Enter Remarks"
-                        value={ticketDetails[ticket._id]?.remarks || ""}
-                        onChange={(e) =>
-                          handleInputChange(e, ticket._id, "remarks")
-                        }
-                      />
-                    </div>
-
-                    {/* Buttons Section */}
-                    <div
-                      className="d-flex flex-column justify-content-center gap-1"
-                      style={{
-                        width: "100%",
-                        gap: "10px",
-                      }}
+                <form
+                  onSubmit={(e) => handleUpdateTicket(e, selectedTicket._id)}
+                >
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      className="form-control my-2"
+                      placeholder="Enter Remarks"
+                      value={ticketDetails[selectedTicket._id]?.remarks || ""}
+                      onChange={(e) =>
+                        handleInputChange(e, selectedTicket._id, "remarks")
+                      }
+                    />
+                  </div>
+                  <div className="d-flex flex-column justify-content-center gap-1">
+                    <Button variant="info" type="submit">
+                      Update Ticket
+                    </Button>
+                    <Button
+                      variant="warning"
+                      onClick={() =>
+                        updateTicketAssignment(selectedTicket._id, "")
+                      }
                     >
-                      {/* Update Ticket Button */}
-                      <Button
-                        variant="info"
-                        type="submit"
-                        className="mt-2"
-                        style={{
-                          width: "100%",
-                          backgroundColor: "lightgreen",
-                          border: "none",
-                          color: "black",
-                          borderRadius: "50px",
-                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                          transition: "all 0.3s ease", // Smooth transition for hover effect
-                        }}
-                        disabled={updatingTickets[ticket._id]} // Disable button if this ticket is being updated
-                        onMouseEnter={(e) =>
-                          (e.target.style.backgroundColor = "#66bb6a")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.target.style.backgroundColor = "lightgreen")
-                        }
-                      >
-                        {updatingTickets[ticket._id] ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          "Update Ticket"
-                        )}
-                      </Button>
-
-                      {/* Unassign Button */}
-                      <Button
-                        variant="warning"
-                        onClick={() => updateTicketAssignment(ticket._id, "")}
-                        className="mt-2"
-                        style={{
-                          width: "100%",
-                          backgroundColor: "#ffc107",
-                          color: "black",
-                          borderRadius: "50px",
-                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                          transition: "all 0.3s ease", // Smooth transition for hover effect
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.target.style.backgroundColor = "#ff9800")
-                        } // Hover background color
-                        onMouseLeave={(e) =>
-                          (e.target.style.backgroundColor = "#ffc107")
-                        } // Reset background color
-                      >
-                        Unassign Agent
-                      </Button>
-
-                      {/* View Details Button */}
-                      <Button
-                        variant="info"
-                        onClick={() => {
-                          setSelectedTicket(ticket);
-                          setShowModal(true);
-                        }}
-                        className="mt-2"
-                        style={{
-                          width: "100%",
-                          backgroundColor: "lightblue",
-                          border: "none",
-                          color: "black",
-                          borderRadius: "50px",
-                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                          transition: "all 0.3s ease", // Smooth transition for hover effect
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.target.style.backgroundColor = "#81d4fa")
-                        } // Hover background color
-                        onMouseLeave={(e) =>
-                          (e.target.style.backgroundColor = "lightblue")
-                        } // Reset background color
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  </form>
-
-                  {/* End Buttons */}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))
-        ) : (
-          <Col md={12}>
-            <p>No tickets found for the selected criteria.</p>
-          </Col>
+                      Unassign Agent
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         )}
-      </Row>
+        {/* Floating Card End */}
+      </div>
       {/* Modal for showing detailed ticket information */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
@@ -1504,7 +1746,7 @@ const OpsManagerDashboard = () => {
                     background: "linear-gradient(90deg, #6a11cb, #2575fc)",
                     color: "#fff",
                     border: "none",
-                    borderRadius: "5px",
+
                     fontSize: "14px",
                     borderRadius: "50px",
                     transition: "background-color 0.3s ease",
@@ -1571,8 +1813,8 @@ const OpsManagerDashboard = () => {
                       <strong>Date:</strong>{" "}
                       {new Date(entry.date).toLocaleDateString()}{" "}
                       {new Date(entry.date).toLocaleTimeString()} <br />
-                      <strong>Updated By:</strong> {entry.username || "Unknown"}{" "}
-                      <br />
+                      <strong>Updated By:</strong>{" "}
+                      {entry.username || "OPS Manager"} <br />
                       <strong>Remarks:</strong>{" "}
                       {entry.remarks || "No remarks provided"}
                     </li>

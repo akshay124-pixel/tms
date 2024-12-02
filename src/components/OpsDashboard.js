@@ -1208,6 +1208,7 @@ const OpsManagerDashboard = () => {
                   <Form.Control
                     type="number"
                     placeholder="Age in Days"
+                    value={filter.ageInDays || ""} // Ensure the input value reflects the filter state
                     onChange={(e) =>
                       setFilter({ ...filter, ageInDays: e.target.value })
                     }

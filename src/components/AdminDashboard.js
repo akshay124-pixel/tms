@@ -1461,6 +1461,18 @@ const AdminDashboard = () => {
           <Button
             variant="secondary"
             onClick={() => setShowDetailsModal(false)}
+            style={{
+              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
+              border: "none", // Remove default border
+              borderRadius: "50px", // Rounded edges for a sleek look
+              color: "#fff", // White text for contrast
+              fontWeight: "bold", // Bold text
+              padding: "12px 30px", // Increase padding for a more prominent button
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
+              transition: "all 0.3s ease", // Smooth transition effect
+            }}
+            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
+            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
           >
             Close
           </Button>
@@ -1521,10 +1533,45 @@ const AdminDashboard = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
+          <Button
+            variant="secondary"
+            onClick={() => setShowModal(false)}
+            style={{
+              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
+              border: "none", // Remove default border
+              borderRadius: "50px", // Rounded edges for a sleek look
+              color: "#fff", // White text for contrast
+              fontWeight: "bold", // Bold text
+              padding: "12px 30px", // Increase padding for a more prominent button
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
+              transition: "all 0.3s ease", // Smooth transition effect
+            }}
+            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
+            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
+          >
+            Close
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+
+          <Button
+            variant="primary"
+            onClick={handleUpdate}
+            style={{
+              background: "linear-gradient(145deg, #4e73df, #224abe)", // Gradient background for a sleek, modern look
+              border: "none", // Remove default border for a clean design
+              borderRadius: "50px", // Rounded corners for smooth appearance
+              color: "#fff", // White text for contrast
+              fontWeight: "bold", // Bold text to make it stand out
+              padding: "14px 36px", // Increased padding for a bigger, more prominent button
+              boxShadow: "0 5px 20px rgba(0, 0, 0, 0.2)", // Larger shadow for a floating effect
+              transition: "all 0.3s ease", // Smooth transition effect on hover and click
+            }}
+            onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")} // Slight zoom effect on hover
+            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset scale effect on hover out
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)")
+            } // Focus effect with box shadow
+            onBlur={(e) => (e.target.style.boxShadow = "none")} // Remove box shadow when focus is lost
+          >
             Update
           </Button>
         </Modal.Footer>

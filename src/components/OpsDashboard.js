@@ -1838,7 +1838,22 @@ const OpsManagerDashboard = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowModal(false)}
+            style={{
+              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
+              border: "none", // Remove default border
+              borderRadius: "50px", // Rounded edges for a sleek look
+              color: "#fff", // White text for contrast
+              fontWeight: "bold", // Bold text
+              padding: "12px 30px", // Increase padding for a more prominent button
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
+              transition: "all 0.3s ease", // Smooth transition effect
+            }}
+            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
+            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
+          >
             Close
           </Button>
         </Modal.Footer>

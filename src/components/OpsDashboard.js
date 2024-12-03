@@ -11,12 +11,13 @@ import {
   Badge,
   Table,
 } from "react-bootstrap";
+import { Drawer } from "@mui/material";
 import CountUp from "react-countup";
 import debounce from "lodash.debounce";
 import axios from "axios";
 import "../App.css";
 import { FaEye } from "react-icons/fa";
-// import { Pie } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { toast } from "react-toastify";
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -56,20 +57,20 @@ const OpsManagerDashboard = () => {
     };
   }, []);
 
-  // // Pie Chart States
-  // const [closedPendingStats, setClosedPendingStats] = useState({
-  //   // closed: 0,
-  //   // pending: 0,
-  // });
-  // const [assignResolveStats, setAssignResolveStats] = useState({
-  //   // assigned: 0,
-  //   // notAssigned: 0,
-  //   // resolved: 0,
-  // });
-  // const [repairReplacementStats, setRepairReplacementStats] = useState({
-  //   // repair: 0,
-  //   // replacement: 0,
-  // });
+  // Pie Chart States
+  const [closedPendingStats, setClosedPendingStats] = useState({
+    closed: 0,
+    pending: 0,
+  });
+  const [assignResolveStats, setAssignResolveStats] = useState({
+    assigned: 0,
+    notAssigned: 0,
+    resolved: 0,
+  });
+  const [repairReplacementStats, setRepairReplacementStats] = useState({
+    repair: 0,
+    replacement: 0,
+  });
   // Ticket and Service Agent States
   const [tickets, setTickets] = useState([]);
   const [serviceAgents, setServiceAgents] = useState([]);
@@ -98,19 +99,13 @@ const OpsManagerDashboard = () => {
   // const [message, setMessage] = useState({ content: null, variant: null });
   const [historyVisible, setHistoryVisible] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [updatingTickets, setUpdatingTickets] = useState({}); // Store updating status for each ticket
 
   const [ticketDetails, setTicketDetails] = useState({});
 
   // Debounced search handler
   const handleSearch = debounce((term) => setSearchTerm(term), 300);
-
-  // // Utility function to set messages and auto-clear after 3 seconds
-  // const showMessage = (content, variant = "success") => {
-  //   setMessage({ content, variant });
-  //   setTimeout(() => setMessage({ content: null, variant: null }), 3000);
-  // };
 
   // Toggle visibility of history for a specific ticket
   const toggleHistory = (ticketId) => {
@@ -472,173 +467,126 @@ const OpsManagerDashboard = () => {
   }, [tickets]);
 
   // Old  Calculation
-  // useEffect(() => {
-  //   if (!tickets || tickets.length === 0) {
-  //     // Reset stats if tickets are empty
-  //     setClosedPendingStats({
-  //       closed: 0,
-  //       pending: 0,
-  //       resolved: 0,
-  //       inprogress: 0,
-  //     });
-  //     setAssignResolveStats({ assigned: 0, notAssigned: 0 });
-  //     setRepairReplacementStats({
-  //       repair: 0,
-  //       replacement: 0,
-  //       received: 0,
-  //       notReceived: 0,
-  //     });
-  //     setTatStats({ threeToFour: 0, fiveToEight: 0, fourteenPlus: 0 }); // Reset TAT stats
-  //     return;
-  //   }
+  useEffect(() => {
+    // Calculate Closed and Pending stats
+    const closed = tickets.filter(
+      (ticket) => ticket.status === "Closed"
+    ).length;
+    const pending = tickets.filter((ticket) => ticket.status === "Open").length;
+    const inprogress = tickets.filter(
+      (ticket) => ticket.status === "In Progress"
+    ).length;
+    const resolved = tickets.filter(
+      (ticket) => ticket.status === "Resolved"
+    ).length;
 
-  //   const currentDate = new Date();
+    // Update Closed vs Pending stats
+    setClosedPendingStats({
+      closed,
+      pending,
+      resolved,
+      inprogress,
+    });
 
-  //   // Calculate TAT statistics
-  //   const threeToFour = tickets.filter((ticket) => {
-  //     const createdAt = new Date(ticket.createdAt); // Ensure `createdAt` exists
-  //     const ageInDays = Math.ceil(
-  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-  //     );
-  //     return ageInDays >= 3 && ageInDays <= 4;
-  //   }).length;
+    // Update statistics for Repair and Replacement
+    const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
+    const replacement = tickets.filter(
+      (ticket) => ticket.Type === "Replacement"
+    ).length;
+    const received = tickets.filter(
+      (ticket) => ticket.Type === "Received"
+    ).length; // Fixed the Type check
+    const notReceived = tickets.filter(
+      (ticket) => ticket.Type === "Not Received"
+    ).length; // Fixed the Type check
 
-  //   const fiveToEight = tickets.filter((ticket) => {
-  //     const createdAt = new Date(ticket.createdAt);
-  //     const ageInDays = Math.ceil(
-  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-  //     );
-  //     return ageInDays >= 5 && ageInDays <= 8;
-  //   }).length;
+    setRepairReplacementStats({ repair, replacement, received, notReceived });
 
-  //   const fourteenPlus = tickets.filter((ticket) => {
-  //     const createdAt = new Date(ticket.createdAt);
-  //     const ageInDays = Math.ceil(
-  //       (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-  //     );
-  //     return ageInDays >= 14;
-  //   }).length;
+    const assigned = tickets.filter(
+      (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
+    ).length;
 
-  //   // Update TAT stats
-  //   setTatStats({
-  //     threeToFour,
-  //     fiveToEight,
-  //     fourteenPlus,
-  //   });
+    const notAssigned = tickets.filter(
+      (ticket) => ticket.assignedTo === "Not Assigned"
+    ).length;
+    const softwareCalls = tickets.filter(
+      (ticket) => ticket.call === "Software Call"
+    ).length;
+    const hardwareCalls = tickets.filter(
+      (ticket) => ticket.call === "Hardware Call"
+    ).length;
 
-  //   // Calculate Closed and Pending stats
-  //   const closed = tickets.filter(
-  //     (ticket) => ticket.status === "Closed"
-  //   ).length;
-  //   const pending = tickets.filter((ticket) => ticket.status === "Open").length;
-  //   const inprogress = tickets.filter(
-  //     (ticket) => ticket.status === "In Progress"
-  //   ).length;
-  //   const resolved = tickets.filter(
-  //     (ticket) => ticket.status === "Resolved"
-  //   ).length;
-
-  //   // Update Closed vs Pending stats
-  //   setClosedPendingStats({
-  //     closed,
-  //     pending,
-  //     resolved,
-  //     inprogress,
-  //   });
-
-  //   // Update statistics for Repair and Replacement
-  //   const repair = tickets.filter((ticket) => ticket.Type === "Repair").length;
-  //   const replacement = tickets.filter(
-  //     (ticket) => ticket.Type === "Replacement"
-  //   ).length;
-  //   const received = tickets.filter(
-  //     (ticket) => ticket.Type === "Received"
-  //   ).length; // Fixed the Type check
-  //   const notReceived = tickets.filter(
-  //     (ticket) => ticket.Type === "Not Received"
-  //   ).length; // Fixed the Type check
-
-  //   setRepairReplacementStats({ repair, replacement, received, notReceived });
-
-  //   const assigned = tickets.filter(
-  //     (ticket) => ticket.assignedTo && ticket.assignedTo !== "Not Assigned"
-  //   ).length;
-
-  //   const notAssigned = tickets.filter(
-  //     (ticket) => ticket.assignedTo === "Not Assigned"
-  //   ).length;
-  //   const softwareCalls = tickets.filter(
-  //     (ticket) => ticket.call === "Software Call"
-  //   ).length;
-  //   const hardwareCalls = tickets.filter(
-  //     (ticket) => ticket.call === "Hardware Call"
-  //   ).length;
-
-  //   // Update Assigned vs Not Assigned stats
-  //   setAssignResolveStats({
-  //     assigned,
-  //     notAssigned,
-  //     softwareCalls,
-  //     hardwareCalls,
-  //   });
-  // }, [tickets]);
+    // Update Assigned vs Not Assigned stats
+    setAssignResolveStats({
+      assigned,
+      notAssigned,
+      softwareCalls,
+      hardwareCalls,
+    });
+  }, [tickets]);
   // Old  Calculation End
 
   // // Pie chart data for Closed vs Pending vs Resolved
-  // const closedPendingData = {
-  //   labels: ["Closed", "Pending", "Resolved", "In Progress"],
-  //   datasets: [
-  //     {
-  //       data: [
-  //         closedPendingStats.closed,
-  //         closedPendingStats.pending,
-  //         closedPendingStats.resolved,
-  //         closedPendingStats.inprogress,
-  //       ],
-  //       backgroundColor: ["#6CCF70", "#FFC658", "#5BA4FF", "#FF6E6E"], // Softer yet vibrant colors
-  //       hoverBackgroundColor: ["#8FE89A", "#FFD88A", "#85C1FF", "#FF9191"], // Subtle pastel-like transitions
-  //     },
-  //   ],
-  // };
+  const closedPendingData = {
+    labels: ["Closed", "Pending", "Resolved", "In Progress"],
+    datasets: [
+      {
+        data: [
+          closedPendingStats.closed,
+          closedPendingStats.pending,
+          closedPendingStats.resolved,
+          closedPendingStats.inprogress,
+        ],
+        backgroundColor: ["#6CCF70", "#FFC658", "#5BA4FF", "#FF6E6E"], // Softer yet vibrant colors
+        hoverBackgroundColor: ["#8FE89A", "#FFD88A", "#85C1FF", "#FF9191"], // Subtle pastel-like transitions
+        borderColor: "transparent", // Make border transparent
+        borderWidth: 2, // Optional: Adjust border thickness
+      },
+    ],
+  };
 
-  // // Pie chart data for Repair, Replacement, Received, Not Received
-  // const RepairReplacementData = {
-  //   labels: ["Replacement", "Repair", "Received", "Not Received"],
-  //   datasets: [
-  //     {
-  //       data: [
-  //         repairReplacementStats.replacement,
-  //         repairReplacementStats.repair,
-  //         repairReplacementStats.received,
-  //         repairReplacementStats.notReceived,
-  //       ],
-  //       backgroundColor: [
-  //         "#FFB84D", // Replacement (Warm Gold)
-  //         "#00B5B8", // Repair (Teal)
-  //         "#00D84A", // Received (Vibrant Lime Green)
-  //         "#D9534F", // Not Received (Rich Red)
-  //       ],
-  //       hoverBackgroundColor: [
-  //         "#FF9A00", // Hover for Replacement (Darker Gold)
-  //         "#00A2A3", // Hover for Repair (Darker Teal)
-  //         "#00B033", // Hover for Received (Darker Lime Green)
-  //         "#C9302C", // Hover for Not Received (Darker Red)
-  //       ],
-  //     },
-  //   ],
-  // };
+  // Pie chart data for Repair, Replacement, Received, Not Received
+  const RepairReplacementData = {
+    labels: ["Repair", "Received", "Replacement", "Not Received"],
+    datasets: [
+      {
+        data: [
+          repairReplacementStats.replacement,
+          repairReplacementStats.repair,
+          repairReplacementStats.received,
+          repairReplacementStats.notReceived,
+        ],
+        backgroundColor: [
+          "#FFB84D", // Replacement (Warm Gold)
+          "#00B5B8", // Repair (Teal)
+          "#00D84A", // Received (Vibrant Lime Green)
+          "#D9534F", // Not Received (Rich Red)
+        ],
+        hoverBackgroundColor: [
+          "#FF9A00", // Hover for Replacement (Darker Gold)
+          "#00A2A3", // Hover for Repair (Darker Teal)
+          "#00B033", // Hover for Received (Darker Lime Green)
+          "#C9302C", // Hover for Not Received (Darker Red)
+        ],
+        borderColor: "transparent", // Make border transparent
+        borderWidth: 2, // Optional: Adjust border thickness
+      },
+    ],
+  };
 
-  // // Pie chart data for Assigned vs Not Assigned
-  // const assignResolveData = {
-  //   labels: ["Assigned", "Not Assigned"],
-  //   datasets: [
-  //     {
-  //       data: [assignResolveStats.assigned, assignResolveStats.notAssigned],
-  //       backgroundColor: ["#FF6F61", "#A2DFF7"], // Warm coral and light sky blue
-  //       hoverBackgroundColor: ["#FF9F89", "#72C7D4"], // Soft peach and pastel blue
-  //     },
-  //   ],
-  // };
+  // Pie chart data for Assigned vs Not Assigned
+  const assignResolveData = {
+    labels: ["Assigned", "Not Assigned"],
+    datasets: [
+      {
+        data: [assignResolveStats.assigned, assignResolveStats.notAssigned],
+        backgroundColor: ["#FF6F61", "#A2DFF7"], // Warm coral and light sky blue
+        hoverBackgroundColor: ["#FF9F89", "#72C7D4"], // Soft peach and pastel blue
+        borderColor: "transparent", // Make border transparent
+        borderWidth: 2, // Optional: Adjust border thickness
+      },
+    ],
+  };
 
   return (
     <Container className="mt-5">
@@ -1031,76 +979,173 @@ const OpsManagerDashboard = () => {
             </h4>
           </div>
         </div>
+
+        <>
+          <div style={{ display: "flex", position: "fixed", bottom: "35px" }}>
+            <button className="piebutton" onClick={() => setDrawerOpen(true)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+                />
+              </svg>
+              <div className="pietext">
+                <strong>Charts</strong>
+              </div>
+            </button>
+          </div>
+        </>
       </div>
       {/* Hero Section End */}
       {/* Hero Section  End Here*/}
       {/* Pies */}
-      {/* <div className="mt-5 d-flex justify-content-center">
-        <Card className="w-100 border-0 rounded-3">
-          <Card.Body>
-            <Card.Title className="text-center fs-4 mb-4 font-weight-bold">
-           
-            </Card.Title>
-            <div className="d-flex flex-wrap justify-content-between align-items-center">
-         
-              <div className="pie-chart-container col-14 col-sm-6 col-md-4 col-lg-4 mb-4">
-                <div className="chart-wrapper mx-auto">
-                  <Pie
-                    data={closedPendingData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        tooltip: {
-                          enabled: true,
-                        },
-                      },
+      <div
+        className="mt-5 d-flex"
+        style={{ background: " linear-gradient(135deg, #6a11cb, #2575fc)" }}
+      >
+        <Drawer
+          anchor="right"
+          open={isDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <div
+            style={{
+              width: "400px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: " linear-gradient(135deg, #6a11cb, #2575fc)",
+            }}
+          >
+            <Card
+              className="w-100 border-0 rounded-3 mt-3"
+              style={{
+                background: " linear-gradient(135deg, #6a11cb, #2575fc)",
+                color: "white",
+              }}
+            >
+              <Card.Body>
+                <div
+                  className="d-flex flex-wrap justify-content-center"
+                  style={{
+                    background: " linear-gradient(135deg, #6a11cb, #2575fc)",
+                  }}
+                >
+                  <div
+                    className="pie-chart-container col-12 col-md-6 mb-4"
+                    style={{
+                      backgroundColor: "transparent",
                     }}
-                    height={300} 
-                  />
-                </div>
-              </div>
+                  >
+                    <div
+                      className="chart-wrapper mx-auto"
+                      style={{
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <Pie
+                        data={closedPendingData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: "bottom", // Position the legend below the chart
+                              labels: {
+                                color: "#FFFFFF", // White text for legend labels
+                              },
+                            },
+                          },
+                        }}
+                        height={300}
+                      />
+                    </div>
+                  </div>
 
-              <div className="pie-chart-container col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div className="chart-wrapper mx-auto">
-                  <Pie
-                    data={assignResolveData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        tooltip: {
-                          enabled: true,
-                        },
-                      },
+                  <div
+                    className="pie-chart-container col-12 col-md-6 mb-2 mx-1"
+                    style={{
+                      backgroundColor: "transparent",
                     }}
-                    height={300} 
-                  />
-                </div>
-              </div>
+                  >
+                    <div
+                      className="chart-wrapper mx-auto"
+                      style={{
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <Pie
+                        data={assignResolveData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: "bottom", // Position the legend below the chart
+                              labels: {
+                                color: "#FFFFFF", // White text for legend labels
+                              },
+                            },
+                            tooltip: {
+                              enabled: true, // Keep tooltips enabled as default
+                            },
+                          },
+                        }}
+                        height={300}
+                      />
+                    </div>
+                  </div>
 
-          
-              <div className="pie-chart-container col-12 col-sm-6 col-md-4 col-lg-4 mb-4">
-                <div className="chart-wrapper mx-auto">
-                  <Pie
-                    data={RepairReplacementData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        tooltip: {
-                          enabled: true,
-                        },
-                      },
+                  <div
+                    className="pie-chart-container col-12 col-md-6 mb-4"
+                    style={{
+                      backgroundColor: "transparent",
                     }}
-                    height={300} 
-                  />
+                  >
+                    <div
+                      className="chart-wrapper mx-auto"
+                      style={{
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <Pie
+                        data={RepairReplacementData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: "bottom", // Position the legend below the chart
+                              labels: {
+                                color: "#FFFFFF", // White text for legend labels
+                              },
+                            },
+                            tooltip: {
+                              enabled: true, // Keep tooltips enabled
+                            },
+                          },
+                        }}
+                        height={300}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </Card.Body>
-        </Card>
-      </div> */}
+              </Card.Body>
+            </Card>
+          </div>
+        </Drawer>
+      </div>
       {/* Pies */}
       {/* Forms */}
       <Form className="mb-4">
@@ -1557,7 +1602,6 @@ const OpsManagerDashboard = () => {
                     {selectedTicket.Type}
                   </Badge>
                 </p>
-
                 {/* Dropdowns and Form */}
                 <Form.Select
                   className="custom-dropdown"
@@ -1645,13 +1689,55 @@ const OpsManagerDashboard = () => {
                     />
                   </div>
                   <div className="d-flex flex-column justify-content-center gap-1">
-                    <Button variant="info" type="submit">
+                    <Button
+                      variant="info"
+                      type="submit"
+                      style={{
+                        background:
+                          "linear-gradient(to right, #00c6ff, #0072ff)", // Gradient effect
+                        border: "none", // Remove default border
+                        color: "#fff", // White text color
+                        padding: "10px 20px", // Adjust padding for better size
+                        fontSize: "16px", // Increase font size
+                        fontWeight: "600", // Bold text for emphasis
+                        borderRadius: "50px", // Rounded corners for modern look
+                        boxShadow: "0 4px 12px rgba(0, 123, 255, 0.2)", // Soft shadow for depth
+                        transition: "all 0.3s ease-in-out", // Smooth transition for hover effects
+                      }}
+                      className="mb-2"
+                      onMouseOver={(e) =>
+                        (e.target.style.transform = "scale(1.05)")
+                      } // Hover scale effect
+                      onMouseOut={(e) =>
+                        (e.target.style.transform = "scale(1)")
+                      }
+                    >
                       Update Ticket
                     </Button>
+
                     <Button
                       variant="warning"
                       onClick={() =>
                         updateTicketAssignment(selectedTicket._id, "")
+                      }
+                      style={{
+                        background:
+                          "linear-gradient(to right, #f39c12, #e67e22)", // Gradient effect
+                        border: "none", // Remove default border
+                        color: "#fff", // White text color
+                        padding: "10px 20px", // Adjust padding for better size
+                        fontSize: "16px", // Increase font size
+                        fontWeight: "600", // Bold text for emphasis
+                        borderRadius: "50px", // Rounded corners for modern look
+                        boxShadow: "0 4px 12px rgba(230, 126, 34, 0.3)", // Soft shadow for depth
+                        transition: "all 0.3s ease-in-out", // Smooth transition for hover effects
+                      }}
+                      className="mb"
+                      onMouseOver={(e) =>
+                        (e.target.style.transform = "scale(1.05)")
+                      } // Hover scale effect
+                      onMouseOut={(e) =>
+                        (e.target.style.transform = "scale(1)")
                       }
                     >
                       Unassign Agent

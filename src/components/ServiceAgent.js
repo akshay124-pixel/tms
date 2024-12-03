@@ -275,7 +275,7 @@ const ServiceAgentDashboard = () => {
               <Card
                 className="shadow-lg "
                 style={{
-                  width: "41vh",
+                  width: "100%",
 
                   borderLeft: `5px solid ${
                     ticket.priority === "High"
@@ -385,22 +385,37 @@ const ServiceAgentDashboard = () => {
                       />
                     </div>
                     {/* Part Name */}
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        className="form-control"
-                        style={{
-                          margin: "0 auto",
-                          border: "1px solid #ddd",
-                          borderRadius: "5px",
-                        }}
-                        placeholder="Enter Part Name If Changes"
-                        value={ticketDetails[ticket._id]?.partName || ""}
+                    <Form.Group className="my-3">
+                      <Form.Label className="fw-bold">
+                        Select Part Name
+                      </Form.Label>
+                      <Form.Select
+                        className="custom-dropdown"
+                        aria-label="Select Part Name"
                         onChange={(e) =>
                           handleInputChange(e, ticket._id, "partName")
                         }
-                      />
-                    </div>
+                        value={ticketDetails[ticket._id]?.partName || ""}
+                        disabled={!ticket?._id} // Disable dropdown if there's no ticket._id
+                      >
+                        <option value="" disabled>
+                          -- Select Part Name --
+                        </option>
+                        <option value="CMOS Battery">CMOS Battery</option>
+                        <option value="DOC Board + LVDS Cable">
+                          DOC Board + LVDS Cable
+                        </option>
+                        <option value="MotherBoard">MotherBoard</option>
+                        <option value="OC Module">OC Module</option>
+                        <option value="OPS">OPS</option>
+                        <option value="Panel">Panel</option>
+                        <option value="Power Board">Power Board</option>
+                        <option value="Speaker">Speaker</option>
+                        <option value="T-CON Board + LVDS Cable">
+                          T-CON Board + LVDS Cable
+                        </option>
+                      </Form.Select>
+                    </Form.Group>
 
                     {/* Buttons Section */}
                     <div

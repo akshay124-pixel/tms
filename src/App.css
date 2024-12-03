@@ -745,3 +745,39 @@ h4 {
 }
 
 /* End Reset Button */
+/* Pie Chart Button */
+
+.piebutton {
+    background-color: #ffffff00;
+    color: #fff;
+    width: 8.5em;
+    height: 2.9em;
+    border: none;
+    border-radius: 11px;
+    text-align: right;
+    transition: all 0.6s ease;
+}
+
+.piebutton:hover {
+    background: "linear-gradient(90deg, #6a11cb, #2575fc)";
+    cursor: pointer;
+}
+
+.piebutton svg {
+    width: 2em;
+    margin: -0.2em 0.8em 1em;
+    position: absolute;
+    display: flex;
+    transition: all 0.6s ease;
+}
+
+.piebutton:hover svg {
+    transform: translateX(5px);
+}
+
+.pietext {
+    margin: 0 1em;
+    font-size: large;
+}
+
+/* End Pie Chart Button */

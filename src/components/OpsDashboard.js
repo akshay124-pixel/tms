@@ -225,13 +225,12 @@ const OpsManagerDashboard = () => {
     }
 
     try {
-      // Prepare payload based on the current ticket details
       const payload = {
-        Type: updatedTicketDetails.Type || "Repair", // Default "Repair" if no Type selected
-        callType: updatedTicketDetails.callType || "Hardware Call", // Default "Hardware Call" if no callType selected
-        assignedTo: updatedTicketDetails.assignedTo || "", // Ensure an empty string if no agent is assigned
-        status: updatedTicketDetails.status || "Open", // Default to "Open" if no status selected
-        remarks: updatedTicketDetails.remarks || "", // Remarks field from ticketDetails
+        Type: updatedTicketDetails.Type || "Repair",
+        callType: updatedTicketDetails.callType || "Hardware Call",
+        assignedTo: updatedTicketDetails.assignedTo || "",
+        status: updatedTicketDetails.status || "Open",
+        remarks: updatedTicketDetails.remarks || "",
       };
 
       // API call to update ticket

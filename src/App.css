@@ -1,783 +1,772 @@
 .form-box {
-    max-width: 300px;
-    background: #f1f7fe;
-    overflow: hidden;
-    border-radius: 16px;
-    color: #010101;
+  max-width: 300px;
+  background: #f1f7fe;
+  overflow: hidden;
+  border-radius: 16px;
+  color: #010101;
 }
 
 .form {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 32px 24px 24px;
-    gap: 16px;
-    text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 24px 24px;
+  gap: 16px;
+  text-align: center;
 }
 
 /*Form text*/
 .title {
-    font-weight: bold;
-    font-size: 1.6rem;
+  font-weight: bold;
+  font-size: 1.6rem;
 }
 
 .subtitle {
-    font-size: 1rem;
-    color: #666;
+  font-size: 1rem;
+  color: #666;
 }
 
 /*Inputs box*/
 .form-container {
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: #fff;
-    margin: 1rem 0 .5rem;
-    width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 1rem 0 0.5rem;
+  width: 100%;
 }
 
 .input {
-    background: none;
-    border: 0;
-    outline: 0;
-    height: 40px;
-    width: 100%;
-    border-bottom: 1px solid #eee;
-    font-size: .9rem;
-    padding: 8px 15px;
+  background: none;
+  border: 0;
+  outline: 0;
+  height: 40px;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  padding: 8px 15px;
 }
 
 .form-section {
-    padding: 16px;
-    font-size: .85rem;
-    background-color: #e0ecfb;
-    box-shadow: rgb(0 0 0 / 8%) 0 -1px;
+  padding: 16px;
+  font-size: 0.85rem;
+  background-color: #e0ecfb;
+  box-shadow: rgb(0 0 0 / 8%) 0 -1px;
 }
 
 .form-section a {
-    font-weight: bold;
-    color: #0066ff;
-    transition: color .3s ease;
+  font-weight: bold;
+  color: #0066ff;
+  transition: color 0.3s ease;
 }
 
 .form-section a:hover {
-    color: #005ce6;
-    text-decoration: underline;
+  color: #005ce6;
+  text-decoration: underline;
 }
 
 /*Button*/
 .form button {
-    background-color: #0066ff;
-    color: #fff;
-    border: 0;
-    border-radius: 24px;
-    padding: 10px 16px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color .3s ease;
+  background-color: #0066ff;
+  color: #fff;
+  border: 0;
+  border-radius: 24px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .form button:hover {
-    background-color: #005ce6;
+  background-color: #005ce6;
 }
 
 /* Navbar */
 /* Navbar.css */
 
 .navbar {
-    /* background: linear-gradient(135deg, #6a82fb, #fc5c7d); */
-    background: linear-gradient(90deg, #6a11cb, #2575fc)
-        /* Gradient background */
+  /* background: linear-gradient(135deg, #6a82fb, #fc5c7d); */
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+  /* Gradient background */
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    color: #fff;
-    font-weight: bold;
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
 }
 
 .navbar-brand img {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .nav-item-custom {
-    font-size: 1.1rem;
-    color: #f8f9fa !important;
-    padding: 10px;
-    transition: all 0.3s ease;
+  font-size: 1.1rem;
+  color: #f8f9fa !important;
+  padding: 10px;
+  transition: all 0.3s ease;
 }
 
 .nav-item-custom:hover {
-    background-color: #343a40;
-    border-radius: 5px;
+  background-color: #343a40;
+  border-radius: 5px;
 }
 
 .navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .navbar {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Add some shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Add some shadow */
 }
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
-    .navbar-brand {
-        text-align: center;
-        width: 100%;
-    }
+  .navbar-brand {
+    text-align: center;
+    width: 100%;
+  }
 }
 
 /* End */
 
 /* Client DashBoard */
 .container {
-    max-width: 960px;
+  max-width: 960px;
 }
 
 .card {
-    border-radius: 10px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .progress-bar {
-    height: 1.5rem;
-    font-size: 0.9rem;
+  height: 1.5rem;
+  font-size: 0.9rem;
 }
 
 .btn-primary {
-    background-color: #6c63ff;
-    border-color: #6c63ff;
+  background-color: #6c63ff;
+  border-color: #6c63ff;
 }
 
 .btn-primary:hover {
-    background-color: #5a54d8;
+  background-color: #5a54d8;
 }
 
 h2,
 h4 {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* End */
 .navbar .form-inline {
-    display: flex;
-    align-items: center;
-    /* Aligns items in the center */
+  display: flex;
+  align-items: center;
+  /* Aligns items in the center */
 }
 
 .navbar .form-control {
-    width: 200px;
-    /* Set fixed width */
+  width: 200px;
+  /* Set fixed width */
 }
 
 .no-border {
-    border: none !important;
-    /* Remove border */
-    background-color: transparent !important;
-    /* Make background transparent */
-    box-shadow: none !important;
-    /* Remove shadow */
+  border: none !important;
+  /* Remove border */
+  background-color: transparent !important;
+  /* Make background transparent */
+  box-shadow: none !important;
+  /* Remove shadow */
 }
-
 
 /* Refresh Button */
 .button {
-    color: white;
-    background-color: #6a82fb;
-    font-weight: 500;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    line-height: 2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 0.7rem;
-    padding-bottom: 0.7rem;
-    cursor: pointer;
-    text-align: center;
-    margin-right: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    border: none;
+  color: white;
+  background-color: #6a82fb;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  cursor: pointer;
+  text-align: center;
+  margin-right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  border: none;
 }
 
 .button:hover {
-    background-color: #8b9ced;
+  background-color: #8b9ced;
 }
 
 .button svg {
-    display: inline;
-    width: 1.3rem;
-    height: 1.3rem;
-    margin-right: 0.75rem;
-    color: white;
-
+  display: inline;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin-right: 0.75rem;
+  color: white;
 }
 
 .button:focus svg {
-    animation: spin_357 0.5s linear;
+  animation: spin_357 0.5s linear;
 }
 
 @keyframes spin_357 {
-    from {
-        transform: rotate(0deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
 
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Delete bUtton */
 
 .bin-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    background-color: rgb(255, 95, 95);
-    cursor: pointer;
-    border: 3px solid rgb(255, 95, 95);
-    transition-duration: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: rgb(255, 95, 95);
+  cursor: pointer;
+  border: 3px solid rgb(255, 95, 95);
+  transition-duration: 0.3s;
 }
 
 .bin-bottom {
-    width: 15px;
+  width: 15px;
 }
 
 .bin-top {
-
-    width: 14px;
-    transform-origin: right;
-    transition-duration: 0.3s;
+  width: 14px;
+  transform-origin: right;
+  transition-duration: 0.3s;
 }
 
 .bin-button:hover .bin-top {
-    transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .bin-button:hover {
-    background-color: rgb(255, 0, 0);
+  background-color: rgb(255, 0, 0);
 }
 
 .bin-button:active {
-    transform: scale(0.9);
+  transform: scale(0.9);
 }
 
 /* End Delete Button */
 /* Logout btn */
 
 .Btn {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition-duration: .3s;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-    background-color: rgb(243, 36, 36);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: rgb(243, 36, 36);
 }
 
 /* plus sign */
 .sign {
-    width: 100%;
-    transition-duration: .3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  transition-duration: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sign svg {
-    width: 17px;
+  width: 17px;
 }
 
 .sign svg path {
-    fill: white;
+  fill: white;
 }
 
 /* text */
 .text {
-    position: absolute;
-    right: 0%;
-    width: 0%;
-    opacity: 0;
-    color: white;
-    font-size: 1.2em;
-    font-weight: 600;
-    transition-duration: .3s;
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: 0.3s;
 }
 
 /* hover effect on button width */
 .Btn:hover {
-    width: 125px;
-    border-radius: 40px;
-    transition-duration: .3s;
+  width: 125px;
+  border-radius: 40px;
+  transition-duration: 0.3s;
 }
 
 .Btn:hover .sign {
-    width: 30%;
-    transition-duration: .3s;
-    padding-left: 20px;
+  width: 30%;
+  transition-duration: 0.3s;
+  padding-left: 20px;
 }
 
 /* hover effect button's text */
 .Btn:hover .text {
-    opacity: 1;
-    width: 70%;
-    transition-duration: .3s;
-    padding-right: 10px;
+  opacity: 1;
+  width: 70%;
+  transition-duration: 0.3s;
+  padding-right: 10px;
 }
 
 /* button click effect*/
 .Btn:active {
-    transform: translate(2px, 2px);
+  transform: translate(2px, 2px);
 }
 
 /* Logout End */
 
-
 /* Edit Button */
 .editBtn {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    border: none;
-    background-color: rgb(93, 93, 116);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.123);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  background-color: rgb(93, 93, 116);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.123);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
 }
 
 .editBtn::before {
-    content: "";
-    width: 200%;
-    height: 200%;
-    background-color: rgb(102, 102, 141);
-    position: absolute;
-    z-index: 1;
-    transform: scale(0);
-    transition: all 0.3s;
-    border-radius: 50%;
-    filter: blur(10px);
+  content: "";
+  width: 200%;
+  height: 200%;
+  background-color: rgb(102, 102, 141);
+  position: absolute;
+  z-index: 1;
+  transform: scale(0);
+  transition: all 0.3s;
+  border-radius: 50%;
+  filter: blur(10px);
 }
 
 .editBtn:hover::before {
-    transform: scale(1);
+  transform: scale(1);
 }
 
 .editBtn:hover {
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.336);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.336);
 }
 
 .editBtn svg {
-    height: 17px;
-    fill: white;
-    z-index: 3;
-    transition: all 0.2s;
-    transform-origin: bottom;
+  height: 17px;
+  fill: white;
+  z-index: 3;
+  transition: all 0.2s;
+  transform-origin: bottom;
 }
 
 .editBtn:hover svg {
-    transform: rotate(-15deg) translateX(5px);
+  transform: rotate(-15deg) translateX(5px);
 }
 
 .editBtn::after {
-    content: "";
-    width: 20px;
-    height: 1.9px;
-    position: absolute;
-    bottom: 11px;
-    left: -5px;
-    background-color: white;
-    border-radius: 2px;
-    z-index: 2;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s ease-out;
+  content: "";
+  width: 20px;
+  height: 1.9px;
+  position: absolute;
+  bottom: 11px;
+  left: -5px;
+  background-color: white;
+  border-radius: 2px;
+  z-index: 2;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease-out;
 }
 
 .editBtn:hover::after {
-    transform: scaleX(1);
-    left: 0px;
-    transform-origin: right;
+  transform: scaleX(1);
+  left: 0px;
+  transform-origin: right;
 }
 
 /* Edit Button End */
 
-
-
 .btn1 {
-    position: relative;
-    outline: 0;
-    border: 1px solid transparent;
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
-    color: #ffffff;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17;
+  position: relative;
+  outline: 0;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+  color: #ffffff;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17;
 }
 
 .btn1 span {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    transition: all .4s ease;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.4s ease;
 }
 
 .btn1 svg {
-    width: 1.25rem;
-    height: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .btn1 span:nth-child(2),
 .btn1 span:nth-child(3) {
-    position: absolute;
-    top: 40px;
-    color: #fff;
+  position: absolute;
+  top: 40px;
+  color: #fff;
 }
 
 .btn1 span:nth-child(2) {
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
 }
 
 .btn1 span:nth-child(3) {
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
 }
 
 .btn1:hover {
-    box-shadow: 0 10px 15px -3px #488aec4f, 0 4px 6px -2px #488aec17;
+  box-shadow: 0 10px 15px -3px #488aec4f, 0 4px 6px -2px #488aec17;
 }
 
 .btn1:hover span:nth-child(2),
 .btn1:focus span:nth-child(3) {
-    top: 0;
+  top: 0;
 }
 
 .btn1:focus {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 /* Butons  */
 .premium-button {
-    position: relative;
-    display: inline-block;
-    padding: 15px 40px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.5s ease;
-    box-shadow: 0 10px 30px rgba(100, 50, 255, 0.5);
+  position: relative;
+  display: inline-block;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.5s ease;
+  box-shadow: 0 10px 30px rgba(100, 50, 255, 0.5);
 }
 
 .premium-button:hover {
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(255, 65, 108, 0.8);
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 65, 108, 0.8);
 }
 
 .premium-button .text-content {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    z-index: 1;
-    transition: 0.3s ease-in-out;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 1;
+  transition: 0.3s ease-in-out;
 }
 
 .premium-button:hover .text-content {
-    transform: translateX(5px);
+  transform: translateX(5px);
 }
 
 .premium-button .particles {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent);
-    animation: moveParticles 2s infinite linear;
-    z-index: 0;
-    border-radius: 50px;
-    opacity: 0.2;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent);
+  animation: moveParticles 2s infinite linear;
+  z-index: 0;
+  border-radius: 50px;
+  opacity: 0.2;
 }
 
 @keyframes moveParticles {
-    0% {
-        background-position: 0% 50%;
-    }
+  0% {
+    background-position: 0% 50%;
+  }
 
-    100% {
-        background-position: 100% 50%;
-    }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
 .danger-button {
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
 }
 
 .danger-button:hover {
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
 }
 
 .info-button {
-    background: linear-gradient(135deg, #1d976c, #93f9b9);
+  background: linear-gradient(135deg, #1d976c, #93f9b9);
 }
 
 .info-button:hover {
-    background: linear-gradient(135deg, #00c9ff, #92fe9d);
+  background: linear-gradient(135deg, #00c9ff, #92fe9d);
 }
 
 .summary-card {
-    width: 85px;
-    height: 100px;
-    padding: 0.4rem;
-    margin: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 85px;
+  height: 100px;
+  padding: 0.4rem;
+  margin: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .summary-card:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 
-    background: rgba(255, 255, 255, 0.15);
-
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .metric-title {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #e0e0e0;
-    transition: color 0.3s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #e0e0e0;
+  transition: color 0.3s ease;
 }
 
 .metric-value {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 
-    font-weight: 700;
-    color: #ffffff;
-    transition: color 0.3s ease;
+  font-weight: 700;
+  color: #ffffff;
+  transition: color 0.3s ease;
 }
 
 .summary-card:hover .metric-title {
-    color: #f8f8f8;
-
+  color: #f8f8f8;
 }
 
 .summary-card:hover .metric-value {
-    color: #ffffff;
-
+  color: #ffffff;
 }
 
 /* End */
 .popup-card {
-
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    z-index: 1050;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    /* Transparent glass effect */
-    backdrop-filter: blur(20px);
-    /* Stronger blur for depth */
-    animation: fadeInScale 0.2s ease-out;
-    /* Custom cubic-bezier curve for flagship-level smoothness */
-    will-change: transform, opacity;
-    /* Tells the browser to optimize for these properties */
-    /* Faster animation */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1050;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  /* Transparent glass effect */
+  backdrop-filter: blur(20px);
+  /* Stronger blur for depth */
+  animation: fadeInScale 0.2s ease-out;
+  /* Custom cubic-bezier curve for flagship-level smoothness */
+  will-change: transform, opacity;
+  /* Tells the browser to optimize for these properties */
+  /* Faster animation */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 }
 
 @keyframes fadeInScale {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.98);
-    }
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
 
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .popup-card-content {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(230, 230, 230, 0.2));
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-height: 80vh;
-    overflow-y: auto;
-    backdrop-filter: blur(15px);
-    /* Inner blur effect */
-    color: #333;
-    /* Modern text color */
-    font-family: 'Roboto', sans-serif;
-    /* Premium font */
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(230, 230, 230, 0.2)
+  );
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  overflow-y: auto;
+  backdrop-filter: blur(15px);
+  /* Inner blur effect */
+  color: #333;
+  /* Modern text color */
+  font-family: "Roboto", sans-serif;
+  /* Premium font */
 }
 
 .premium-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    /* Premium shadow */
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.2);
-    /* Glass-like card */
-    backdrop-filter: blur(10px);
-    /* Soft glass effect */
-    padding: 20px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  /* Premium shadow */
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+  /* Glass-like card */
+  backdrop-filter: blur(10px);
+  /* Soft glass effect */
+  padding: 20px;
 }
 
 .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 8px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #ff5f57;
-    /* Elegant close button color */
-    cursor: pointer;
-    transition: color 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  top: 15px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #ff5f57;
+  /* Elegant close button color */
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .close-btn:hover {
-    color: #ff1c1c;
-    /* Darker hover effect for close button */
-    transform: scale(1);
-    /* Slightly enlarge on hover */
+  color: #ff1c1c;
+  /* Darker hover effect for close button */
+  transform: scale(1);
+  /* Slightly enlarge on hover */
 }
-
-
 
 /* Buttons Styling */
 
-
 /* Scrollbar for Overflow */
 .popup-card-content::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 .popup-card-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .popup-card-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
 }
 
 .popup-card-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .popup-card {
-        width: 95%;
-        max-width: 90%;
-    }
+  .popup-card {
+    width: 95%;
+    max-width: 90%;
+  }
 
-    .popup-card-content {
-        padding: 20px;
-    }
+  .popup-card-content {
+    padding: 20px;
+  }
 }
 
 /* Reset button */
 .svg-icon {
-    transition: transform 0.6s ease;
-    /* Smooth rotation transition */
+  transition: transform 0.6s ease;
+  /* Smooth rotation transition */
 }
 
 .reset-button:hover .svg-icon {
-    transform: rotate(360deg);
-    /* Rotate 360 degrees on hover */
+  transform: rotate(360deg);
+  /* Rotate 360 degrees on hover */
 }
 
 /* End Reset Button */
 /* Pie Chart Button */
 
 .piebutton {
-    background-color: #ffffff00;
-    color: #fff;
-    width: 8.5em;
-    height: 2.9em;
-    border: none;
-    border-radius: 11px;
-    text-align: right;
-    transition: all 0.6s ease;
+  background-color: #ffffff00;
+  color: #fff;
+  width: 8.5em;
+  height: 2.9em;
+  border: none;
+  border-radius: 11px;
+  text-align: right;
+  transition: all 0.6s ease;
 }
 
 .piebutton:hover {
-    background: "linear-gradient(90deg, #6a11cb, #2575fc)";
-    cursor: pointer;
+  background: "linear-gradient(90deg, #6a11cb, #2575fc)";
+  cursor: pointer;
 }
 
 .piebutton svg {
-    width: 2em;
-    margin: -0.2em 0.8em 1em;
-    position: absolute;
-    display: flex;
-    transition: all 0.6s ease;
+  width: 2em;
+  margin: -0.2em 0.8em 1em;
+  position: absolute;
+  display: flex;
+  transition: all 0.6s ease;
 }
 
 .piebutton:hover svg {
-    transform: translateX(5px);
+  transform: translateX(5px);
 }
 
 .pietext {
-    margin: 0 1em;
-    font-size: large;
+  margin: 0 1em;
+  font-size: large;
 }
-
-/* End Pie Chart Button */

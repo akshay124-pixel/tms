@@ -979,7 +979,7 @@ const OpsManagerDashboard = () => {
         </div>
 
         <>
-          <div style={{ display: "flex", position: "fixed", bottom: "35px" }}>
+          <div>
             <button className="piebutton" onClick={() => setDrawerOpen(true)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

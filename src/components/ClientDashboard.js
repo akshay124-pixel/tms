@@ -19,8 +19,8 @@ const ClientDashboard = () => {
     description: "",
     contactNumber: "",
     billNumber: "",
-    productType: "Product A",
-    modelType: "Model A",
+    productType: "",
+    modelType: "",
     address: "",
     serialNumber: "",
     state: "",
@@ -33,6 +33,8 @@ const ClientDashboard = () => {
   const [userId, setUserId] = useState(""); // Store the logged-in user's ID
   const [viewTickets, setViewTickets] = useState(false); // State to toggle between "Raise Ticket" and "View My Tickets"
   const [historyVisible, setHistoryVisible] = useState({}); // Track which ticket's history is visible
+  const [selectedState, setSelectedState] = useState(ticketData.state || "");
+  const [selectedCity, setSelectedCity] = useState(ticketData.city || "");
 
   // Get the logged-in user's ID (assuming it's stored in localStorage)
   useEffect(() => {
@@ -76,7 +78,7 @@ const ClientDashboard = () => {
     try {
       // Send the form data to the backend
       const response = await axios.post(
-        "https://tms-server-saeo.onrender.com/tickets/create",
+        "http://localhost:5000/tickets/create",
         dataToSend
       );
 
@@ -91,8 +93,8 @@ const ClientDashboard = () => {
         description: "",
         contactNumber: "",
         billNumber: "",
-        productType: "Product A",
-        modelType: "Model A",
+        productType: "",
+        modelType: "",
         address: "",
         city: "",
         state: "",
@@ -155,9 +157,7 @@ const ClientDashboard = () => {
   // Fetch all tickets raised by the logged-in customer
   const fetchTickets = async () => {
     try {
-      const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/ticket"
-      );
+      const response = await axios.get("http://localhost:5000/tickets/ticket");
       // Filter tickets to only show the ones raised by the logged-in customer
       const customerTickets = response.data.filter(
         (ticket) => ticket.customerName === ticketData.customerName
@@ -175,7 +175,7 @@ const ClientDashboard = () => {
     try {
       // Send delete request
       const response = await axios.delete(
-        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+        `http://localhost:5000/tickets/delete/${ticketId}`
       );
 
       // Check if deletion was successful
@@ -204,6 +204,85 @@ const ClientDashboard = () => {
       setSuccess(null);
     }
   };
+
+  // New
+  // Handle state selection
+  const handleStateChange = (e) => {
+    const state = e.target.value;
+    setSelectedState(state);
+    setSelectedCity(""); // Reset city when state changes
+    setTicketData((prev) => ({
+      ...prev,
+      state,
+      city: "", // Clear the city when state changes
+    }));
+  };
+
+  // Handle city selection
+  const handleCityChange = (e) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+    setTicketData((prev) => ({
+      ...prev,
+      city,
+    }));
+  };
+  const statesAndCities = {
+    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Tirupati"],
+    "Arunachal Pradesh": ["Itanagar", "Tawang", "Ziro", "Pasighat"],
+    Assam: ["Guwahati", "Dibrugarh", "Jorhat", "Silchar"],
+    Bihar: ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+    Chhattisgarh: ["Raipur", "Bilaspur", "Durg", "Korba"],
+    Goa: ["Panaji", "Margao", "Vasco da Gama", "Mapusa"],
+    Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+    Haryana: ["Gurgaon", "Faridabad", "Panipat", "Ambala"],
+    "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Mandi"],
+    Jharkhand: ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+    Karnataka: ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"],
+    Kerala: ["Thiruvananthapuram", "Kochi", "Kozhikode", "Kannur"],
+    "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur"],
+    Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],
+    Manipur: ["Imphal", "Churachandpur", "Thoubal", "Bishnupur"],
+    Meghalaya: ["Shillong", "Tura", "Nongpoh", "Cherrapunjee"],
+    Mizoram: ["Aizawl", "Lunglei", "Champhai", "Serchhip"],
+    Nagaland: ["Kohima", "Dimapur", "Mokokchung", "Tuensang"],
+    Odisha: ["Bhubaneswar", "Cuttack", "Rourkela", "Puri"],
+    Punjab: ["Amritsar", "Mohali", "Ludhiana", "Patiala", "Jalandhar"],
+    Rajasthan: ["Jaipur", "Udaipur", "Jodhpur", "Kota"],
+    Sikkim: ["Gangtok", "Namchi", "Pelling", "Geyzing"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli"],
+    Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar"],
+    Tripura: ["Agartala", "Udaipur", "Dharmanagar", "Kailashahar"],
+    "Uttar Pradesh": [
+      "Lucknow",
+      "Kanpur",
+      "Varanasi",
+      "Agra",
+      "Allahabad",
+      "Ghaziabad",
+      "Noida",
+      "Meerut",
+      "Aligarh",
+      "Bareilly",
+      "Badaun",
+    ],
+    Uttarakhand: ["Dehradun", "Haridwar", "Nainital", "Rishikesh"],
+    "West Bengal": ["Kolkata", "Darjeeling", "Siliguri", "Howrah"],
+    "Andaman and Nicobar Islands": [
+      "Port Blair",
+      "Havelock Island",
+      "Diglipur",
+    ],
+    Chandigarh: ["Chandigarh"],
+    "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"],
+    Delhi: ["New Delhi"],
+    "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla"],
+    Ladakh: ["Leh", "Kargil"],
+    Lakshadweep: ["Kavaratti", "Agatti", "Minicoy"],
+    Puducherry: ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+  };
+
+  // End New
 
   // Fetch tickets on component mount
   useEffect(() => {
@@ -249,7 +328,9 @@ const ClientDashboard = () => {
               </h4>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formCustomerName">
-                  <Form.Label>Customer Name</Form.Label>
+                  <Form.Label>
+                    <strong>Customer Name</strong>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="customerName"
@@ -261,7 +342,9 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formSerialNumber">
-                  <Form.Label>Serial Number</Form.Label>
+                  <Form.Label>
+                    <strong>Serial Number</strong>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="serialNumber"
@@ -272,7 +355,9 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formBillNumber">
-                  <Form.Label>Bill Number</Form.Label>
+                  <Form.Label>
+                    <strong>Bill Number</strong>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="billNumber"
@@ -283,7 +368,9 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formDescription">
-                  <Form.Label>Description</Form.Label>
+                  <Form.Label>
+                    <strong>Description</strong>
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     name="description"
@@ -295,7 +382,9 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formContactNumber">
-                  <Form.Label>Contact Number</Form.Label>
+                  <Form.Label>
+                    <strong>Contact Number</strong>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="contactNumber"
@@ -306,7 +395,9 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formEmailaddress">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>
+                    <strong>Email</strong>
+                  </Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -316,34 +407,51 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
-                <Form.Group controlId="formProductType">
-                  <Form.Label>Product Type</Form.Label>
-                  <Form.Control
-                    as="select"
+                <Form.Group className="my-3" controlId="formProductType">
+                  <Form.Label className="fw-bold">
+                    Select Product Type
+                  </Form.Label>
+                  <Form.Select
+                    className="custom-dropdown"
+                    aria-label="Select Product Type"
                     name="productType"
                     value={ticketData.productType}
                     onChange={handleChange}
                   >
-                    <option value="Product A">Product A</option>
-                    <option value="Product B">Product B</option>
-                    <option value="Product C">Product C</option>
-                  </Form.Control>
+                    <option value="">-- Select Product Type --</option>
+                    <option value="Audio Podium">Audio Podium</option>
+                    <option value="Digital Podium">Digital Podium</option>
+                    <option value="IFPD">IFPD</option>
+                    <option value="Mike">Mike</option>
+                    <option value="OPS">OPS</option>
+                    <option value="PTZ Camera">PTZ Camera</option>
+                  </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="formModalType">
-                  <Form.Label>Model Type</Form.Label>
-                  <Form.Control
-                    as="select"
+
+                <Form.Group className="my-3" controlId="formModelType">
+                  <Form.Label className="fw-bold">Select Model Type</Form.Label>
+                  <Form.Select
+                    className="custom-dropdown"
+                    aria-label="Select Model Type"
                     name="modelType"
                     value={ticketData.modelType}
                     onChange={handleChange}
                   >
-                    <option value="Model A">Model A</option>
-                    <option value="Model B">Model B</option>
-                    <option value="Model C">Model C</option>
-                  </Form.Control>
+                    <option value="">-- Select Model Type --</option>
+                    <option value="HKC">HKC</option>
+                    <option value="OKV">OKV</option>
+                    <option value="PRO AT">PRO AT</option>
+                    <option value="Q Series">Q Series</option>
+                    <option value="RSP">RSP</option>
+                    <option value="T9">T9</option>
+                    <option value="T9H">T9H</option>
+                  </Form.Select>
                 </Form.Group>
+
                 <Form.Group controlId="formAddress">
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label>
+                    <strong>Address</strong>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="address"
@@ -353,27 +461,39 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
-                <Form.Group controlId="formAddress">
-                  <Form.Label>City</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="city"
-                    value={ticketData.city}
-                    onChange={handleChange}
-                    placeholder="Enter Your City"
-                    required
-                  />
+                <Form.Group controlId="formState">
+                  <Form.Label>
+                    <strong>State </strong>
+                  </Form.Label>
+                  <Form.Select
+                    value={selectedState}
+                    onChange={handleStateChange}
+                  >
+                    <option value="">-- Select State --</option>
+                    {Object.keys(statesAndCities).map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="formAddress">
-                  <Form.Label>State</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="state"
-                    value={ticketData.state}
-                    onChange={handleChange}
-                    placeholder="Enter Your State"
-                    required
-                  />
+                <Form.Group controlId="formCity" className="mt">
+                  <Form.Label>
+                    <strong>City</strong>
+                  </Form.Label>
+                  <Form.Select
+                    value={selectedCity}
+                    onChange={handleCityChange}
+                    disabled={!selectedState} // Disable city dropdown if no state is selected
+                  >
+                    <option value="">-- Select City --</option>
+                    {selectedState &&
+                      statesAndCities[selectedState].map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                  </Form.Select>
                 </Form.Group>
 
                 <button class="btn1 my-3" type="submit">

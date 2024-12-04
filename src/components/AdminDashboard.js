@@ -855,7 +855,6 @@ const AdminDashboard = () => {
             <h4 style={{ marginLeft: "10px" }}>
               <CountUp
                 end={
-                  // Total number of tickets (open + closed)
                   openCalls.hardware["0-2Days"] +
                   openCalls.hardware["3-7Days"] +
                   openCalls.hardware["8-14Days"] +

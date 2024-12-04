@@ -228,21 +228,21 @@ const AdminDashboard = () => {
   };
 
   // Function to handle filter changes (and reset other filters when a new one is clicked)
-  const handleFilterChange = (filterType, value) => {
-    setFilter((prevFilter) => {
-      const newFilter = { ...prevFilter };
+  // const handleFilterChange = (filterType, value) => {
+  //   setFilter((prevFilter) => {
+  //     const newFilter = { ...prevFilter };
 
-      // Reset all filters and apply the new one
-      Object.keys(newFilter).forEach((key) => {
-        if (key !== filterType) {
-          newFilter[key] = ""; // Reset all other filters
-        }
-      });
+  //     // Reset all filters and apply the new one
+  //     Object.keys(newFilter).forEach((key) => {
+  //       if (key !== filterType) {
+  //         newFilter[key] = ""; // Reset all other filters
+  //       }
+  //     });
 
-      newFilter[filterType] = value; // Set the selected filter
-      return newFilter;
-    });
-  };
+  //     newFilter[filterType] = value; // Set the selected filter
+  //     return newFilter;
+  //   });
+  // };
   // // Handle ticket closure
   // const handleCloseTicket = async (ticketId) => {
   //   try {
@@ -546,19 +546,13 @@ const AdminDashboard = () => {
                 0–2 Days
               </h4>
               <div className="d-flex">
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "0-2Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Hardware Calls</p>
                   <h4>
                     <CountUp end={openCalls.hardware["0-2Days"]} duration={2} />
                   </h4>
                 </div>
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "0-2Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Software Calls</p>
                   <h4>
                     <CountUp end={openCalls.software["0-2Days"]} duration={2} />
@@ -579,19 +573,13 @@ const AdminDashboard = () => {
                 3–7 Days
               </h4>
               <div className="d-flex">
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "3-7Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Hardware Calls</p>
                   <h4>
                     <CountUp end={openCalls.hardware["3-7Days"]} duration={2} />
                   </h4>
                 </div>
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "3-7Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Software Calls</p>
                   <h4>
                     <CountUp end={openCalls.software["3-7Days"]} duration={2} />
@@ -612,10 +600,7 @@ const AdminDashboard = () => {
                 8–14 Days
               </h4>
               <div className="d-flex">
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "8-14Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Hardware Calls</p>
                   <h4>
                     <CountUp
@@ -624,10 +609,7 @@ const AdminDashboard = () => {
                     />
                   </h4>
                 </div>
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "8-14Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Software Calls</p>
                   <h4>
                     <CountUp
@@ -651,19 +633,13 @@ const AdminDashboard = () => {
                 14 Days
               </h4>
               <div className="d-flex">
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "14 Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Hardware Calls</p>
                   <h4>
                     <CountUp end={openCalls.hardware[">14Days"]} duration={2} />
                   </h4>
                 </div>
-                <div
-                  className="summary-card text-center "
-                  onClick={() => handleFilterChange("tat", "14 Days")}
-                >
+                <div className="summary-card text-center ">
                   <p>Software Calls</p>
                   <h4>
                     <CountUp end={openCalls.software[">14Days"]} duration={2} />

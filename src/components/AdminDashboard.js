@@ -1396,6 +1396,12 @@ const AdminDashboard = () => {
                 <strong>Address:</strong> {selectedTicket.address}
               </p>
               <p>
+                <strong>City:</strong> {selectedTicket.city}
+              </p>
+              <p>
+                <strong>State:</strong> {selectedTicket.state}
+              </p>
+              <p>
                 <strong>Product Type:</strong> {selectedTicket.productType}
               </p>
               <p>

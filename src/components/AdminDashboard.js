@@ -200,7 +200,10 @@ const AdminDashboard = () => {
           ticket.contactNumber
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()));
+          ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ticket.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ticket.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesAgeInDays = filter.ageInDays
         ? (() => {
@@ -1045,7 +1048,7 @@ const AdminDashboard = () => {
                 <div className="col-12 col-lg-4 mb-3 mb-lg-0">
                   <Form.Control
                     type="text"
-                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No."
+                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No., Address, City, State. "
                     onChange={(e) => handleSearch(e.target.value)}
                     style={{
                       borderRadius: "50px",

@@ -218,7 +218,6 @@ const OpsManagerDashboard = () => {
 
     const updatedTicketDetails = ticketDetails[ticketId];
 
-    // Check if the ticket details are available before making the update
     if (!updatedTicketDetails) {
       toast.error("Ticket details not found.");
       return;

@@ -392,10 +392,23 @@ const ServiceAgentDashboard = () => {
                       <Form.Select
                         className="custom-dropdown"
                         aria-label="Select Part Name"
-                        onChange={(e) =>
-                          handleInputChange(e, ticket._id, "partName")
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "Other") {
+                            // Show input field for custom part name
+                            handleInputChange(e, ticket._id, "isOther", true);
+                            handleInputChange(e, ticket._id, "partName", ""); // Reset partName
+                          } else {
+                            // Directly set the selected part name
+                            handleInputChange(e, ticket._id, "isOther", false);
+                            handleInputChange(e, ticket._id, "partName", value);
+                          }
+                        }}
+                        value={
+                          ticketDetails[ticket._id]?.isOther
+                            ? "Other"
+                            : ticketDetails[ticket._id]?.partName || ""
                         }
-                        value={ticketDetails[ticket._id]?.partName || ""}
                         disabled={!ticket?._id} // Disable dropdown if there's no ticket._id
                       >
                         <option value="" disabled>
@@ -414,7 +427,30 @@ const ServiceAgentDashboard = () => {
                         <option value="T-CON Board + LVDS Cable">
                           T-CON Board + LVDS Cable
                         </option>
+                        <option value="Other">Other</option>
                       </Form.Select>
+
+                      {/* Conditionally render input field if "Other" is selected */}
+                      {ticketDetails[ticket._id]?.isOther && (
+                        <Form.Group className="my-3">
+                          <Form.Label className="fw-bold">
+                            Specify Other Part Name
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter Part Name"
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                ticket._id,
+                                "partName",
+                                e.target.value
+                              )
+                            }
+                            value={ticketDetails[ticket._id]?.partName || ""}
+                          />
+                        </Form.Group>
+                      )}
                     </Form.Group>
 
                     {/* Buttons Section */}

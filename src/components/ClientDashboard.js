@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import "../App.css";
+import ReactStars from "react-rating-stars-component";
 import { toast } from "react-toastify";
 const ClientDashboard = () => {
   const [ticketData, setTicketData] = useState({
@@ -206,6 +207,106 @@ const ClientDashboard = () => {
       setSuccess(null);
     }
   };
+
+  // FeedBack
+  const [feedbacks, setFeedbacks] = useState({}); // Store feedback for each ticket
+  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState({}); // Track if feedback is already submitted
+
+  // Load feedback data from localStorage on mount
+  useEffect(() => {
+    const storedFeedback = JSON.parse(localStorage.getItem("feedbacks"));
+    const storedSubmissionStatus = JSON.parse(
+      localStorage.getItem("isFeedbackSubmitted")
+    );
+
+    if (storedFeedback) {
+      setFeedbacks(storedFeedback);
+    }
+    if (storedSubmissionStatus) {
+      setIsFeedbackSubmitted(storedSubmissionStatus);
+    }
+  }, []);
+
+  // Save feedback data to localStorage whenever feedback state changes
+  useEffect(() => {
+    if (Object.keys(feedbacks).length > 0) {
+      localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
+    }
+    if (Object.keys(isFeedbackSubmitted).length > 0) {
+      localStorage.setItem(
+        "isFeedbackSubmitted",
+        JSON.stringify(isFeedbackSubmitted)
+      );
+    }
+  }, [feedbacks, isFeedbackSubmitted]);
+
+  const handleFeedbackChange = (ticketId, rating) => {
+    setFeedbacks((prevFeedbacks) => ({
+      ...prevFeedbacks,
+      [ticketId]: { ...prevFeedbacks[ticketId], rating },
+    }));
+  };
+
+  const handleCommentChange = (ticketId, comment) => {
+    setFeedbacks((prevFeedbacks) => ({
+      ...prevFeedbacks,
+      [ticketId]: { ...prevFeedbacks[ticketId], comment },
+    }));
+  };
+
+  const submitFeedback = async (ticketId) => {
+    const feedback = feedbacks[ticketId];
+    console.log("Submitting Feedback for Ticket ID:", ticketId, feedback);
+
+    try {
+      const feedbackData = {
+        ticketId: ticketId,
+        rating: feedback.rating,
+        comments: feedback.comment, // Ensure backend field matches
+      };
+
+      const response = await axios.post(
+        `https://tms-server-saeo.onrender.com/tickets/${ticketId}/feedback`, // Make sure this URL matches
+        feedbackData
+      );
+
+      toast.success("Feedback submitted successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // Mark feedback as submitted for this ticket
+      setIsFeedbackSubmitted((prev) => ({
+        ...prev,
+        [ticketId]: true, // Ticket feedback has been submitted
+      }));
+
+      // Save feedback submission status to localStorage
+      localStorage.setItem(
+        "isFeedbackSubmitted",
+        JSON.stringify({
+          ...isFeedbackSubmitted,
+          [ticketId]: true,
+        })
+      );
+    } catch (error) {
+      console.error("Error while submitting feedback:", error);
+      toast.error("Failed to submit feedback. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
+
+  // End FeedBack
 
   // New
   // Handle state selection
@@ -498,7 +599,7 @@ const ClientDashboard = () => {
                   </Form.Select>
                 </Form.Group>
 
-                <button class="btn1 my-3" type="submit">
+                <button className="btn1 my-3" type="submit">
                   <span>
                     Submit
                     <svg
@@ -559,28 +660,40 @@ const ClientDashboard = () => {
 
           {viewTickets && (
             <>
-              <h4 className="mb-4">Your Tickets</h4>
+              <h4
+                className="mb-4"
+                style={{
+                  background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  display: "flex",
+                  justifyContent: "center",
+                  textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
+                  fontFamily: "'Poppins', sans-serif",
+                }}
+              >
+                Your Tickets
+              </h4>
               <Row>
                 {tickets.length > 0 ? (
                   tickets.map((ticket) => (
                     <Col md={6} key={ticket._id} className="mb-4">
                       <Card className="shadow-lg ticket-card">
                         <Card.Body>
+                          {/* Ticket Details */}
                           <Card.Title>
-                            <strong>Tracking ID:</strong> {ticket.trackingId}
+                            <strong style={{ color: "green" }}>
+                              Tracking ID:
+                            </strong>{" "}
+                            {ticket.trackingId}
                           </Card.Title>
                           <hr />
                           <Card.Text>
-                            {" "}
-                            <strong>Name: </strong>
-                            {ticket.customerName}
+                            <strong>Name:</strong> {ticket.customerName}
                           </Card.Text>
                           <Card.Text>
-                            {" "}
-                            <strong>Description: </strong>
-                            {ticket.description}
+                            <strong>Description:</strong> {ticket.description}
                           </Card.Text>
-
                           <Card.Text>
                             <strong>Serial Number:</strong>{" "}
                             {ticket.serialNumber}
@@ -610,7 +723,6 @@ const ClientDashboard = () => {
                           <Card.Text>
                             <strong>State:</strong> {ticket.state}
                           </Card.Text>
-
                           <Card.Text>
                             <strong>Status:</strong>{" "}
                             <Badge
@@ -626,61 +738,22 @@ const ClientDashboard = () => {
                               {ticket.status}
                             </Badge>
                           </Card.Text>
-                          <Button
-                            variant="danger"
-                            onClick={() => handleDelete(ticket._id)}
-                            style={{
-                              background:
-                                "linear-gradient(135deg, #ff4d4d, #ff3333)",
-                              border: "none",
-                              borderRadius: "20px",
-                              color: "#fff",
-                              fontWeight: "bold",
-                              padding: "10px 20px",
-                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                              transition:
-                                "transform 0.3s ease, box-shadow 0.3s ease",
-                            }}
-                            onMouseEnter={(e) => {
-                              e.target.style.transform = "scale(1.05)";
-                              e.target.style.boxShadow =
-                                "0 6px 8px rgba(0, 0, 0, 0.2)";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.transform = "scale(1)";
-                              e.target.style.boxShadow =
-                                "0 4px 6px rgba(0, 0, 0, 0.1)";
-                            }}
-                          >
-                            <i className="fas fa-trash-alt"></i> Remove Ticket
-                          </Button>
 
+                          {/* Ticket History */}
                           <Button
                             variant="info"
                             onClick={() => toggleHistory(ticket._id)}
                             style={{
                               background:
                                 "linear-gradient(90deg, #6a11cb, #2575fc)",
-
                               border: "none",
                               borderRadius: "20px",
                               color: "#fff",
                               fontWeight: "bold",
                               padding: "10px 20px",
-                              marginLeft: "10px",
-                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                              marginBottom: "10px",
                               transition:
                                 "transform 0.3s ease, box-shadow 0.3s ease",
-                            }}
-                            onMouseEnter={(e) => {
-                              e.target.style.transform = "scale(1.05)";
-                              e.target.style.boxShadow =
-                                "0 6px 8px rgba(0, 0, 0, 0.2)";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.transform = "scale(1)";
-                              e.target.style.boxShadow =
-                                "0 4px 6px rgba(0, 0, 0, 0.1)";
                             }}
                           >
                             <i className="fas fa-history"></i>{" "}
@@ -689,35 +762,78 @@ const ClientDashboard = () => {
                               : "View History"}
                           </Button>
 
-                          {/* Display Ticket History */}
                           {historyVisible[ticket._id] && (
                             <ListGroup className="mt-3">
                               {ticket.history?.map((historyItem, index) => (
                                 <ListGroup.Item key={index}>
-                                  <div style={{ flex: 1 }}>
-                                    <strong>Status:</strong>{" "}
-                                    {historyItem.status}
-                                    <br />
-                                    <small>
-                                      {new Date(
-                                        historyItem.date
-                                      ).toLocaleString()}
-                                    </small>
-                                  </div>
+                                  <strong>Status:</strong> {historyItem.status}
+                                  <br />
+                                  <small>
+                                    {new Date(
+                                      historyItem.date
+                                    ).toLocaleString()}
+                                  </small>
                                 </ListGroup.Item>
                               ))}
                             </ListGroup>
+                          )}
+
+                          {ticket.status === "Closed" &&
+                            !isFeedbackSubmitted[ticket._id] && (
+                              <div className="feedback-section mt-3">
+                                <h5>
+                                  <strong>Feedback</strong>
+                                </h5>
+                                {/* Star Rating */}
+                                <ReactStars
+                                  count={5}
+                                  value={feedbacks[ticket._id]?.rating || 0}
+                                  onChange={(rating) =>
+                                    handleFeedbackChange(ticket._id, rating)
+                                  }
+                                  size={24}
+                                  activeColor="#ffd700"
+                                />
+                                {/* Comment Box */}
+                                <textarea
+                                  className="form-control mt-2"
+                                  placeholder="Leave your comments here..."
+                                  rows="3"
+                                  value={feedbacks[ticket._id]?.comment || ""}
+                                  onChange={(e) =>
+                                    handleCommentChange(
+                                      ticket._id,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                {/* Submit Feedback Button */}
+                                <Button
+                                  variant="primary"
+                                  className="mt-2"
+                                  onClick={() => submitFeedback(ticket._id)}
+                                  style={{
+                                    background:
+                                      "linear-gradient(90deg, #11998e, #38ef7d)",
+                                    border: "none",
+                                    borderRadius: "20px",
+                                    fontWeight: "bold",
+                                    color: "#fff",
+                                  }}
+                                >
+                                  Submit Feedback
+                                </Button>
+                              </div>
+                            )}
+                          {isFeedbackSubmitted[ticket._id] && (
+                            <p>Feedback already submitted for this ticket.</p>
                           )}
                         </Card.Body>
                       </Card>
                     </Col>
                   ))
                 ) : (
-                  <Col md={12}>
-                    <p className="text-center">
-                      No tickets found. Please raise a new ticket.
-                    </p>
-                  </Col>
+                  <p>No tickets available.</p>
                 )}
               </Row>
             </>
@@ -728,7 +844,10 @@ const ClientDashboard = () => {
       <div className="text-center">
         <button
           type="button"
-          style={{ background: "linear-gradient(90deg, #6a11cb, #2575fc)" }}
+          style={{
+            background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+            fontWeight: "bold",
+          }}
           onClick={() => setViewTickets(!viewTickets)}
           className="button my-4"
         >

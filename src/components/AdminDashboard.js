@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { Drawer } from "@mui/material";
 import CountUp from "react-countup";
+import ReactStars from "react-rating-stars-component";
 import axios from "axios";
 import debounce from "lodash.debounce";
 import { Pie } from "react-chartjs-2";
@@ -259,7 +260,26 @@ const AdminDashboard = () => {
   //     console.error("Error closing ticket:", error);
   //   }
   // };
+  // FeedBack Starts
+  const [feedback, setFeedback] = useState(null);
 
+  // Fetch feedback when modal opens
+  useEffect(() => {
+    if (selectedTicket && selectedTicket._id) {
+      axios
+        .get(
+          `https://tms-server-saeo.onrender.com/tickets/${selectedTicket._id}/feedback`
+        )
+        .then((res) => setFeedback(res.data))
+        .catch((err) => {
+          console.error("Error fetching feedback:", err);
+          setFeedback(null);
+        });
+    } else {
+      console.log("Invalid or missing ticketId.");
+    }
+  }, [selectedTicket]);
+  // Feedback End
   // View Ticket Details
   const handleViewDetails = (ticket) => {
     setSelectedTicket(ticket);
@@ -834,6 +854,7 @@ const AdminDashboard = () => {
             <h4 style={{ marginLeft: "10px" }}>
               <CountUp
                 end={
+                  // Total number of tickets (open + closed)
                   openCalls.hardware["0-2Days"] +
                   openCalls.hardware["3-7Days"] +
                   openCalls.hardware["8-14Days"] +
@@ -1372,83 +1393,145 @@ const AdminDashboard = () => {
       {/* Modal for Viewing Ticket Details */}
       <Modal show={showDetailsModal} onHide={() => setShowDetailsModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Ticket Details</Modal.Title>
+          <Modal.Title
+            style={{ fontWeight: "bold", fontSize: "24px", color: "#007bff" }}
+          >
+            Ticket Details
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedTicket && (
+          {selectedTicket ? (
             <div>
-              <h5>Ticket ID: {selectedTicket.trackingId}</h5>
-              <hr />
-              <p>
-                <strong>Created On:</strong>{" "}
-                {new Date(selectedTicket.createdAt).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedTicket.description}
-              </p>
-              <p>
-                <strong>Customer Name:</strong> {selectedTicket.customerName}
-              </p>
-              <p>
-                <strong>Contact:</strong> {selectedTicket.contactNumber}
-              </p>
-              <p>
-                <strong>Address:</strong> {selectedTicket.address}
-              </p>
-              <p>
-                <strong>City:</strong> {selectedTicket.city}
-              </p>
-              <p>
-                <strong>State:</strong> {selectedTicket.state}
-              </p>
-              <p>
-                <strong>Product Type:</strong> {selectedTicket.productType}
-              </p>
-              <p>
-                <strong>Serial Number:</strong> {selectedTicket.serialNumber}
-              </p>
-              <p>
-                <strong>Call Type:</strong>{" "}
-                {selectedTicket.call || "Not  Available"}
-              </p>
-              <p>
-                <strong>Type:</strong> {selectedTicket.Type || "Not  Available"}
-              </p>
-              <p>
-                <strong>Part Name:</strong>{" "}
-                {selectedTicket.partName || "Not Available"}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedTicket.status}
-              </p>
-              <p>
-                <strong>Priority:</strong>{" "}
-                <Badge
-                  bg={
-                    selectedTicket.priority === "High"
-                      ? "danger"
-                      : selectedTicket.priority === "Normal"
-                      ? "warning"
-                      : "success"
-                  }
-                >
-                  {selectedTicket.priority}
-                </Badge>
-              </p>
-              <p>
-                <strong>Assigned Agent:</strong>{" "}
-                {selectedTicket.assignedTo || "Not Assigned"}
-              </p>
-              <p>
-                <strong>Remarks:</strong>{" "}
-                {selectedTicket.remarks || "Not Available"}
-              </p>
-              <p>
-                <strong>History:</strong>{" "}
+              {/* Ticket Information */}
+              <div style={{ marginBottom: "20px" }}>
+                <p>
+                  <strong>Tracking ID:</strong> {selectedTicket.trackingId}
+                </p>
+                <p>
+                  <strong>Created On:</strong>{" "}
+                  {new Date(selectedTicket.createdAt).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Customer Name:</strong> {selectedTicket.customerName}
+                </p>
+                <p>
+                  <strong>Contact:</strong> {selectedTicket.contactNumber}
+                </p>
+                <p>
+                  <strong>Address:</strong> {selectedTicket.address}
+                </p>
+                <p>
+                  <strong>City:</strong> {selectedTicket.city}
+                </p>
+                <p>
+                  <strong>State:</strong> {selectedTicket.state}
+                </p>
+                <p>
+                  <strong>Product Type:</strong> {selectedTicket.productType}
+                </p>
+                <p>
+                  <strong>Model Type:</strong> {selectedTicket.modelType}
+                </p>
+                <p>
+                  <strong>Serial Number:</strong> {selectedTicket.serialNumber}
+                </p>
+                <p>
+                  <strong>Bill Number:</strong> {selectedTicket.billNumber}
+                </p>
+                <p>
+                  <strong>Call Type:</strong>{" "}
+                  {selectedTicket.callType || "Not specified"}
+                </p>
+                <p>
+                  <strong>Part name if changes:</strong>{" "}
+                  {selectedTicket.partName || "No part changes reported"}
+                </p>
+                <p>
+                  <strong>Type:</strong>{" "}
+                  {selectedTicket.Type || "Type not available"}
+                </p>
+                <p>
+                  <strong>Status:</strong> {selectedTicket.status}
+                </p>
+                <p>
+                  <strong>Priority:</strong>{" "}
+                  <Badge
+                    bg={
+                      selectedTicket.priority === "High"
+                        ? "danger"
+                        : selectedTicket.priority === "Normal"
+                        ? "warning"
+                        : "success"
+                    }
+                    style={{ fontSize: "14px", padding: "5px 10px" }}
+                  >
+                    {selectedTicket.priority}
+                  </Badge>
+                </p>
+                <p>
+                  <strong>Remarks:</strong>{" "}
+                  {selectedTicket.remarks || "No remarks provided"}
+                </p>
+                <p>
+                  <strong>Assigned Agent:</strong>{" "}
+                  {selectedTicket.assignedTo || "Not Assigned"}
+                </p>
+              </div>
+              {/* Feedback Section */}
+              <div>
+                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
+                  Feedback
+                </h5>
+                {feedback ? (
+                  <div style={{ marginTop: "10px" }}>
+                    <p>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            margin: "0",
+                            color: "#333",
+                          }}
+                        >
+                          Rating:
+                        </p>
+                        <div style={{ marginLeft: "10px" }}>
+                          <ReactStars
+                            count={5}
+                            value={feedback.rating}
+                            size={24}
+                            edit={false}
+                            activeColor="#ffd700"
+                          />
+                        </div>
+                      </div>
+                      <p>
+                        <strong>Comment:</strong>{" "}
+                        {feedback.comments || "No comments provided"}
+                      </p>
+                    </p>
+                  </div>
+                ) : (
+                  <p>No feedback submitted yet.</p>
+                )}
+              </div>
+
+              {/* Ticket History Section */}
+              <div style={{ marginBottom: "20px" }}>
+                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
+                  Ticket History
+                </h5>
                 <button
                   type="button"
                   onClick={() => toggleHistory(selectedTicket._id)}
-                  className="button mx-2"
+                  className="button "
                   style={{
                     height: "40px",
                     padding: "8px 20px",
@@ -1485,49 +1568,50 @@ const AdminDashboard = () => {
                     ? "Hide History"
                     : "Show History"}
                 </button>
-              </p>{" "}
-              {/* Ticket History */}
-              {historyVisible[selectedTicket._id] && (
-                <ul
-                  style={{
-                    marginTop: "10px",
-                    padding: "10px",
-                    backgroundColor: "#f8f9fa",
-                    borderRadius: "8px",
-                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  {selectedTicket.history.map((entry, index) => (
-                    <li
-                      key={index}
-                      style={{
-                        padding: "8px 12px",
-                        borderBottom: "1px solid #ddd",
-                        fontSize: "14px",
-                        color: "#333",
-                        lineHeight: "1.6",
-                        transition: "background-color 0.3s",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.target.style.backgroundColor = "#f1f1f1")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.target.style.backgroundColor = "#fff")
-                      }
-                    >
-                      <strong>Status:</strong> {entry.status} <br />
-                      <strong>Date:</strong>{" "}
-                      {new Date(entry.date).toLocaleDateString()}{" "}
-                      {new Date(entry.date).toLocaleTimeString()} <br />
-                      <strong>Updated By:</strong> {entry.username || "Admin"}{" "}
-                      <br />
-                      <strong>Remarks:</strong>{" "}
-                      {entry.remarks || "No remarks provided"}
-                    </li>
-                  ))}
-                </ul>
-              )}
+                {historyVisible[selectedTicket._id] && (
+                  <ul
+                    style={{
+                      marginTop: "10px",
+                      padding: "10px",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "8px",
+                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {selectedTicket.history.map((entry, index) => (
+                      <li
+                        key={index}
+                        style={{
+                          padding: "8px 12px",
+                          borderBottom: "1px solid #ddd",
+                          fontSize: "14px",
+                          color: "#333",
+                          lineHeight: "1.6",
+                          transition: "background-color 0.3s",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#f1f1f1")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "#fff")
+                        }
+                      >
+                        <strong>Status:</strong> {entry.status} <br />
+                        <strong>Date:</strong>{" "}
+                        {new Date(entry.date).toLocaleDateString()}{" "}
+                        {new Date(entry.date).toLocaleTimeString()} <br />
+                        <strong>Updated By:</strong>{" "}
+                        {entry.username || "OPS Manager"} <br />
+                        <strong>Remarks:</strong>{" "}
+                        {entry.remarks || "No remarks provided"}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
+          ) : (
+            <p>No ticket selected.</p>
           )}
         </Modal.Body>
         <Modal.Footer>

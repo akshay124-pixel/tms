@@ -1821,7 +1821,6 @@ const OpsManagerDashboard = () => {
                 <p>
                   <strong>State:</strong> {selectedTicket.state}
                 </p>
-
                 <p>
                   <strong>Product Type:</strong> {selectedTicket.productType}
                 </p>

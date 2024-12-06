@@ -1807,6 +1807,9 @@ const OpsManagerDashboard = () => {
                   <strong>Customer Name:</strong> {selectedTicket.customerName}
                 </p>
                 <p>
+                  <strong>Customer Issue:</strong> {selectedTicket.description}
+                </p>
+                <p>
                   <strong>Contact:</strong> {selectedTicket.contactNumber}
                 </p>
                 <p>
@@ -1818,6 +1821,7 @@ const OpsManagerDashboard = () => {
                 <p>
                   <strong>State:</strong> {selectedTicket.state}
                 </p>
+
                 <p>
                   <strong>Product Type:</strong> {selectedTicket.productType}
                 </p>

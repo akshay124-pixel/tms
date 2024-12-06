@@ -1415,6 +1415,9 @@ const AdminDashboard = () => {
                   <strong>Customer Name:</strong> {selectedTicket.customerName}
                 </p>
                 <p>
+                  <strong>Customer Issue:</strong> {selectedTicket.description}
+                </p>
+                <p>
                   <strong>Contact:</strong> {selectedTicket.contactNumber}
                 </p>
                 <p>

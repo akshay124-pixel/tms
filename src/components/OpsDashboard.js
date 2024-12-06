@@ -574,7 +574,7 @@ const OpsManagerDashboard = () => {
 
   // Pie chart data for Repair, Replacement, Received, Not Received
   const RepairReplacementData = {
-    labels: ["Repair", "Received", "Replacement", "Not Received"],
+    labels: ["Replacement", "Repair", "Received", "Not Received"],
     datasets: [
       {
         data: [

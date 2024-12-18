@@ -137,11 +137,11 @@ function Signup() {
               className="input"
               required
             >
-              {/* <option value="">Select Role</option> */}
-              {/* <option value="admin">Admin</option> */}
+              <option value="">Select Role</option>
+              <option value="admin">Admin</option>
               <option value="client">Customer</option>
-              {/* <option value="opsManager">Operations Manager</option> */}
-              {/* <option value="serviceAgent">Service Agent</option> */}
+              <option value="opsManager">Operations Manager</option>
+              <option value="serviceAgent">Service Agent</option>
             </select>
           </div>
           <button

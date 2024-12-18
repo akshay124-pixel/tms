@@ -568,6 +568,7 @@ const ClientDashboard = () => {
                     <option value="Shutter">Shutter</option>
                     <option value="Web Camera">Web Camera</option>
                     <option value="IWB">IWB</option>
+                    <option value="Other">Other</option>
                   </Form.Select>
                 </Form.Group>
 

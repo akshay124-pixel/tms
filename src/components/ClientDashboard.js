@@ -373,7 +373,7 @@ const ClientDashboard = () => {
     Chhattisgarh: ["Raipur", "Bilaspur", "Durg", "Korba"],
     Goa: ["Panaji", "Margao", "Vasco da Gama", "Mapusa"],
     Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
-    Haryana: ["Gurgaon", "Faridabad", "Panipat", "Ambala"],
+    Haryana: ["Gurgaon", "Faridabad", "Panipat", "Ambala", " Hisar"],
     "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Mandi"],
     Jharkhand: ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
     Karnataka: ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"],

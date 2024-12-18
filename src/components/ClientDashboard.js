@@ -297,11 +297,11 @@ const ClientDashboard = () => {
       const feedbackData = {
         ticketId: ticketId,
         rating: feedback.rating,
-        comments: feedback.comment, // Ensure backend field matches
+        comments: feedback.comment,
       };
 
       const response = await axios.post(
-        `https://tms-server-saeo.onrender.com/tickets/${ticketId}/feedback`, // Make sure this URL matches
+        `https://tms-server-saeo.onrender.com/tickets/${ticketId}/feedback`,
         feedbackData
       );
 

@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import Login from "./auth/Login";
 import SignUp from "./auth/Signup";
@@ -15,6 +21,8 @@ function App() {
     <BrowserRouter>
       <ConditionalNavbar />
       <Routes>
+        {/* Default route to redirect to login */}
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/client" element={<ClientDashboard />} />

@@ -781,3 +781,36 @@ h4 {
 }
 
 /* End Pie Chart Button */
+/* Download Button */
+.enhanced-download-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.enhanced-download-btn:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.enhanced-download-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.enhanced-download-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(98, 133, 255, 0.5);
+}
+
+/*End Download Button */

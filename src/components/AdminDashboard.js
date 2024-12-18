@@ -1439,7 +1439,23 @@ const AdminDashboard = () => {
                   <strong>Serial Number:</strong> {selectedTicket.serialNumber}
                 </p>
                 <p>
-                  <strong>Bill Number:</strong> {selectedTicket.billNumber}
+                  <strong>Bill Image:</strong> {selectedTicket.billImage}
+                  <a
+                    href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                      /^uploads[\\/]/,
+                      ""
+                    )}`}
+                    download={selectedTicket.billImage.replace(
+                      /^uploads[\\/]/,
+                      ""
+                    )}
+                    className="enhanced-download-btn btn-sm mx-3"
+                    style={{
+                      background: "linear-gradient(135deg, #6a11cb, #2575fc)",
+                    }}
+                  >
+                    Download Bill
+                  </a>
                 </p>
                 <p>
                   <strong>Call Type:</strong>{" "}

@@ -19,7 +19,7 @@ const ClientDashboard = () => {
     customerName: "",
     description: "",
     contactNumber: "",
-    billNumber: "",
+    billImage: "",
     productType: "",
     modelType: "",
     address: "",
@@ -36,7 +36,7 @@ const ClientDashboard = () => {
   const [historyVisible, setHistoryVisible] = useState({}); // Track which ticket's history is visible
   const [selectedState, setSelectedState] = useState(ticketData.state || "");
   const [selectedCity, setSelectedCity] = useState(ticketData.city || "");
-
+  const [billImage, setBillImage] = useState(null);
   // Get the logged-in user's ID (assuming it's stored in localStorage)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -68,19 +68,47 @@ const ClientDashboard = () => {
   const handleChange = (e) => {
     setTicketData({ ...ticketData, [e.target.name]: e.target.value });
   };
+  const handleFileChange = (e) => {
+    setBillImage(e.target.files[0]); // Update billImage state with the selected file
+  };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if a file is uploaded
+    if (!billImage) {
+      toast.error("Please upload a bill image!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
     const newTrackingId = generateTrackingId();
-    const dataToSend = { ...ticketData, trackingId: newTrackingId };
+
+    // Create a FormData object
+    const data = new FormData();
+    Object.keys(ticketData).forEach((key) => {
+      data.append(key, ticketData[key]);
+    });
+    data.append("billImage", billImage); // Add the uploaded file
+    data.append("trackingId", newTrackingId); // Include tracking ID in the request
 
     try {
       // Send the form data to the backend
       const response = await axios.post(
         "https://tms-server-saeo.onrender.com/tickets/create",
-        dataToSend
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type
+          },
+        }
       );
 
       // If ticket creation is successful, show success message
@@ -93,15 +121,22 @@ const ClientDashboard = () => {
         serialNumber: "",
         description: "",
         contactNumber: "",
-        billNumber: "",
         productType: "",
         modelType: "",
         address: "",
         city: "",
         state: "",
       });
-
-      // Optionally, refresh the page after ticket is raised
+      setBillImage(null); // Reset the file input
+      toast.success("Successfully raised ticket", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      // Optionally, refresh the required UI elements
       window.location.reload();
     } catch (error) {
       console.error("Error while raising the ticket:", error);
@@ -457,18 +492,20 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
-                <Form.Group controlId="formBillNumber">
+
+                <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>
-                    <strong>Bill Number</strong>
+                    <strong>Upload Bill Image</strong>
                   </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="billNumber"
-                    value={ticketData.billNumber}
-                    onChange={handleChange}
-                    placeholder="Enter serial number"
-                    required
-                  />
+                  <div className="input-group">
+                    <Form.Control
+                      type="file"
+                      name="billImage"
+                      onChange={handleFileChange}
+                      required
+                      className="form-control"
+                    />
+                  </div>
                 </Form.Group>
                 <Form.Group controlId="formDescription">
                   <Form.Label>
@@ -699,7 +736,7 @@ const ClientDashboard = () => {
                             {ticket.serialNumber}
                           </Card.Text>
                           <Card.Text>
-                            <strong>Bill Number:</strong> {ticket.billNumber}
+                            <strong>Bill Image:</strong> {ticket.billImage}
                           </Card.Text>
                           <Card.Text>
                             <strong>Contact Number:</strong>{" "}

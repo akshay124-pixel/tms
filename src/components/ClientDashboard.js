@@ -502,7 +502,6 @@ const ClientDashboard = () => {
                       type="file"
                       name="billImage"
                       onChange={handleFileChange}
-                      required
                       className="form-control"
                     />
                   </div>
@@ -565,6 +564,10 @@ const ClientDashboard = () => {
                     <option value="Mike">Mike</option>
                     <option value="OPS">OPS</option>
                     <option value="PTZ Camera">PTZ Camera</option>
+                    <option value="UPS">UPS</option>
+                    <option value="Shutter">Shutter</option>
+                    <option value="Web Camera">Web Camera</option>
+                    <option value="IWB">IWB</option>
                   </Form.Select>
                 </Form.Group>
 
@@ -585,6 +588,7 @@ const ClientDashboard = () => {
                     <option value="RSP">RSP</option>
                     <option value="T9">T9</option>
                     <option value="T9H">T9H</option>
+                    <option value="Other">Other</option>
                   </Form.Select>
                 </Form.Group>
 

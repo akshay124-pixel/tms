@@ -936,7 +936,16 @@ const ClientDashboard = () => {
                     </Col>
                   ))
                 ) : (
-                  <p>No tickets available.</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    <p>No tickets available.</p>
+                  </div>
                 )}
               </Row>
             </>

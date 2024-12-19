@@ -540,12 +540,14 @@ const ServiceAgentDashboard = () => {
                 <strong>Created On:</strong>{" "}
                 {new Date(selectedTicket.createdAt).toLocaleDateString()}
               </p>
-
               <p>
                 <strong>Description:</strong> {selectedTicket.description}
               </p>
               <p>
                 <strong>Customer Name:</strong> {selectedTicket.customerName}
+              </p>{" "}
+              <p>
+                <strong>Contact Person:</strong> {selectedTicket.contactPerson}
               </p>
               <p>
                 <strong>Contact:</strong> {selectedTicket.contactNumber}
@@ -559,16 +561,13 @@ const ServiceAgentDashboard = () => {
               <p>
                 <strong>Model Type:</strong> {selectedTicket.modelType}
               </p>
-
               <p>
                 <strong>Part Name:</strong>{" "}
                 {selectedTicket.partName || "Not Available"}
               </p>
-
               <p>
                 <strong>Serial Number:</strong> {selectedTicket.serialNumber}
               </p>
-
               <p>
                 <strong>Call Type:</strong> {selectedTicket.call}
               </p>

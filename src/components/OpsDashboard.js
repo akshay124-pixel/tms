@@ -1807,6 +1807,10 @@ const OpsManagerDashboard = () => {
                   <strong>Customer Name:</strong> {selectedTicket.customerName}
                 </p>
                 <p>
+                  <strong>Contact Person:</strong>{" "}
+                  {selectedTicket.contactPerson}
+                </p>
+                <p>
                   <strong>Customer Issue:</strong> {selectedTicket.description}
                 </p>
                 <p>

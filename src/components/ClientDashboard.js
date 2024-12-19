@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 const ClientDashboard = () => {
   const [ticketData, setTicketData] = useState({
     customerName: "",
+    contactPerson: "",
     description: "",
     contactNumber: "",
     billImage: "",
@@ -118,6 +119,7 @@ const ClientDashboard = () => {
       // Reset the form after submission
       setTicketData({
         customerName: "",
+        contactPerson: "",
         serialNumber: "",
         description: "",
         contactNumber: "",
@@ -520,7 +522,21 @@ const ClientDashboard = () => {
                     name="customerName"
                     value={ticketData.customerName}
                     onChange={handleChange}
-                    placeholder="Enter customer name"
+                    placeholder="Enter customer name (individual, business, or institution)"
+                    required
+                    disabled
+                  />
+                </Form.Group>
+                <Form.Group controlId="formCustomerName">
+                  <Form.Label>
+                    <strong>Contact Person</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="customerName"
+                    value={ticketData.contactPerson}
+                    onChange={handleChange}
+                    placeholder="Enter the name of the contact person"
                     required
                     disabled
                   />

@@ -1372,7 +1372,7 @@ const OpsManagerDashboard = () => {
                                 {ticket.status}
                               </Badge>
                             </td>{" "}
-                            <td>{ticket.assignedTo || "Not Assigned"}</td>
+                            <td>{ticket.assignedTo || "UnAssigned"}</td>
                             <td>
                               <Row>
                                 {/* View Details  */}{" "}

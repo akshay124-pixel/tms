@@ -160,7 +160,7 @@ const OpsManagerDashboard = () => {
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
           ticket._id === ticketId
-            ? { ...ticket, assignedTo: userId || "UnAssigned" }
+            ? { ...ticket, assignedTo: userId || "Not Assigned" }
             : ticket
         )
       );
@@ -1372,7 +1372,7 @@ const OpsManagerDashboard = () => {
                                 {ticket.status}
                               </Badge>
                             </td>{" "}
-                            <td>{ticket.assignedTo || "UnAssigned"}</td>
+                            <td>{ticket.assignedTo || "Not Assigned"}</td>
                             <td>
                               <Row>
                                 {/* View Details  */}{" "}

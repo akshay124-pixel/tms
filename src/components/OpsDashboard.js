@@ -1435,7 +1435,7 @@ const OpsManagerDashboard = () => {
                                 <Col className="d-flex justify-content-between">
                                   <Button
                                     variant="primary"
-                                    className="mx"
+                                    className="mx-2"
                                     style={{
                                       width: "40px",
                                       height: "40px",

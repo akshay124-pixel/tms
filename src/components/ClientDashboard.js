@@ -494,6 +494,7 @@ const ClientDashboard = () => {
       "Gonda",
       "Mainpuri",
       "Lalitpur",
+      "Sitapur",
       "Etah",
       "Deoria",
       "Ghazipur",

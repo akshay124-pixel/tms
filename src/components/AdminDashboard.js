@@ -1184,8 +1184,12 @@ const AdminDashboard = () => {
                       style={{
                         width: "120px", // Fixed width
                         maxWidth: "120px", // Prevents growing beyond this width
-                        overflowX: "auto", // Enables horizontal scrolling
-                        // whiteSpace: "nowrap", // Prevents text from wrapping
+                        height: "50px", // Fixed height
+                        maxHeight: "50px", // Prevents growing beyond this height
+                        overflowX: "auto", // Enables horizontal scrolling for content
+                        overflowY: "hidden", // Prevents vertical scrolling
+                        textAlign: "center", // Aligns content horizontally
+                        verticalAlign: "middle", // Aligns content vertically
                       }}
                     >
                       {ticket.trackingId}

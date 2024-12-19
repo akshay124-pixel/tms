@@ -1687,9 +1687,9 @@ const OpsManagerDashboard = () => {
                 <Form.Select
                   className="my-2"
                   aria-label="Update Status"
-                  onChange={(e) =>
-                    handleInputChange(e, selectedTicket._id, "status")
-                  }
+                  onChange={(e) => {
+                    handleInputChange(e, selectedTicket._id, "status");
+                  }}
                   value={
                     ticketDetails[selectedTicket._id]?.status ||
                     selectedTicket.status
@@ -1702,7 +1702,17 @@ const OpsManagerDashboard = () => {
                 </Form.Select>
 
                 <form
-                  onSubmit={(e) => handleUpdateTicket(e, selectedTicket._id)}
+                  onSubmit={(e) => {
+                    if (
+                      !ticketDetails[selectedTicket._id]?.remarks ||
+                      ticketDetails[selectedTicket._id]?.remarks.trim() === ""
+                    ) {
+                      e.preventDefault();
+                      alert("Remarks are required when updating the status.");
+                      return;
+                    }
+                    handleUpdateTicket(e, selectedTicket._id);
+                  }}
                 >
                   <div className="mb-3">
                     <input

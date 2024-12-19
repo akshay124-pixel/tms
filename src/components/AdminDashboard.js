@@ -1153,7 +1153,7 @@ const AdminDashboard = () => {
       <Card className="mb-4 shadow-lg">
         <Card.Body>
           {/* <h4>All Customer Tickets</h4> */}
-          <Table striped bordered hover className="text-center">
+          <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>
                 <th>Date</th>

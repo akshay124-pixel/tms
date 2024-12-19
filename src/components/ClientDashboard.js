@@ -45,7 +45,7 @@ const ClientDashboard = () => {
       setUserId(user._id); // Store the user's ID
       setTicketData((prevData) => ({
         ...prevData,
-        customerName: user.username, // Set the customer name from the logged-in user
+        // customerName: user.username, // Set the customer name from the logged-in user
       }));
     }
   }, []);
@@ -524,7 +524,6 @@ const ClientDashboard = () => {
                     onChange={handleChange}
                     placeholder="Enter customer name (individual, business, or institution)"
                     required
-                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formCustomerName">
@@ -533,12 +532,11 @@ const ClientDashboard = () => {
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    name="customerName"
+                    name="contactPerson"
                     value={ticketData.contactPerson}
                     onChange={handleChange}
                     placeholder="Enter the name of the contact person"
                     required
-                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formSerialNumber">

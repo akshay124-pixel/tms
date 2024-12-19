@@ -160,7 +160,7 @@ const OpsManagerDashboard = () => {
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
           ticket._id === ticketId
-            ? { ...ticket, assignedTo: userId || "Not Assigned" }
+            ? { ...ticket, assignedTo: userId || "UnAssigned" }
             : ticket
         )
       );

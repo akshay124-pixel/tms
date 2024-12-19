@@ -45,7 +45,7 @@ const ClientDashboard = () => {
       setUserId(user._id); // Store the user's ID
       setTicketData((prevData) => ({
         ...prevData,
-        // customerName: user.username, // Set the customer name from the logged-in user
+        customerName: user.username, // Set the customer name from the logged-in user
       }));
     }
   }, []);

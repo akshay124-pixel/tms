@@ -510,394 +510,337 @@ const AdminDashboard = () => {
 
       {/* New Hero Section */}
       <div
-        className="dashboard-container"
         style={{
-          background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-          padding: "1.5rem",
-          borderRadius: "12px",
-
+          background: "linear-gradient(135deg, #6a11cb, #2575fc)", // Purple-blue gradient for body
+          padding: "2rem 3rem", // Adjusted padding
+          borderRadius: "15px",
           color: "white",
-          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)", // Softer shadow for a more refined look
+          textAlign: "center",
+          fontFamily: "'Roboto', sans-serif",
         }}
       >
-        {/* Header Section */}
-        <div className="text-center ">
-          <h5 style={{ fontWeight: "700" }}>Dashboard Overview</h5>
-          {/* <p>
-            Analyze and monitor ticket statistics by categories and age ranges.
-          </p> */}
-        </div>
-
-        {/* Open Calls Section */}
-        <div className="section mb-5">
-          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
-            Open Calls
-            <span
-              style={{
-                marginLeft: "10px",
-                fontSize: "1.2rem",
-                fontWeight: "600",
-              }}
-            >
-              Total :
-              <CountUp
-                style={{ marginLeft: "5px" }}
-                end={
-                  openCalls.hardware["0-2Days"] +
-                  openCalls.hardware["3-7Days"] +
-                  openCalls.hardware["8-14Days"] +
-                  openCalls.hardware[">14Days"] +
-                  openCalls.software["0-2Days"] +
-                  openCalls.software["3-7Days"] +
-                  openCalls.software["8-14Days"] +
-                  openCalls.software[">14Days"]
-                }
-                duration={2}
-              />
-            </span>
-          </h3>
-          <div className="d-flex flex-wrap justify-content-between">
-            {/* 0-2 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                0–2 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.hardware["0-2Days"]} duration={2} />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.software["0-2Days"]} duration={2} />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* 3-7 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                3–7 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.hardware["3-7Days"]} duration={2} />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.software["3-7Days"]} duration={2} />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* 8-14 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                8–14 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp
-                      end={openCalls.hardware["8-14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp
-                      end={openCalls.software["8-14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* >14 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                14 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.hardware[">14Days"]} duration={2} />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp end={openCalls.software[">14Days"]} duration={2} />
-                  </h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Closed Calls Section */}
-        <div className="section" style={{ marginTop: "-30px" }}>
-          <h3 style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
-            Closed Calls
-            <span
-              style={{
-                marginLeft: "10px",
-
-                fontSize: "1.2rem",
-                fontWeight: "600",
-              }}
-            >
-              Total :
-              <CountUp
-                style={{ marginLeft: "5px" }}
-                end={
-                  closedCalls.hardware["0-2Days"] +
-                  closedCalls.hardware["3-7Days"] +
-                  closedCalls.hardware["8-14Days"] +
-                  closedCalls.hardware[">14Days"] +
-                  closedCalls.software["0-2Days"] +
-                  closedCalls.software["3-7Days"] +
-                  closedCalls.software["8-14Days"] +
-                  closedCalls.software[">14Days"]
-                }
-                duration={2}
-              />
-            </span>
-          </h3>
-          <div className="d-flex flex-wrap justify-content-between">
-            {/* 0-2 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                0–2 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.hardware["0-2Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.software["0-2Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* 3-7 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {" "}
-                3–7 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.hardware["3-7Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.software["3-7Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* 8-14 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                8–14 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.hardware["8-14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.software["8-14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* >14 Days */}
-            <div className="metric-section">
-              <h4
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {" "}
-                14 Days
-              </h4>
-              <div className="d-flex">
-                <div className="summary-card text-center ">
-                  <p>Hardware Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.hardware[">14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-                <div className="summary-card text-center ">
-                  <p>Software Calls</p>
-                  <h4>
-                    <CountUp
-                      end={closedCalls.software[">14Days"]}
-                      duration={2}
-                    />
-                  </h4>
-                </div>
-              </div>
-            </div>
-            {/* Total Tickets Section */}
-          </div>
-          <div
-            className="total-summary "
+        {/* Dashboard Header */}
+        <div style={{ marginBottom: "1rem" }}>
+          <h2
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              // padding: "0.5rem",
-              marginTop: "10px",
-              textAlign: "center",
-              color: "white",
+              fontWeight: "700",
+              fontSize: "1.2rem", // Slightly smaller size
+              letterSpacing: "1px",
+              color: "#fff",
+              textTransform: "uppercase",
+              textShadow: "0 3px 10px rgba(0, 0, 0, 0.15)", // Lighter text shadow
             }}
           >
-            <h3 style={{ fontWeight: "700" }}>Total Tickets :</h3>
-            <h4 style={{ marginLeft: "10px" }}>
-              <CountUp
-                end={
-                  // Total number of tickets (open + closed)
-                  openCalls.hardware["0-2Days"] +
-                  openCalls.hardware["3-7Days"] +
-                  openCalls.hardware["8-14Days"] +
-                  openCalls.hardware[">14Days"] +
-                  openCalls.software["0-2Days"] +
-                  openCalls.software["3-7Days"] +
-                  openCalls.software["8-14Days"] +
-                  openCalls.software[">14Days"] +
-                  closedCalls.hardware["0-2Days"] +
-                  closedCalls.hardware["3-7Days"] +
-                  closedCalls.hardware["8-14Days"] +
-                  closedCalls.hardware[">14Days"] +
-                  closedCalls.software["0-2Days"] +
-                  closedCalls.software["3-7Days"] +
-                  closedCalls.software["8-14Days"] +
-                  closedCalls.software[">14Days"]
-                }
-                duration={2}
-              />
-            </h4>
-          </div>
+            Dashboard Overview
+          </h2>
         </div>
-        <div>
-          <button className="piebutton" onClick={() => setDrawerOpen(true)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
+
+        {/* Table for Open and Closed Calls */}
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginBottom: "2.5rem",
+          }}
+        >
+          <thead>
+            <tr
+              style={{
+                background: "transparent", // Fully transparent background
+              }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-              />
-            </svg>
-            <div className="pietext">
-              <strong>Charts</strong>
-            </div>
-          </button>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                Call Type
+              </th>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                Category
+              </th>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                0-2 Days
+              </th>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                3-7 Days
+              </th>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                8-14 Days
+              </th>
+              <th
+                style={{
+                  padding: "1.5rem",
+                  borderBottom: "3px solid rgba(255, 255, 255, 0.2)",
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                &gt;14 Days
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {/* Open Calls */}
+            <tr
+              style={{
+                background: "transparent", // Fully transparent background
+
+                borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <td
+                rowSpan={2}
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  background: "transparent", // Fully transparent
+                  color: "#fff",
+                  backdropFilter: "blur(10px)",
+                }}
+              >
+                Open Calls
+              </td>
+              <td
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontSize: "1rem",
+                  backgroundColor: "transparent", // Fully transparent
+                  color: "#fff",
+                }}
+              >
+                Hardware
+              </td>
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
+                <td
+                  key={`open-hardware-${ageGroup}`}
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "1rem",
+                    background: "transparent", // Fully transparent
+                  }}
+                >
+                  <CountUp end={openCalls.hardware[ageGroup]} duration={2} />
+                </td>
+              ))}
+            </tr>
+
+            <tr
+              style={{
+                background: "transparent", // Fully transparent background
+
+                borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <td
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontSize: "1rem",
+                  backgroundColor: "transparent", // Fully transparent
+                  color: "#fff",
+                }}
+              >
+                Software
+              </td>
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
+                <td
+                  key={`open-software-${ageGroup}`}
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "1rem",
+                    background: "transparent", // Fully transparent
+                  }}
+                >
+                  <CountUp end={openCalls.software[ageGroup]} duration={2} />
+                </td>
+              ))}
+            </tr>
+
+            {/* Closed Calls */}
+            <tr
+              style={{
+                background: "transparent", // Fully transparent background
+
+                borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <td
+                rowSpan={2}
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  background: "transparent", // Fully transparent
+                  color: "#fff",
+                  backdropFilter: "blur(10px)",
+                }}
+              >
+                Closed Calls
+              </td>
+              <td
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontSize: "1rem",
+                  backgroundColor: "transparent", // Fully transparent
+                  color: "#fff",
+                }}
+              >
+                Hardware
+              </td>
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
+                <td
+                  key={`closed-hardware-${ageGroup}`}
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "1rem",
+                    background: "transparent", // Fully transparent
+                  }}
+                >
+                  <CountUp end={closedCalls.hardware[ageGroup]} duration={2} />
+                </td>
+              ))}
+            </tr>
+
+            <tr
+              style={{
+                background: "transparent", // Fully transparent background
+
+                borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <td
+                style={{
+                  padding: "1.5rem",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  fontSize: "1rem",
+                  backgroundColor: "transparent", // Fully transparent
+                  color: "#fff",
+                }}
+              >
+                Software
+              </td>
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
+                <td
+                  key={`closed-software-${ageGroup}`}
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "1rem",
+                    background: "transparent", // Fully transparent
+                  }}
+                >
+                  <CountUp end={closedCalls.software[ageGroup]} duration={2} />
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+        <div style={{ textAlign: "center", marginTop: "-1.5rem" }}>
+          <h3 style={{ fontWeight: "bold" }}>
+            Total Tickets:{" "}
+            <CountUp
+              end={
+                Object.values(openCalls.hardware).reduce(
+                  (sum, val) => sum + val,
+                  0
+                ) +
+                Object.values(openCalls.software).reduce(
+                  (sum, val) => sum + val,
+                  0
+                ) +
+                Object.values(closedCalls.hardware).reduce(
+                  (sum, val) => sum + val,
+                  0
+                ) +
+                Object.values(closedCalls.software).reduce(
+                  (sum, val) => sum + val,
+                  0
+                )
+              }
+              duration={2}
+            />
+          </h3>
         </div>
+
+        <button className="piebutton" onClick={() => setDrawerOpen(true)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+            />
+          </svg>
+          <div className="pietext">
+            <strong>Charts</strong>
+          </div>
+        </button>
       </div>
       {/* Pies */}
       <div

@@ -792,7 +792,12 @@ const ClientDashboard = () => {
                           </Card.Title>
                           <hr />
                           <Card.Text>
-                            <strong>Name:</strong> {ticket.customerName}
+                            <strong>Customer Name:</strong>{" "}
+                            {ticket.customerName}
+                          </Card.Text>{" "}
+                          <Card.Text>
+                            <strong>Contact Person:</strong>{" "}
+                            {ticket.contactPerson}
                           </Card.Text>
                           <Card.Text>
                             <strong>Description:</strong> {ticket.description}
@@ -841,7 +846,6 @@ const ClientDashboard = () => {
                               {ticket.status}
                             </Badge>
                           </Card.Text>
-
                           {/* Ticket History */}
                           <Button
                             variant="info"
@@ -864,7 +868,6 @@ const ClientDashboard = () => {
                               ? "Hide History"
                               : "View History"}
                           </Button>
-
                           {historyVisible[ticket._id] && (
                             <ListGroup className="mt-3">
                               {ticket.history?.map((historyItem, index) => (
@@ -880,7 +883,6 @@ const ClientDashboard = () => {
                               ))}
                             </ListGroup>
                           )}
-
                           {ticket.status === "Closed" &&
                             !isFeedbackSubmitted[ticket._id] && (
                               <div className="feedback-section mt-3">

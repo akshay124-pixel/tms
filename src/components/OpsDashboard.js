@@ -1790,7 +1790,7 @@ const OpsManagerDashboard = () => {
                   <strong>Serial Number:</strong> {selectedTicket.serialNumber}
                 </p>
                 <p>
-                  <strong>Bill Image:</strong> {selectedTicket.billImage}
+                  <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
                     href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
                       /^uploads[\\/]/,

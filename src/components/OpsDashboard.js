@@ -1708,7 +1708,9 @@ const OpsManagerDashboard = () => {
                       ticketDetails[selectedTicket._id]?.remarks.trim() === ""
                     ) {
                       e.preventDefault();
-                      alert("Remarks are required when updating the status.");
+                      toast.error(
+                        "Remarks are required when updating the status."
+                      );
                       return;
                     }
                     handleUpdateTicket(e, selectedTicket._id);

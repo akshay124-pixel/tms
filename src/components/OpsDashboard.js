@@ -1743,7 +1743,7 @@ const OpsManagerDashboard = () => {
                         boxShadow: "0 4px 12px rgba(0, 123, 255, 0.2)", // Soft shadow for depth
                         transition: "all 0.3s ease-in-out", // Smooth transition for hover effects
                       }}
-                      className="mb-2"
+                      className="mb-2 my-3"
                       onMouseOver={(e) =>
                         (e.target.style.transform = "scale(1.05)")
                       } // Hover scale effect
@@ -1771,7 +1771,7 @@ const OpsManagerDashboard = () => {
                         boxShadow: "0 4px 12px rgba(230, 126, 34, 0.3)", // Soft shadow for depth
                         transition: "all 0.3s ease-in-out", // Smooth transition for hover effects
                       }}
-                      className="mb"
+                      className="mb my-3"
                       onMouseOver={(e) =>
                         (e.target.style.transform = "scale(1.05)")
                       } // Hover scale effect

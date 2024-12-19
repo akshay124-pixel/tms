@@ -479,7 +479,7 @@ const ServiceAgentDashboard = () => {
                       <Button
                         variant="info"
                         type="submit"
-                        className="mt-2"
+                        className="mt-2 my-3"
                         style={{
                           width: "100%",
                           backgroundColor: "lightgreen",

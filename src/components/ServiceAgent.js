@@ -547,7 +547,7 @@ const ServiceAgentDashboard = () => {
                 <strong>Customer Name:</strong> {selectedTicket.customerName}
               </p>{" "}
               <p>
-                <strong>Contact Person:</strong> {selectedTicket.contactPerson}
+                <strong>Organization:</strong> {selectedTicket.organization}
               </p>
               <p>
                 <strong>Contact:</strong> {selectedTicket.contactNumber}

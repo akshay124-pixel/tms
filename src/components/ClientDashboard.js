@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 const ClientDashboard = () => {
   const [ticketData, setTicketData] = useState({
     customerName: "",
-    contactPerson: "",
+    organization: "",
     description: "",
     contactNumber: "",
     billImage: "",
@@ -119,7 +119,7 @@ const ClientDashboard = () => {
       // Reset the form after submission
       setTicketData({
         customerName: "",
-        contactPerson: "",
+        organization: "",
         serialNumber: "",
         description: "",
         contactNumber: "",
@@ -527,17 +527,16 @@ const ClientDashboard = () => {
                     disabled
                   />
                 </Form.Group>
-                <Form.Group controlId="formCustomerName">
+                <Form.Group controlId="formOrganization">
                   <Form.Label>
-                    <strong>Contact Person</strong>
+                    <strong>Organization</strong>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    name="contactPerson"
-                    value={ticketData.contactPerson}
+                    name="organization"
+                    value={ticketData.organization}
                     onChange={handleChange}
-                    placeholder="Enter the name of the contact person"
-                    required
+                    placeholder="Enter the organization, college, or company name"
                   />
                 </Form.Group>
                 <Form.Group controlId="formSerialNumber">
@@ -796,8 +795,7 @@ const ClientDashboard = () => {
                             {ticket.customerName}
                           </Card.Text>{" "}
                           <Card.Text>
-                            <strong>Contact Person:</strong>{" "}
-                            {ticket.contactPerson}
+                            <strong>Organization:</strong> {ticket.organization}
                           </Card.Text>
                           <Card.Text>
                             <strong>Description:</strong> {ticket.description}

@@ -1182,12 +1182,12 @@ const AdminDashboard = () => {
                     {/* Tracking ID */}
                     <td
                       style={{
-                        width: "120px", // Fixed width
-                        maxWidth: "120px", // Prevents growing beyond this width
-                        height: "50px", // Fixed height
-                        maxHeight: "50px", // Prevents growing beyond this height
-                        overflowX: "auto", // Enables horizontal scrolling for content
-                        overflowY: "hidden", // Prevents vertical scrolling
+                        width: "120px",
+                        maxWidth: "120px",
+                        height: "50px",
+                        maxHeight: "50px",
+                        overflowX: "auto",
+                        overflowY: "hidden",
                       }}
                     >
                       {ticket.trackingId}

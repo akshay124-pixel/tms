@@ -1188,8 +1188,6 @@ const AdminDashboard = () => {
                         maxHeight: "50px", // Prevents growing beyond this height
                         overflowX: "auto", // Enables horizontal scrolling for content
                         overflowY: "hidden", // Prevents vertical scrolling
-                        textAlign: "center", // Aligns content horizontally
-                        verticalAlign: "middle", // Aligns content vertically
                       }}
                     >
                       {ticket.trackingId}

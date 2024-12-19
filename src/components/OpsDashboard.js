@@ -248,7 +248,7 @@ const OpsManagerDashboard = () => {
       // Prepare payload based on the current ticket details
       const payload = {
         Type: updatedTicketDetails.Type || "Repair", // Default "Repair" if no Type selected
-        callType: updatedTicketDetails.callType || "Hardware Call", // Default "Hardware Call" if no callType selected
+        call: updatedTicketDetails.call || "Hardware Call", // Default "Hardware Call" if no call selected
         assignedTo:
           updatedTicketDetails.assignedTo !== undefined &&
           updatedTicketDetails.assignedTo !== null
@@ -273,7 +273,7 @@ const OpsManagerDashboard = () => {
                   ...ticket,
                   status: payload.status,
                   remarks: payload.remarks,
-                  callType: payload.callType,
+                  call: payload.call,
                   Type: payload.Type,
                   assignedTo: payload.assignedTo,
                 }
@@ -453,7 +453,7 @@ const OpsManagerDashboard = () => {
         : Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
     };
 
-    const calculateCallStats = (tickets, callType, validStatuses) => {
+    const calculateCallStats = (tickets, call, validStatuses) => {
       const result = {
         "0-2Days": 0,
         "3-7Days": 0,
@@ -461,7 +461,7 @@ const OpsManagerDashboard = () => {
         ">14Days": 0,
       };
       tickets.forEach((ticket) => {
-        if (ticket.call === callType && validStatuses.includes(ticket.status)) {
+        if (ticket.call === call && validStatuses.includes(ticket.status)) {
           const ageInDays = calculateAgeInDays(ticket.createdAt);
           if (ageInDays <= 2) result["0-2Days"]++;
           else if (ageInDays <= 7) result["3-7Days"]++;
@@ -1651,11 +1651,11 @@ const OpsManagerDashboard = () => {
                   className="my-2"
                   aria-label="Update Call Type"
                   onChange={(e) =>
-                    handleInputChange(e, selectedTicket._id, "callType")
+                    handleInputChange(e, selectedTicket._id, "call")
                   }
                   value={
-                    ticketDetails[selectedTicket._id]?.callType ||
-                    selectedTicket.callType
+                    ticketDetails[selectedTicket._id]?.call ||
+                    selectedTicket.call
                   }
                 >
                   <option value="" disabled>
@@ -1867,7 +1867,7 @@ const OpsManagerDashboard = () => {
 
                 <p>
                   <strong>Call Type:</strong>{" "}
-                  {selectedTicket.callType || "Not specified"}
+                  {selectedTicket.call || "Not specified"}
                 </p>
                 <p>
                   <strong>Part name if changes:</strong>{" "}

@@ -352,7 +352,21 @@ const ServiceAgentDashboard = () => {
                       <option value="Repair">Repair</option>
                     </Form.Select>
                   </Form.Group>
-                  <Form onSubmit={(e) => handleUpdateTicket(e, ticket._id)}>
+                  <Form
+                    onSubmit={(e) => {
+                      if (
+                        !ticketDetails[selectedTicket._id]?.remarks ||
+                        ticketDetails[selectedTicket._id]?.remarks.trim() === ""
+                      ) {
+                        e.preventDefault();
+                        toast.error(
+                          "Remarks are required when updating the status."
+                        );
+                        return;
+                      }
+                      handleUpdateTicket(e, selectedTicket._id);
+                    }}
+                  >
                     {/* Status Update Dropdown */}
                     <Form.Select
                       className="my-2"

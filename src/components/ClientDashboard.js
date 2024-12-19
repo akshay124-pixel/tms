@@ -524,6 +524,7 @@ const ClientDashboard = () => {
                     onChange={handleChange}
                     placeholder="Enter customer name (individual, business, or institution)"
                     required
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formCustomerName">

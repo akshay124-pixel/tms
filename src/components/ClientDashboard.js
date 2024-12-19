@@ -602,7 +602,7 @@ const ClientDashboard = () => {
 
                 <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>
-                    <strong>Upload Bill Image</strong>
+                    <strong>Upload Bill</strong>
                   </Form.Label>
                   <div className="input-group">
                     <Form.Control

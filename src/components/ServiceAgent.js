@@ -355,8 +355,8 @@ const ServiceAgentDashboard = () => {
                   <Form
                     onSubmit={(e) => {
                       if (
-                        !ticketDetails[selectedTicket._id]?.remarks ||
-                        ticketDetails[selectedTicket._id]?.remarks.trim() === ""
+                        !ticketDetails[ticket._id]?.remarks ||
+                        ticketDetails[ticket._id]?.remarks.trim() === ""
                       ) {
                         e.preventDefault();
                         toast.error(
@@ -364,7 +364,7 @@ const ServiceAgentDashboard = () => {
                         );
                         return;
                       }
-                      handleUpdateTicket(e, selectedTicket._id);
+                      handleUpdateTicket(e, ticket._id);
                     }}
                   >
                     {/* Status Update Dropdown */}

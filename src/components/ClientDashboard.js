@@ -210,40 +210,40 @@ const ClientDashboard = () => {
     }
   };
 
-  // Handle ticket deletion
-  const handleDelete = async (ticketId) => {
-    try {
-      // Send delete request
-      const response = await axios.delete(
-        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
-      );
+  // // Handle ticket deletion
+  // const handleDelete = async (ticketId) => {
+  //   try {
+  //     // Send delete request
+  //     const response = await axios.delete(
+  //       `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+  //     );
 
-      // Check if deletion was successful
-      if (response.status === 200) {
-        setSuccess("Ticket deleted successfully!");
-        setError(null);
-        fetchTickets(); // Refresh tickets list after deletion
+  //     // Check if deletion was successful
+  //     if (response.status === 200) {
+  //       setSuccess("Ticket deleted successfully!");
+  //       setError(null);
+  //       fetchTickets(); // Refresh tickets list after deletion
 
-        // Clear the success message after 3 seconds
-        setTimeout(() => {
-          setSuccess(null);
-        }, 3000);
-      }
-    } catch (error) {
-      console.error("Error deleting ticket:", error);
+  //       // Clear the success message after 3 seconds
+  //       setTimeout(() => {
+  //         setSuccess(null);
+  //       }, 3000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting ticket:", error);
 
-      // Handle 404 and 500 errors specifically
-      if (error.response && error.response.status === 404) {
-        setError("Ticket not found.");
-      } else if (error.response && error.response.status === 500) {
-        setError("Server error. Failed to delete ticket.");
-      } else {
-        setError("Failed to delete ticket. Please try again.");
-      }
+  //     // Handle 404 and 500 errors specifically
+  //     if (error.response && error.response.status === 404) {
+  //       setError("Ticket not found.");
+  //     } else if (error.response && error.response.status === 500) {
+  //       setError("Server error. Failed to delete ticket.");
+  //     } else {
+  //       setError("Failed to delete ticket. Please try again.");
+  //     }
 
-      setSuccess(null);
-    }
-  };
+  //     setSuccess(null);
+  //   }
+  // };
 
   // FeedBack
   const [feedbacks, setFeedbacks] = useState({}); // Store feedback for each ticket

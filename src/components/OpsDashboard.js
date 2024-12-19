@@ -189,19 +189,19 @@ const OpsManagerDashboard = () => {
   // Function to toggle the card visibility
 
   // Delete ticket and update UI
-  const handleDelete = async (ticketId) => {
-    try {
-      await axios.delete(
-        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
-      );
-      setTickets((prevTickets) =>
-        prevTickets.filter((ticket) => ticket._id !== ticketId)
-      );
-      toast.success("Ticket deleted successfully!");
-    } catch (error) {
-      toast.error("Failed to delete ticket. Please try again.");
-    }
-  };
+  // const handleDelete = async (ticketId) => {
+  //   try {
+  //     await axios.delete(
+  //       `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+  //     );
+  //     setTickets((prevTickets) =>
+  //       prevTickets.filter((ticket) => ticket._id !== ticketId)
+  //     );
+  //     toast.success("Ticket deleted successfully!");
+  //   } catch (error) {
+  //     toast.error("Failed to delete ticket. Please try again.");
+  //   }
+  // };
 
   // End Tat Filtering
   // Helper function to clear message after 3 seconds
@@ -1460,7 +1460,7 @@ const OpsManagerDashboard = () => {
                                   </button>
                                   {/* View card Buttons End */}
                                   {/* Delete Button */}
-                                  <button
+                                  {/* <button
                                     className="bin-button mx"
                                     onClick={() => handleDelete(ticket._id)}
                                   >
@@ -1514,7 +1514,7 @@ const OpsManagerDashboard = () => {
                                         stroke-width="4"
                                       ></path>
                                     </svg>
-                                  </button>
+                                  </button> */}
                                 </Col>
                               </Row>
                               {/* End Delete Button */}

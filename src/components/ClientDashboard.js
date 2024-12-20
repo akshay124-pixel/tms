@@ -597,7 +597,6 @@ const ClientDashboard = () => {
                     value={ticketData.serialNumber}
                     onChange={handleChange}
                     placeholder="Enter serial number"
-                    required
                   />
                 </Form.Group>
 

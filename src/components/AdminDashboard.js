@@ -1214,7 +1214,7 @@ const AdminDashboard = () => {
             style={{
               color: "#2575fc",
               marginTop: "-15px",
-              paddingBottom: "15px",
+              paddingBottom: "10px",
               marginLeft: "-10px",
             }}
           >

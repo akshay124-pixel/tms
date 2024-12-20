@@ -1213,7 +1213,7 @@ const AdminDashboard = () => {
             onClick={handleExport}
             style={{
               color: "#2575fc",
-              paddingBottom: "15px",
+              marginBottom: "-15px",
               marginLeft: "-10px",
             }}
           >

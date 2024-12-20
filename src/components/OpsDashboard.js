@@ -1351,7 +1351,7 @@ const OpsManagerDashboard = () => {
                 onClick={handleExport}
                 style={{
                   color: "#2575fc",
-                  paddingBottom: "15px",
+
                   marginLeft: "-10px",
                 }}
               >

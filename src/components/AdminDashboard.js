@@ -14,6 +14,7 @@ import {
 import { Drawer } from "@mui/material";
 import CountUp from "react-countup";
 import ReactStars from "react-rating-stars-component";
+import Papa from "papaparse";
 import axios from "axios";
 import debounce from "lodash.debounce";
 import { Pie } from "react-chartjs-2";
@@ -260,6 +261,61 @@ const AdminDashboard = () => {
   //     console.error("Error closing ticket:", error);
   //   }
   // };
+  //Exports
+  const handleExport = async () => {
+    try {
+      // Send request using Axios
+      const response = await axios.get(
+        "https://tms-server-saeo.onrender.com/tickets/export",
+        {
+          responseType: "text", // Ensure we get the CSV as text
+        }
+      );
+
+      // Log the response data for debugging
+      console.log(response.data);
+
+      // Parse CSV string to JSON objects using PapaParse
+      const parsedData = Papa.parse(response.data, {
+        header: true, // Automatically use the first row as headers
+        skipEmptyLines: true, // Skip any empty lines
+      });
+
+      // If parsing fails, show an alert
+      if (parsedData.errors.length > 0) {
+        alert("Error parsing CSV data.");
+        return;
+      }
+
+      const tickets = parsedData.data; // This is now an array of objects
+
+      // If no tickets found, show an alert
+      if (tickets.length === 0) {
+        alert("No tickets available to export!");
+        return;
+      }
+
+      // Generate CSV string from tickets array (if needed for export)
+      const csvString = Papa.unparse(tickets);
+
+      // Create a Blob from the CSV string
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+
+      // Create a temporary download link and trigger the download
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "tickets.csv";
+      link.click();
+
+      // Clean up
+      URL.revokeObjectURL(url); // Free up memory
+    } catch (error) {
+      console.error("Error exporting tickets:", error);
+      alert("An error occurred while exporting tickets.");
+    }
+  };
+  //Exports End
   // FeedBack Starts
   const [feedback, setFeedback] = useState(null);
 
@@ -1152,7 +1208,33 @@ const AdminDashboard = () => {
 
       <Card className="mb-4 shadow-lg">
         <Card.Body>
-          {/* <h4>All Customer Tickets</h4> */}
+          <button
+            className="piebutton"
+            onClick={handleExport}
+            style={{
+              color: "#2575fc",
+              paddingBottom: "15px",
+              marginLeft: "-10px",
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+              />
+            </svg>
+            <div className="pietext">
+              <strong>Export</strong>
+            </div>
+          </button>
           <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>

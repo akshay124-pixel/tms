@@ -462,6 +462,7 @@ const ClientDashboard = () => {
     Tripura: ["Agartala", "Udaipur", "Dharmanagar", "Kailashahar"],
     "Uttar Pradesh": [
       "Lucknow",
+      "Kasganj",
       "Kanpur",
       "Varanasi",
       "Agra",

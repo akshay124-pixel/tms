@@ -684,20 +684,18 @@ const ClientDashboard = () => {
                     <strong>Contact Number</strong>
                   </Form.Label>
                   <Form.Control
-                    type="number"
+                    type="text" // Changed to "text" to avoid spinner buttons
                     name="contactNumber"
                     value={ticketData.contactNumber}
                     onChange={(e) => {
                       const value = e.target.value;
-                      // Allow only positive integers and restrict to 10 digits
+
+                      // Allow only digits and restrict length to 10
                       if (/^\d*$/.test(value) && value.length <= 10) {
-                        handleChange(e); // Update state only if the value is valid
+                        handleChange(e); // Update state only if valid
                       }
                     }}
                     placeholder="Enter contact number"
-                    min="0" // Prevent negative numbers
-                    step="1" // Ensures only whole numbers
-                    maxLength="10" // Just an additional safety, though not enforced by "number" type
                     required
                   />
                 </Form.Group>

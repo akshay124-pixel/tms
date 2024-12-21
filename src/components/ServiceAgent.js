@@ -593,7 +593,29 @@ const ServiceAgentDashboard = () => {
                 {selectedTicket.partName || "Not Available"}
               </p>
               <p>
-                <strong>Status:</strong> {selectedTicket.status}
+                <strong>Status:</strong>{" "}
+                <Badge
+                  bg={
+                    selectedTicket.status === "Open"
+                      ? "primary"
+                      : selectedTicket.status === "In Progress"
+                      ? "warning"
+                      : selectedTicket.status === "Resolved"
+                      ? "success"
+                      : selectedTicket.status === "Closed"
+                      ? "secondary"
+                      : "dark" // Default color for unknown status
+                  }
+                  style={{
+                    fontSize: "14px",
+                    padding: "5px 10px",
+                    borderRadius: "12px",
+                    color: "#fff",
+                    textTransform: "capitalize", // Makes status text look uniform
+                  }}
+                >
+                  {selectedTicket.status}
+                </Badge>
               </p>
               <p>
                 <strong>Priority:</strong>{" "}

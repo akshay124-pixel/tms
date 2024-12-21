@@ -1518,9 +1518,6 @@ const AdminDashboard = () => {
                   {selectedTicket.Type || "Type not available"}
                 </p>
                 <p>
-                  <strong>Status:</strong> {selectedTicket.status}
-                </p>
-                <p>
                   <strong>Priority:</strong>{" "}
                   <Badge
                     bg={

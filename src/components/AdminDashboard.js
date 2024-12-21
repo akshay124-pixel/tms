@@ -231,7 +231,10 @@ const AdminDashboard = () => {
           ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()));
+          ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          ticket.organization
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()));
 
       return (
         matchesStatus &&
@@ -1082,7 +1085,7 @@ const AdminDashboard = () => {
                 <div className="col-12 col-lg-4 mb-3 mb-lg-0">
                   <Form.Control
                     type="text"
-                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No., Address, City, State. "
+                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No., Address, Organization, City, State. "
                     onChange={(e) => handleSearch(e.target.value)}
                     style={{
                       borderRadius: "50px",

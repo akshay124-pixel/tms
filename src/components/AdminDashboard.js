@@ -50,6 +50,7 @@ const AdminDashboard = () => {
 
   const resetFilters = () => {
     setFilter({
+      searchTerm: "",
       status: "",
       priority: "",
       call: "",

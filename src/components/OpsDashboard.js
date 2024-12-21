@@ -472,7 +472,12 @@ const OpsManagerDashboard = () => {
           safeToLowerCase(ticket.productType).includes(
             searchTerm.toLowerCase()
           ) ||
-          safeToLowerCase(ticket.modelType).includes(searchTerm.toLowerCase()));
+          safeToLowerCase(ticket.modelType).includes(
+            searchTerm.toLowerCase()
+          ) ||
+          safeToLowerCase(ticket.serialNumber).includes(
+            searchTerm.toLowerCase()
+          ));
 
       return (
         matchesStatus &&
@@ -1224,7 +1229,7 @@ const OpsManagerDashboard = () => {
                 <div className="col-12 col-lg-4 mb-3 mb-lg-0">
                   <Form.Control
                     type="text"
-                    placeholder="🔍 Search by Tracking ID, Customer Name, Customer No., or Bill No., Address, Organization, City, State. "
+                    placeholder="🔍 Search by ID, name, or anything – let's track it down!"
                     onChange={(e) => handleSearch(e.target.value)}
                     style={{
                       borderRadius: "50px",

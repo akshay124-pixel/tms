@@ -228,9 +228,6 @@ const AdminDashboard = () => {
         (safeToLowerCase(ticket.customerName).includes(
           searchTerm.toLowerCase()
         ) ||
-          safeToLowerCase(ticket.billNumber).includes(
-            searchTerm.toLowerCase()
-          ) ||
           safeToLowerCase(ticket.contactNumber).includes(
             searchTerm.toLowerCase()
           ) ||
@@ -242,7 +239,11 @@ const AdminDashboard = () => {
           safeToLowerCase(ticket.state).includes(searchTerm.toLowerCase()) ||
           safeToLowerCase(ticket.organization).includes(
             searchTerm.toLowerCase()
-          ));
+          ) ||
+          safeToLowerCase(ticket.productType).includes(
+            searchTerm.toLowerCase()
+          ) ||
+          safeToLowerCase(ticket.modelType).includes(searchTerm.toLowerCase()));
 
       return (
         matchesStatus &&

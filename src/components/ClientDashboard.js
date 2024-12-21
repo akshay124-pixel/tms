@@ -1136,7 +1136,6 @@ const ClientDashboard = () => {
       "Nettapakkam",
     ],
   };
-
   // End New
 
   // Fetch tickets on component mount

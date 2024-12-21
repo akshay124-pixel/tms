@@ -1836,62 +1836,23 @@ const OpsManagerDashboard = () => {
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
-        size="lg"
+        size="l"
         centered
-        style={{
-          background: "rgba(0, 0, 0, 0.7)", // Semi-transparent dark background
-        }}
       >
-        <Modal.Header
-          closeButton
-          style={{
-            background: "linear-gradient(135deg, #1e3c72, #2a5298)", // Gradient background for header
-            border: "none", // Remove border
-            color: "#fff", // White text color
-            boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)", // Subtle shadow
-          }}
-        >
+        <Modal.Header closeButton>
           <Modal.Title
-            style={{
-              fontWeight: "bold",
-              fontSize: "28px",
-              letterSpacing: "1px",
-              textShadow: "1px 1px 5px rgba(0, 0, 0, 0.3)", // Text shadow
-            }}
+            style={{ fontWeight: "bold", fontSize: "24px", color: "#007bff" }}
           >
             Ticket Details
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body
-          style={{
-            background: "linear-gradient(135deg, #e0eafc, #cfdef3)", // Subtle gradient
-            borderRadius: "10px", // Rounded corners
-            padding: "30px", // Generous padding
-            boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)", // Elevated shadow
-          }}
-        >
+        <Modal.Body>
           {selectedTicket ? (
             <div>
               {/* Ticket Information */}
-              <div
-                style={{
-                  marginBottom: "20px",
-                  background: "white", // Card background
-                  borderRadius: "8px",
-                  padding: "20px",
-                  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Shadow for card
-                }}
-              >
+              <div style={{ marginBottom: "20px" }}>
                 <p>
-                  <strong>Tracking ID:</strong>{" "}
-                  <span
-                    style={{
-                      color: "#007bff",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {selectedTicket.trackingId}
-                  </span>
+                  <strong>Tracking ID:</strong> {selectedTicket.trackingId}
                 </p>
                 <p>
                   <strong>Created On:</strong>{" "}
@@ -1928,7 +1889,7 @@ const OpsManagerDashboard = () => {
                   <strong>Serial Number:</strong> {selectedTicket.serialNumber}
                 </p>
                 <p>
-                  <strong>Bill:</strong>{" "}
+                  <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
                     href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
                       /^uploads[\\/]/,
@@ -1938,115 +1899,207 @@ const OpsManagerDashboard = () => {
                       /^uploads[\\/]/,
                       ""
                     )}
+                    className="enhanced-download-btn btn-sm mx-3"
                     style={{
-                      textDecoration: "none",
-                      color: "#ffffff",
-                      padding: "10px 20px",
-                      borderRadius: "5px",
-                      background: "linear-gradient(135deg, #ff7e5f, #feb47b)", // Fancy gradient
-                      fontWeight: "bold",
-                      display: "inline-block",
-                      boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Elevated shadow
+                      background: "linear-gradient(135deg, #6a11cb, #2575fc)",
                     }}
                   >
                     Download Bill
                   </a>
                 </p>
+
                 <p>
-                  <strong>Status:</strong>{" "}
-                  <span
-                    style={{
-                      padding: "5px 10px",
-                      borderRadius: "20px",
-                      color: "#fff",
-                      backgroundColor:
-                        selectedTicket.status === "Open"
-                          ? "#28a745"
-                          : selectedTicket.status === "In Progress"
-                          ? "#ffc107"
-                          : "#dc3545", // Dynamic status colors
-                    }}
+                  <strong>Call Type:</strong>{" "}
+                  {selectedTicket.call || "Not specified"}
+                </p>
+                <p>
+                  <strong>Part name if changes:</strong>{" "}
+                  {selectedTicket.partName || "No part changes reported"}
+                </p>
+                <p>
+                  <strong>Type:</strong>{" "}
+                  {selectedTicket.Type || "Type not available"}
+                </p>
+                <p>
+                  <strong>Status:</strong> {selectedTicket.status}
+                </p>
+                <p>
+                  <strong>Priority:</strong>{" "}
+                  <Badge
+                    bg={
+                      selectedTicket.priority === "High"
+                        ? "danger"
+                        : selectedTicket.priority === "Normal"
+                        ? "warning"
+                        : "success"
+                    }
+                    style={{ fontSize: "14px", padding: "5px 10px" }}
                   >
-                    {selectedTicket.status}
-                  </span>
+                    {selectedTicket.priority}
+                  </Badge>
+                </p>
+                <p>
+                  <strong>Remarks:</strong>{" "}
+                  {selectedTicket.remarks || "No remarks provided"}
+                </p>
+                <p>
+                  <strong>Assigned Agent:</strong>{" "}
+                  {selectedTicket.assignedTo || "Not Assigned"}
                 </p>
               </div>
-
               {/* Feedback Section */}
-              <div
-                style={{
-                  background: "#f8f9fa",
-                  padding: "20px",
-                  borderRadius: "8px",
-                  marginBottom: "20px",
-                  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Shadow for card
-                }}
-              >
-                <h5
-                  style={{
-                    fontWeight: "bold",
-                    color: "#007bff",
-                    textShadow: "1px 1px 5px rgba(0, 0, 0, 0.3)", // Subtle text shadow
-                  }}
-                >
+              <div>
+                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
                   Feedback
                 </h5>
                 {feedback ? (
                   <div style={{ marginTop: "10px" }}>
                     <p>
-                      <strong>Rating:</strong>{" "}
-                      <ReactStars
-                        count={5}
-                        value={feedback.rating}
-                        size={24}
-                        edit={false}
-                        activeColor="#ffd700"
-                      />
-                    </p>
-                    <p>
-                      <strong>Comment:</strong>{" "}
-                      {feedback.comments || "No comments"}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            margin: "0",
+                            color: "#333",
+                          }}
+                        >
+                          Rating:
+                        </p>
+                        <div style={{ marginLeft: "10px" }}>
+                          <ReactStars
+                            count={5}
+                            value={feedback.rating}
+                            size={24}
+                            edit={false}
+                            activeColor="#ffd700"
+                          />
+                        </div>
+                      </div>
+                      <p>
+                        <strong>Comment:</strong>{" "}
+                        {feedback.comments || "No comments provided"}
+                      </p>
                     </p>
                   </div>
                 ) : (
                   <p>No feedback submitted yet.</p>
                 )}
               </div>
+
+              {/* Ticket History Section */}
+              <div style={{ marginBottom: "20px" }}>
+                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
+                  Ticket History
+                </h5>
+                <button
+                  type="button"
+                  onClick={() => toggleHistory(selectedTicket._id)}
+                  className="button "
+                  style={{
+                    height: "40px",
+                    padding: "8px 20px",
+                    background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "50px",
+                    fontSize: "14px",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#0056b3")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#007bff")
+                  }
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-arrow-repeat"
+                    viewBox="0 0 16 16"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
+                    <path
+                      fillRule="evenodd"
+                      d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                    ></path>
+                  </svg>
+                  {historyVisible[selectedTicket._id]
+                    ? "Hide History"
+                    : "Show History"}
+                </button>
+                {historyVisible[selectedTicket._id] && (
+                  <ul
+                    style={{
+                      marginTop: "10px",
+                      padding: "10px",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "8px",
+                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {selectedTicket.history.map((entry, index) => (
+                      <li
+                        key={index}
+                        style={{
+                          padding: "8px 12px",
+                          borderBottom: "1px solid #ddd",
+                          fontSize: "14px",
+                          color: "#333",
+                          lineHeight: "1.6",
+                          transition: "background-color 0.3s",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#f1f1f1")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "#fff")
+                        }
+                      >
+                        <strong>Status:</strong> {entry.status} <br />
+                        <strong>Date:</strong>{" "}
+                        {new Date(entry.date).toLocaleDateString()}{" "}
+                        {new Date(entry.date).toLocaleTimeString()} <br />
+                        <strong>Updated By:</strong>{" "}
+                        {entry.username || "OPS Manager"} <br />
+                        <strong>Remarks:</strong>{" "}
+                        {entry.remarks || "No remarks provided"}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           ) : (
-            <p
-              style={{
-                color: "#dc3545",
-                fontWeight: "bold",
-                textAlign: "center",
-                padding: "20px",
-              }}
-            >
-              No ticket selected.
-            </p>
+            <p>No ticket selected.</p>
           )}
         </Modal.Body>
-        <Modal.Footer
-          style={{
-            background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-            border: "none",
-          }}
-        >
+        <Modal.Footer>
           <Button
             variant="secondary"
             onClick={() => setShowModal(false)}
             style={{
-              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)",
-              border: "none",
-              borderRadius: "50px",
-              color: "#fff",
-              fontWeight: "bold",
-              padding: "12px 30px",
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-              transition: "all 0.3s ease",
+              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
+              border: "none", // Remove default border
+              borderRadius: "50px", // Rounded edges for a sleek look
+              color: "#fff", // White text for contrast
+              fontWeight: "bold", // Bold text
+              padding: "12px 30px", // Increase padding for a more prominent button
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
+              transition: "all 0.3s ease", // Smooth transition effect
             }}
-            onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
+            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
           >
             Close
           </Button>

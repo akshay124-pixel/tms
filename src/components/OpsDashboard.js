@@ -1272,25 +1272,24 @@ const OpsManagerDashboard = () => {
 
                 {/* Filter by Age in Days */}
                 <div className="col-6 col-lg-2">
-                  <Form.Control
-                    type="number"
-                    placeholder="Age in Days"
+                  <Form.Select
                     value={filter.ageInDays || ""}
                     onChange={(e) => {
-                      // Only update the state if the value is a valid non-negative number
-                      const value = e.target.value;
-                      if (value >= 0 || value === "") {
-                        setFilter({ ...filter, ageInDays: value });
-                      }
+                      setFilter({ ...filter, ageInDays: e.target.value });
                     }}
-                    min="0" // Ensure the minimum value is 0
                     style={{
                       border: "1px solid #ddd",
                       borderRadius: "30px",
                       padding: "10px 20px",
                       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
                     }}
-                  />
+                  >
+                    <option value="">Select Age in Days</option>
+                    <option value="0-2">0-2 Days</option>
+                    <option value="3-7">3-7 Days</option>
+                    <option value="8-14">8-14 Days</option>
+                    <option value=">14">&gt;14 Days</option>
+                  </Form.Select>
                 </div>
               </div>
             </div>{" "}

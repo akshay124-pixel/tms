@@ -168,7 +168,7 @@ const AdminDashboard = () => {
       const matchesType = filter.Type ? ticket.Type === filter.Type : true;
       const matchesCall = filter.call ? ticket.call === filter.call : true;
 
-      // Apply TAT filter
+      // TAT filter logic
       const matchesTAT = () => {
         if (!ticket.createdAt) return false; // Skip tickets without createdAt field
         const currentDate = new Date();
@@ -193,6 +193,32 @@ const AdminDashboard = () => {
         }
       };
 
+      // Age in Days filter logic
+      const matchesAgeInDays = filter.ageInDays
+        ? (() => {
+            if (!ticket.createdAt) return false;
+            const currentDate = new Date();
+            const createdAt = new Date(ticket.createdAt);
+            const ageInDays = Math.ceil(
+              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+            );
+
+            switch (filter.ageInDays) {
+              case "0-2":
+                return ageInDays >= 0 && ageInDays <= 2;
+              case "3-7":
+                return ageInDays >= 3 && ageInDays <= 7;
+              case "8-14":
+                return ageInDays >= 8 && ageInDays <= 14;
+              case ">14":
+                return ageInDays > 14;
+              default:
+                return true;
+            }
+          })()
+        : true;
+
+      // Search Term filter
       const matchesSearchTerm =
         searchTerm &&
         (ticket.customerName
@@ -206,18 +232,6 @@ const AdminDashboard = () => {
           ticket.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()));
-
-      const matchesAgeInDays = filter.ageInDays
-        ? (() => {
-            if (!ticket.createdAt) return false;
-            const currentDate = new Date();
-            const createdAt = new Date(ticket.createdAt);
-            const ageInDays = Math.ceil(
-              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-            );
-            return ageInDays === Number(filter.ageInDays);
-          })()
-        : true;
 
       return (
         matchesStatus &&
@@ -1143,25 +1157,25 @@ const AdminDashboard = () => {
 
                 {/* Filter by Age in Days */}
                 <div className="col-6 col-lg-2">
-                  <Form.Control
-                    type="number"
-                    placeholder="Age in Days"
+                  <Form.Select
                     value={filter.ageInDays || ""}
                     onChange={(e) => {
-                      // Only update the state if the value is a valid non-negative number
                       const value = e.target.value;
-                      if (value >= 0 || value === "") {
-                        setFilter({ ...filter, ageInDays: value });
-                      }
+                      setFilter({ ...filter, ageInDays: value });
                     }}
-                    min="0" // Ensure the minimum value is 0
                     style={{
                       border: "1px solid #ddd",
                       borderRadius: "30px",
                       padding: "10px 20px",
                       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
                     }}
-                  />
+                  >
+                    <option value="">Select Age in Days</option>
+                    <option value="0-2">0-2 Days</option>
+                    <option value="3-7">3-7 Days</option>
+                    <option value="8-14">8-14 Days</option>
+                    <option value=">14">&gt;14 Days</option>
+                  </Form.Select>
                 </div>
               </div>
             </div>{" "}

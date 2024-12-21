@@ -803,6 +803,10 @@ const ClientDashboard = () => {
                   >
                     <option value="">-- Select Model Type --</option>
                     <option value="HKC">HKC</option>
+                    <option value="RS">RS</option>
+                    <option value="A3">A3</option>
+                    <option value="M22">M22</option>
+                    <option value="RK">RK</option>
                     <option value="OKV">OKV</option>
                     <option value="PRO AT">PRO AT</option>
                     <option value="Q Series">Q Series</option>

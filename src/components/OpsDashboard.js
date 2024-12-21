@@ -80,6 +80,7 @@ const OpsManagerDashboard = () => {
     status: "",
     priority: "",
     call: "",
+
     assignedTo: "",
     ageInDays: "",
     Type: "",
@@ -382,6 +383,10 @@ const OpsManagerDashboard = () => {
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))); // Convert to days and ensure non-negative
   };
   // Filter tickets based on status, priority, and search term
+  const safeToLowerCase = (value) => {
+    return value ? String(value).toLowerCase() : "";
+  };
+
   const filterTickets = () => {
     return tickets.filter((ticket) => {
       const matchesStatus = filter.status
@@ -446,23 +451,27 @@ const OpsManagerDashboard = () => {
           })()
         : true;
 
-      // Search Term filter
+      // Search Term filter logic
       const matchesSearchTerm =
         searchTerm &&
-        (ticket.customerName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-          ticket.billNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.contactNumber
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ticket.organization
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()));
+        (safeToLowerCase(ticket.customerName).includes(
+          searchTerm.toLowerCase()
+        ) ||
+          safeToLowerCase(ticket.billNumber).includes(
+            searchTerm.toLowerCase()
+          ) ||
+          safeToLowerCase(ticket.contactNumber).includes(
+            searchTerm.toLowerCase()
+          ) ||
+          safeToLowerCase(ticket.trackingId).includes(
+            searchTerm.toLowerCase()
+          ) ||
+          safeToLowerCase(ticket.address).includes(searchTerm.toLowerCase()) ||
+          safeToLowerCase(ticket.city).includes(searchTerm.toLowerCase()) ||
+          safeToLowerCase(ticket.state).includes(searchTerm.toLowerCase()) ||
+          safeToLowerCase(ticket.organization).includes(
+            searchTerm.toLowerCase()
+          ));
 
       return (
         matchesStatus &&

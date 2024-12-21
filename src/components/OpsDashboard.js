@@ -27,8 +27,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const OpsManagerDashboard = () => {
   const [isSticky, setIsSticky] = useState(false);
 
-  //Automtaiclly Closeing
-
   const closeCard = () => setShowCard(false);
   const cardRef = useRef();
   // Close the card when clicked outside of it

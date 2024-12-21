@@ -1273,7 +1273,7 @@ const OpsManagerDashboard = () => {
                 {/* Filter by Age in Days */}
                 <div className="col-6 col-lg-2">
                   <Form.Select
-                    value={filter.ageInDays || ""}
+                    value={filterTickets.ageInDays || ""}
                     onChange={(e) => {
                       setFilter({ ...filter, ageInDays: e.target.value });
                     }}

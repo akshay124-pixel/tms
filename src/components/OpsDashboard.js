@@ -87,13 +87,18 @@ const OpsManagerDashboard = () => {
     tat: "",
   });
   const resetFilters = () => {
+    // Reset filters
     setFilter({
       status: "",
       priority: "",
       call: "",
       ageInDays: "",
     });
-    console.log("Filters reset.");
+
+    // Reset search term (clearing the search bar)
+    setSearchTerm("");
+
+    console.log("Filters and search term reset.");
   };
 
   const [selectedTicket, setSelectedTicket] = useState(null);

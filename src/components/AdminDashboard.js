@@ -49,14 +49,18 @@ const AdminDashboard = () => {
   const handleSearch = debounce((term) => setSearchTerm(term), 300);
 
   const resetFilters = () => {
+    // Reset filters
     setFilter({
-      searchTerm: "",
       status: "",
       priority: "",
       call: "",
       ageInDays: "",
     });
-    console.log("Filters reset.");
+
+    // Reset search term (clearing the search bar)
+    setSearchTerm("");
+
+    console.log("Filters and search term reset.");
   };
 
   const [closedPendingStats, setClosedPendingStats] = useState({

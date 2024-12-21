@@ -684,14 +684,23 @@ const ClientDashboard = () => {
                     <strong>Contact Number</strong>
                   </Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     name="contactNumber"
                     value={ticketData.contactNumber}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only positive integers
+                      if (/^\d*$/.test(value)) {
+                        handleChange(e); // Update state only if the value is valid
+                      }
+                    }}
                     placeholder="Enter contact number"
+                    min="0" // Prevent negative numbers
+                    step="1" // Ensures only whole numbers
                     required
                   />
                 </Form.Group>
+
                 <Form.Group controlId="formEmailaddress">
                   <Form.Label>
                     <strong>Email</strong>

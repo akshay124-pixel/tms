@@ -112,8 +112,21 @@ const OpsManagerDashboard = () => {
 
   const [ticketDetails, setTicketDetails] = useState({});
 
-  // Debounced search handler
-  const handleSearch = debounce((term) => setSearchTerm(term), 300);
+  // Debounced function to handle intensive operations
+  const handleSearchDebounced = useCallback(
+    debounce((term) => {
+      // Perform the debounced operation here, e.g., API call
+      console.log("Debounced Search Term:", term);
+    }, 300),
+    []
+  );
+
+  // Immediate input handler
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value); // Update state immediately
+    handleSearchDebounced(value); // Apply debounced operation
+  };
 
   // Toggle visibility of history for a specific ticket
   const toggleHistory = (ticketId) => {
@@ -1235,7 +1248,8 @@ const OpsManagerDashboard = () => {
                   <Form.Control
                     type="text"
                     placeholder="🔍 Search by ID, name, or anything – let's track it down!"
-                    onChange={(e) => handleSearch(e.target.value)}
+                    value={searchTerm}
+                    onChange={handleSearch}
                     style={{
                       borderRadius: "50px",
                       padding: "10px 20px",

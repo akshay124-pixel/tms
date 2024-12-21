@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Card,
@@ -46,7 +46,21 @@ const AdminDashboard = () => {
   });
   const [isSticky, setIsSticky] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const handleSearch = debounce((term) => setSearchTerm(term), 300);
+  // Debounced function to handle intensive operations
+  const handleSearchDebounced = useCallback(
+    debounce((term) => {
+      // Perform the debounced operation here, e.g., API call
+      console.log("Debounced Search Term:", term);
+    }, 300),
+    []
+  );
+
+  // Immediate input handler
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value); // Update state immediately
+    handleSearchDebounced(value); // Apply debounced operation
+  };
 
   const resetFilters = () => {
     // Reset filters
@@ -1105,7 +1119,8 @@ const AdminDashboard = () => {
                   <Form.Control
                     type="text"
                     placeholder="🔍 Search by ID, name, or anything – let's track it down!"
-                    onChange={(e) => handleSearch(e.target.value)}
+                    value={searchTerm}
+                    onChange={handleSearch}
                     style={{
                       borderRadius: "50px",
                       padding: "10px 20px",

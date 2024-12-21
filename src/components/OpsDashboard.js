@@ -396,7 +396,7 @@ const OpsManagerDashboard = () => {
       const matchesType = filter.Type ? ticket.Type === filter.Type : true;
       const matchesCall = filter.call ? ticket.call === filter.call : true;
 
-      // Apply TAT filter
+      // TAT filter logic
       const matchesTAT = () => {
         if (!ticket.createdAt) return false; // Skip tickets without createdAt field
         const currentDate = new Date();
@@ -421,6 +421,32 @@ const OpsManagerDashboard = () => {
         }
       };
 
+      // Age in Days filter logic
+      const matchesAgeInDays = filter.ageInDays
+        ? (() => {
+            if (!ticket.createdAt) return false;
+            const currentDate = new Date();
+            const createdAt = new Date(ticket.createdAt);
+            const ageInDays = Math.ceil(
+              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+            );
+
+            switch (filter.ageInDays) {
+              case "0-2":
+                return ageInDays >= 0 && ageInDays <= 2;
+              case "3-7":
+                return ageInDays >= 3 && ageInDays <= 7;
+              case "8-14":
+                return ageInDays >= 8 && ageInDays <= 14;
+              case ">14":
+                return ageInDays > 14;
+              default:
+                return true;
+            }
+          })()
+        : true;
+
+      // Search Term filter
       const matchesSearchTerm =
         searchTerm &&
         (ticket.customerName
@@ -434,18 +460,6 @@ const OpsManagerDashboard = () => {
           ticket.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           ticket.state?.toLowerCase().includes(searchTerm.toLowerCase()));
-
-      const matchesAgeInDays = filter.ageInDays
-        ? (() => {
-            if (!ticket.createdAt) return false;
-            const currentDate = new Date();
-            const createdAt = new Date(ticket.createdAt);
-            const ageInDays = Math.ceil(
-              (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-            );
-            return ageInDays === Number(filter.ageInDays);
-          })()
-        : true;
 
       return (
         matchesStatus &&
@@ -1273,9 +1287,10 @@ const OpsManagerDashboard = () => {
                 {/* Filter by Age in Days */}
                 <div className="col-6 col-lg-2">
                   <Form.Select
-                    value={filterTickets.ageInDays || ""}
+                    value={filter.ageInDays || ""}
                     onChange={(e) => {
-                      setFilter({ ...filter, ageInDays: e.target.value });
+                      const value = e.target.value;
+                      setFilter({ ...filter, ageInDays: value });
                     }}
                     style={{
                       border: "1px solid #ddd",

@@ -566,15 +566,21 @@ const OpsManagerDashboard = () => {
       tickets.forEach((ticket) => {
         if (ticket.call === call && validStatuses.includes(ticket.status)) {
           const ageInDays = calculateAgeInDays(ticket.createdAt);
-          if (ageInDays <= 2) result["0-2Days"]++;
-          else if (ageInDays <= 7) result["3-7Days"]++;
-          else if (ageInDays <= 14) result["8-14Days"]++;
-          else result[">14Days"]++;
+          // Categorize the ticket based on ageInDays
+          if (ageInDays >= 0 && ageInDays <= 1) {
+            result["0-2Days"]++;
+          } else if (ageInDays >= 2 && ageInDays <= 7) {
+            result["3-7Days"]++;
+          } else if (ageInDays >= 8 && ageInDays <= 14) {
+            result["8-14Days"]++;
+          } else if (ageInDays > 14) {
+            result[">14Days"]++;
+          }
         }
       });
+
       return result;
     };
-
     // Accumulate "Open," "In Progress," and "Resolved" for openCalls
     setOpenCalls({
       hardware: calculateCallStats(tickets, "Hardware Call", [

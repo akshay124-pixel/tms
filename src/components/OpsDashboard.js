@@ -897,19 +897,21 @@ const OpsManagerDashboard = () => {
               >
                 Hardware
               </td>
-              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
-                <td
-                  key={`open-hardware-${ageGroup}`}
-                  style={{
-                    padding: "1.5rem",
-                    border: "1px solid rgba(255, 255, 255, 0.3)",
-                    fontSize: "1rem",
-                    background: "transparent", // Fully transparent
-                  }}
-                >
-                  <CountUp end={openCalls.hardware[ageGroup]} duration={2} />
-                </td>
-              ))}
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map(
+                (ageInDays) => (
+                  <td
+                    key={`open-hardware-${ageInDays}`}
+                    style={{
+                      padding: "1.5rem",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      fontSize: "1rem",
+                      background: "transparent", // Fully transparent
+                    }}
+                  >
+                    <CountUp end={openCalls.hardware[ageInDays]} duration={2} />
+                  </td>
+                )
+              )}
             </tr>
 
             <tr
@@ -930,19 +932,21 @@ const OpsManagerDashboard = () => {
               >
                 Software
               </td>
-              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((ageGroup) => (
-                <td
-                  key={`open-software-${ageGroup}`}
-                  style={{
-                    padding: "1.5rem",
-                    border: "1px solid rgba(255, 255, 255, 0.3)",
-                    fontSize: "1rem",
-                    background: "transparent", // Fully transparent
-                  }}
-                >
-                  <CountUp end={openCalls.software[ageGroup]} duration={2} />
-                </td>
-              ))}
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map(
+                (ageInDays) => (
+                  <td
+                    key={`open-software-${ageInDays}`}
+                    style={{
+                      padding: "1.5rem",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      fontSize: "1rem",
+                      background: "transparent", // Fully transparent
+                    }}
+                  >
+                    <CountUp end={openCalls.software[ageInDays]} duration={2} />
+                  </td>
+                )
+              )}
             </tr>
 
             {/* Closed Calls */}

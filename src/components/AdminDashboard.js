@@ -1294,14 +1294,7 @@ const AdminDashboard = () => {
               <strong>Export</strong>
             </div>
           </button>
-          <Table
-            responsive
-            striped
-            bordered
-            hover
-            className="text-center"
-            style={{ maxHeight: "500px" }}
-          >
+          <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>
                 <th>Date</th>

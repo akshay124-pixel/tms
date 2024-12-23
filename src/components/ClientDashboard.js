@@ -416,6 +416,7 @@ const ClientDashboard = () => {
       "Lakhimpur",
       "Diphu",
       "Golaghat",
+      "Kamrup",
     ],
     Bihar: [
       "Patna",

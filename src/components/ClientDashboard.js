@@ -484,6 +484,7 @@ const ClientDashboard = () => {
       "Surendranagar",
     ],
     Haryana: [
+      "Bahadurgarh",
       "Gurugram",
       "Faridabad",
       "Panipat",

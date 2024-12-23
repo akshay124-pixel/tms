@@ -1491,7 +1491,8 @@ const AdminDashboard = () => {
               {/* Ticket Information */}
               <div style={{ marginBottom: "20px" }}>
                 <p>
-                  <strong>Tracking ID:</strong> {selectedTicket.trackingId}
+                  <strong style={{ color: "green" }}>Tracking ID:</strong>{" "}
+                  {selectedTicket.trackingId}
                 </p>
                 <p>
                   <strong>Created On:</strong>{" "}
@@ -1504,7 +1505,8 @@ const AdminDashboard = () => {
                   <strong>Organization:</strong> {selectedTicket.organization}
                 </p>
                 <p>
-                  <strong>Customer Issue:</strong> {selectedTicket.description}
+                  <strong style={{ color: "red" }}>Customer Issue:</strong>{" "}
+                  {selectedTicket.description}
                 </p>
                 <p>
                   <strong>Contact:</strong> {selectedTicket.contactNumber}

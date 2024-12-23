@@ -897,21 +897,19 @@ const OpsManagerDashboard = () => {
               >
                 Hardware
               </td>
-              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map(
-                (ageInDays) => (
-                  <td
-                    key={`open-hardware-${ageInDays}`}
-                    style={{
-                      padding: "1.5rem",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
-                      fontSize: "1rem",
-                      background: "transparent", // Fully transparent
-                    }}
-                  >
-                    <CountUp end={openCalls.hardware[ageInDays]} duration={2} />
-                  </td>
-                )
-              )}
+              {["0-2Days", "3-7Days", "8-14Days", ">14Days"].map((age) => (
+                <td
+                  key={`${callType}-hardware-${age}`}
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "1rem",
+                    background: "transparent", // Fully transparent
+                  }}
+                >
+                  <CountUp end={callData.hardware[age]} duration={2} />
+                </td>
+              ))}
             </tr>
 
             <tr

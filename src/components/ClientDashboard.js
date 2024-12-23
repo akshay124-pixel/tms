@@ -824,6 +824,7 @@ const ClientDashboard = () => {
       "Sangrur",
       "Khamano",
       "Chunni Kalan",
+      "Balachaur",
     ],
     Rajasthan: [
       "Jaipur",

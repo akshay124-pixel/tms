@@ -1423,7 +1423,7 @@ const OpsManagerDashboard = () => {
                 onClick={handleExport}
                 style={{
                   color: "#2575fc",
-                  marginBottom: "-15px",
+                  marginBottom: "-10px",
                   marginLeft: "-10px",
                 }}
               >

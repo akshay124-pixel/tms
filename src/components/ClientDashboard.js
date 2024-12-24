@@ -1334,6 +1334,8 @@ const ClientDashboard = () => {
                     <option value="RSP">RSP</option>
                     <option value="T9">T9</option>
                     <option value="T9H">T9H</option>
+                    <option value="ESP">ESP</option>
+                    <option value="KONKA">KONKA</option>
                     <option value="Other">Other</option>
                   </Form.Select>
                 </Form.Group>

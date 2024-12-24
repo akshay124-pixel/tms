@@ -402,6 +402,8 @@ const ClientDashboard = () => {
       "Seppa",
     ],
     Assam: [
+      "Agartala",
+      "Tripura ",
       "Guwahati",
       "Dibrugarh",
       "Jorhat",

@@ -98,7 +98,12 @@ const OpsManagerDashboard = () => {
 
     console.log("Filters and search term reset.");
   };
-
+  // Extract only the public_id part from the full Cloudinary URL
+  const publicId = selectedTicket.billImage
+    .split("/")
+    .slice(-2)
+    .join("/")
+    .replace(/\.(jpg|png|gif|pdf)$/, ""); // Remove file extension
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -1951,7 +1956,7 @@ const OpsManagerDashboard = () => {
                   <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
                     href={`https://tms-server-saeo.onrender.com/tickets/download/${encodeURIComponent(
-                      selectedTicket.billImage.split("/").slice(-2).join("/")
+                      publicId
                     )}`}
                     className="enhanced-download-btn btn-sm mx-3"
                     style={{

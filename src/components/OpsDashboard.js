@@ -1950,14 +1950,9 @@ const OpsManagerDashboard = () => {
                 <p>
                   <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
-                    href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
-                      /^uploads[\\/]/,
-                      ""
-                    )}`}
-                    download={selectedTicket.billImage.replace(
-                      /^uploads[\\/]/,
-                      ""
-                    )}
+                    href={`https://tms-server-saeo.onrender.com/tickets/download/${encodeURIComponent(
+                      selectedTicket.billImage.split("/").slice(-2).join("/")
+                    )}`} // Extracts only the public_id part from the Cloudinary URL
                     className="enhanced-download-btn btn-sm mx-3"
                     style={{
                       background: "linear-gradient(135deg, #6a11cb, #2575fc)",

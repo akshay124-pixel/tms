@@ -1264,36 +1264,41 @@ const AdminDashboard = () => {
 
       {/* Search End  */}
 
-      <Card className="mb-4 shadow-lg">
-        <Card.Body>
-          <button
-            className="piebutton"
-            onClick={handleExport}
-            style={{
-              color: "#2575fc",
-              marginTop: "-15px",
-              paddingBottom: "5px",
-              marginLeft: "-10px",
-            }}
+      <Card
+        className="mb-4 shadow-lg"
+        style={{ height: "500px", overflow: "hidden" }}
+      >
+        {" "}
+        <button
+          className="piebutton"
+          onClick={handleExport}
+          style={{
+            color: "#2575fc",
+            marginBottom: "-10px",
+            marginLeft: "-10px",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-              />
-            </svg>
-            <div className="pietext">
-              <strong>Export</strong>
-            </div>
-          </button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+            />
+          </svg>
+          <div className="pietext">
+            <strong>Export</strong>
+          </div>
+        </button>
+        <Card.Body
+          style={{ height: "100%", overflowY: "auto", padding: "10px" }}
+        >
           <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>

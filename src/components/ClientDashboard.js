@@ -403,7 +403,7 @@ const ClientDashboard = () => {
     ],
     Assam: [
       "Agartala",
-      "Tripura ",
+      "Tripura",
       "Guwahati",
       "Dibrugarh",
       "Jorhat",

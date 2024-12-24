@@ -1414,7 +1414,10 @@ const OpsManagerDashboard = () => {
               <Spinner animation="border" variant="primary" />
             </div>
           ) : (
-            <Card className="mb-4 shadow-lg">
+            <Card
+              className="mb-4 shadow-lg"
+              style={{ height: "500px", overflow: "hidden" }}
+            >
               <button
                 className="piebutton"
                 onClick={handleExport}
@@ -1442,7 +1445,9 @@ const OpsManagerDashboard = () => {
                   <strong>Export</strong>
                 </div>
               </button>
-              <Card.Body>
+              <Card.Body
+                style={{ height: "100%", overflowY: "auto", padding: "10px" }}
+              >
                 <Col md={12}>
                   <Table
                     responsive

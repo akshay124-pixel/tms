@@ -1950,7 +1950,7 @@ const OpsManagerDashboard = () => {
                 <p>
                   <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
-                    href={`http://localhost:5000/tickets/download/${selectedTicket.billImage.replace(
+                    href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
                       /^uploads[\\/]/,
                       ""
                     )}`}

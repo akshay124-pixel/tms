@@ -1951,7 +1951,7 @@ const OpsManagerDashboard = () => {
                   <strong>Bill:</strong> {selectedTicket.billImage}
                   <a
                     href={`https://tms-server-saeo.onrender.com/tickets/download/${encodeURIComponent(
-                      selectedTicket.billImage
+                      selectedTicket.billImage.split("/").slice(-2).join("/") // Extracts the relative path
                     )}`}
                     className="enhanced-download-btn btn-sm mx-3"
                     style={{

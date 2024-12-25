@@ -1956,6 +1956,10 @@ const OpsManagerDashboard = () => {
                     className="enhanced-download-btn btn-sm mx-3"
                     style={{
                       background: "linear-gradient(135deg, #6a11cb, #2575fc)",
+                      color: "white",
+                      textDecoration: "none",
+                      padding: "10px 20px",
+                      borderRadius: "5px",
                     }}
                   >
                     Download Bill

@@ -1957,9 +1957,10 @@ const OpsManagerDashboard = () => {
                     style={{
                       background: "linear-gradient(135deg, #6a11cb, #2575fc)",
                       color: "white",
+                      padding: "8px 16px",
+                      borderRadius: "4px",
                       textDecoration: "none",
-                      padding: "10px 20px",
-                      borderRadius: "5px",
+                      fontWeight: "bold",
                     }}
                   >
                     Download Bill

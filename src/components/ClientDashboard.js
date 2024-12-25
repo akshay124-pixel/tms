@@ -1104,6 +1104,7 @@ const ClientDashboard = () => {
       "Rajouri",
       "Reasi",
       "Doda",
+      "Miran sahib",
     ],
     Ladakh: [
       "Leh",

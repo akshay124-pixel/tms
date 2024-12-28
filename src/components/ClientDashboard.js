@@ -422,6 +422,7 @@ const ClientDashboard = () => {
     ],
     Bihar: [
       "Patna",
+      "Jehanabad",
       "Gaya",
       "Bhagalpur",
       "Muzaffarpur",

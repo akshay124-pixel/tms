@@ -831,6 +831,7 @@ const ClientDashboard = () => {
       "Balachaur",
     ],
     Rajasthan: [
+      "Suratgarh",
       "Jaipur",
       "Udaipur",
       "Jodhpur",

@@ -511,6 +511,7 @@ const ClientDashboard = () => {
       "Narwana",
     ],
     "Himachal Pradesh": [
+      "Nagrota Surian",
       "Shimla",
       "Dharamshala",
       "Solan",

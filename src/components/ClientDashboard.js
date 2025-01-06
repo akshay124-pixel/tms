@@ -832,6 +832,7 @@ const ClientDashboard = () => {
       "Balachaur",
     ],
     Rajasthan: [
+      "Newai",
       "Suratgarh",
       "Jaipur",
       "Udaipur",
@@ -920,6 +921,7 @@ const ClientDashboard = () => {
       "Melaghar",
     ],
     "Uttar Pradesh": [
+      "Shikohabad ",
       "Lucknow",
       "Matbarganj",
       "Kasganj",

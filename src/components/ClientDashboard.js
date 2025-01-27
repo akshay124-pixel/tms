@@ -833,6 +833,7 @@ const ClientDashboard = () => {
     ],
     Rajasthan: [
       "Newai",
+      "Gaganagar",
       "Suratgarh",
       "Jaipur",
       "Udaipur",

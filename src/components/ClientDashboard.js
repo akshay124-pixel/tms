@@ -370,6 +370,7 @@ const ClientDashboard = () => {
   const statesAndCities = {
     "Andhra Pradesh": [
       "Visakhapatnam",
+      "Jaganathpuram",
       "Vijayawada",
       "Guntur",
       "Tirupati",

@@ -1336,6 +1336,7 @@ const ClientDashboard = () => {
                     <option value="HKC">HKC</option>
                     <option value="RS">RS</option>
                     <option value="A3">A3</option>
+                    <option value="DLS">DLS</option>
                     <option value="M22">M22</option>
                     <option value="RK">RK</option>
                     <option value="OKV">OKV</option>
@@ -1345,7 +1346,7 @@ const ClientDashboard = () => {
                     <option value="T9">T9</option>
                     <option value="T9H">T9H</option>
                     <option value="ESP">ESP</option>
-                    <option value="CH BUNKA">CH BUNKA</option>
+                    <option value="CH BUNKA">BUNKA</option>
                     <option value="KONKA">KONKA</option>
                     <option value="Other">Other</option>
                   </Form.Select>

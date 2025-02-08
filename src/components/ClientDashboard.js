@@ -1334,6 +1334,7 @@ const ClientDashboard = () => {
                   >
                     <option value="">-- Select Model Type --</option>
                     <option value="HKC">HKC</option>
+                    <option value="SKW">SKW</option>
                     <option value="RS">RS</option>
                     <option value="A3">A3</option>
                     <option value="DLS">DLS</option>

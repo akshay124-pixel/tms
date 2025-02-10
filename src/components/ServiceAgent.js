@@ -386,7 +386,7 @@ const ServiceAgentDashboard = () => {
         <Modal.Body className="modal-body-custom">
           {selectedTicket ? (
             <div className="ticket-detail-container">
-              {/* Tracking ID and Status Section */}
+              {/* Header with Tracking ID and Status */}
               <div className="ticket-header-section">
                 <div className="tracking-id-container">
                   <span className="label">Tracking ID:</span>
@@ -401,232 +401,197 @@ const ServiceAgentDashboard = () => {
                 </Badge>
               </div>
 
-              {/* Customer Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-user-circle me-2"></i>
-                  Customer Information
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Customer Name:</span>
-                    <span className="value">{selectedTicket.customerName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Contact:</span>
-                    <span className="value">
-                      {selectedTicket.contactNumber}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Email:</span>
-                    <span className="value">{selectedTicket.email}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Organization:</span>
-                    <span className="value">
-                      {selectedTicket.organization || "N/A"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Product Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-box me-2"></i>
-                  Product Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Product Type:</span>
-                    <span className="value">{selectedTicket.productType}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Model Type:</span>
-                    <span className="value">{selectedTicket.modelType}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Serial Number:</span>
-                    <span className="value">{selectedTicket.serialNumber}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Call Type:</span>
-                    <span className="value">
-                      {selectedTicket.call || "Not Specified"}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Part Name:</span>
-                    <span className="value">
-                      {selectedTicket.partName || "Not Available"}
-                    </span>
+              {/* Main Details Grid */}
+              <div className="details-grid">
+                {/* Customer Information */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-user-circle me-2"></i>
+                    Customer Information
+                  </h5>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Name:</span>
+                      <span className="value">
+                        {selectedTicket.customerName}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Contact:</span>
+                      <span className="value">
+                        {selectedTicket.contactNumber}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Email:</span>
+                      <span className="value">{selectedTicket.email}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Organization:</span>
+                      <span className="value">
+                        {selectedTicket.organization || "N/A"}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Location Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-map-marker-alt me-2"></i>
-                  Location Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Address:</span>
-                    <span className="value address-value">
-                      {selectedTicket.address}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">City:</span>
-                    <span className="value">{selectedTicket.city}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">State:</span>
-                    <span className="value">{selectedTicket.state}</span>
+                {/* Product Information */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-box me-2"></i>
+                    Product Details
+                  </h5>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Product Type:</span>
+                      <span className="value">
+                        {selectedTicket.productType}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Model Type:</span>
+                      <span className="value">{selectedTicket.modelType}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Serial Number:</span>
+                      <span className="value">
+                        {selectedTicket.serialNumber}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Bill Download Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-file-invoice me-2"></i>
-                  Bill Information
-                </h5>
-                <div className="bill-download-container">
-                  <div className="bill-info">
-                    <span className="bill-name">
-                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
-                    </span>
-                    <a
-                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
-                        /^uploads[\\/]/,
-                        ""
-                      )}`}
-                      download
-                      className="download-button"
-                    >
-                      <i className="fas fa-download me-2"></i>
-                      Download Bill
-                    </a>
+                {/* Location Information */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-map-marker-alt me-2"></i>
+                    Location Details
+                  </h5>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Address:</span>
+                      <span className="value">{selectedTicket.address}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">City:</span>
+                      <span className="value">{selectedTicket.city}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">State:</span>
+                      <span className="value">{selectedTicket.state}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Service Details Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-cogs me-2"></i>
-                  Service Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Service Type:</span>
-                    <span className="value">
-                      <Badge
-                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
-                      >
+                {/* Service Details */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-cogs me-2"></i>
+                    Service Details
+                  </h5>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="label">Service Type:</span>
+                      <span className="value">
                         {selectedTicket.Type || "Not Specified"}
-                      </Badge>
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Priority:</span>
-                    <span className="value">
-                      <Badge
-                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
-                      >
-                        {selectedTicket.priority || "Normal"}
-                      </Badge>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-comment-alt me-2"></i>
-                  Issue Description
-                </h5>
-                <div className="description-box">
-                  {selectedTicket.description}
-                </div>
-              </div>
-
-              {/* Feedback Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-star me-2"></i>
-                  Customer Feedback
-                </h5>
-                {selectedTicket.feedback ? (
-                  <div className="feedback-container">
-                    <div className="rating-display">
-                      <span className="rating-label">Rating:</span>
-                      <div className="stars-container">
-                        <ReactStars
-                          count={5}
-                          value={selectedTicket.feedback.rating}
-                          size={24}
-                          edit={false}
-                          activeColor="#ffd700"
-                        />
-                        <span className="rating-value">
-                          ({selectedTicket.feedback.rating}/5)
-                        </span>
-                      </div>
+                      </span>
                     </div>
-                    <div className="feedback-comment">
-                      <span className="comment-label">Comment:</span>
-                      <p className="comment-text">
-                        {selectedTicket.feedback.comment ||
-                          "No comments provided"}
-                      </p>
+                    <div className="info-item">
+                      <span className="label">Priority:</span>
+                      <span className="value">{selectedTicket.priority}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="label">Part Name:</span>
+                      <span className="value">
+                        {selectedTicket.partName || "Not Available"}
+                      </span>
                     </div>
                   </div>
-                ) : (
-                  <div className="no-feedback">
-                    <i className="fas fa-comment-alt"></i>
-                    <p>No feedback submitted yet</p>
-                  </div>
-                )}
-              </div>
+                </div>
 
-              {/* History Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-history me-2"></i>
-                  Ticket History
-                </h5>
-                <div className="history-timeline">
-                  {selectedTicket.history.map((entry, index) => (
-                    <div key={index} className="timeline-item">
-                      <div className="timeline-icon">
-                        <i className="fas fa-circle"></i>
-                      </div>
-                      <div className="timeline-content">
-                        <div className="timeline-header">
-                          <span className="status">{entry.status}</span>
-                          <span className="date">
-                            {new Date(entry.date).toLocaleString()}
+                {/* Description Section - Full Width */}
+                <div className="detail-section description-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-comment-alt me-2"></i>
+                    Issue Description
+                  </h5>
+                  <div className="description-box">
+                    {selectedTicket.description}
+                  </div>
+                </div>
+
+                {/* Feedback Section */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-star me-2"></i>
+                    Customer Feedback
+                  </h5>
+                  {selectedTicket.feedback ? (
+                    <div className="feedback-container">
+                      <div className="rating-display">
+                        <span className="rating-label">Rating:</span>
+                        <div className="stars-container">
+                          <ReactStars
+                            count={5}
+                            value={selectedTicket.feedback.rating}
+                            size={24}
+                            edit={false}
+                            activeColor="#ffd700"
+                          />
+                          <span className="rating-value">
+                            ({selectedTicket.feedback.rating}/5)
                           </span>
                         </div>
-                        <div className="timeline-body">
-                          <p className="mb-1">
-                            <strong>Updated By:</strong>{" "}
-                            {entry.username || "Service Agent"}
-                          </p>
-                          <p className="mb-0">
-                            <strong>Remarks:</strong>{" "}
-                            {entry.remarks || "No remarks provided"}
-                          </p>
-                        </div>
+                      </div>
+                      <div className="feedback-comment">
+                        <span className="comment-label">Comment:</span>
+                        <p className="comment-text">
+                          {selectedTicket.feedback.comment ||
+                            "No comments provided"}
+                        </p>
                       </div>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="no-feedback">
+                      <i className="fas fa-comment-alt"></i>
+                      <p>No feedback submitted yet</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* History Section */}
+                <div className="detail-section">
+                  <h5 className="section-title">
+                    <i className="fas fa-history me-2"></i>
+                    Ticket History
+                  </h5>
+                  <div className="history-timeline">
+                    {selectedTicket.history.map((entry, index) => (
+                      <div key={index} className="timeline-item">
+                        <div className="timeline-icon">
+                          <i className="fas fa-circle"></i>
+                        </div>
+                        <div className="timeline-content">
+                          <div className="timeline-header">
+                            <span className="status">{entry.status}</span>
+                            <span className="date">
+                              {new Date(entry.date).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="timeline-body">
+                            <p className="mb-1">
+                              <strong>Updated By:</strong>{" "}
+                              {entry.username || "Service Agent"}
+                            </p>
+                            <p className="mb-0">
+                              <strong>Remarks:</strong>{" "}
+                              {entry.remarks || "No remarks provided"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

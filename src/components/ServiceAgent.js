@@ -9,7 +9,6 @@ import {
   Modal,
   Spinner,
   Badge,
-  Table,
 } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -18,7 +17,6 @@ import "../App.css";
 import { toast } from "react-toastify";
 import ReactStars from "react-rating-stars-component";
 import "../styles/TicketModal.css";
-import "../styles/ServiceAgent.css";
 // Adjust the path as needed
 
 const ServiceAgentDashboard = () => {
@@ -158,228 +156,376 @@ const ServiceAgentDashboard = () => {
   }, [fetchTickets]);
 
   return (
-    <Container fluid className="service-agent-dashboard">
-      {/* Dashboard Header */}
-      <div className="dashboard-header">
-        <div className="header-content">
-          <h2 className="dashboard-title">
-            <i className="fas fa-headset me-2"></i>
-            Service Agent Dashboard
-          </h2>
-          <p className="dashboard-subtitle">
-            Manage and resolve customer tickets efficiently
-          </p>
-        </div>
+    <Container className="mt-5">
+      <div
+        className="my-3"
+        style={{
+          background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          display: "flex",
+          justifyContent: "center",
+          textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
+          fontFamily: "'Poppins', sans-serif",
+        }}
+      >
+        <h2 style={{ fontWeight: "700", fontSize: "2rem" }}>
+          Service Agent Dashboard: Manage & Resolve Tickets
+        </h2>
       </div>
 
-      {/* Search and Refresh Section */}
-      <div className="search-section">
-        <div className="search-container">
-          <div className="search-box">
-            <i className="fas fa-search search-icon"></i>
-            <input
-              type="text"
-              placeholder="Search tickets by ID, customer, status..."
-              onChange={(e) => handleSearch(e.target.value)}
-              className="search-input"
-            />
-          </div>
+      <div className="container py-3 my-3">
+        <div
+          className="input-group"
+          style={{
+            margin: "0 auto",
+            border: "1px solid #ddd",
+            borderRadius: "50px",
+            maxWidth: "600px",
+            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          {/* Search Input */}
+          <input
+            type="text"
+            className="form-control border-0"
+            placeholder="🔍 Search by Ticket ID,Customer, Status, or Priority"
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{
+              fontSize: "16px",
+              border: "none",
+              outline: "none",
+              borderRadius: "50px 0 0 50px", // Left rounded pill shape
+              paddingLeft: "20px",
+            }}
+          />
+
+          {/* Refresh Button */}
           <button
-            className="refresh-button"
+            type="button"
             onClick={fetchTickets}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            className="btn"
+            onMouseEnter={() => setIsHovered(true)} // Set hover to true
+            onMouseLeave={() => setIsHovered(false)} // Set hover to false
+            style={{
+              background: "linear-gradient(90deg, #6a11cb, #2575fc)", // Gradient background
+              color: "white",
+              border: "none",
+              borderRadius: "0 50px 50px 0", // Right rounded pill shape
+              padding: "8px 20px",
+              cursor: "pointer",
+              transition: "all 0.3s ease-in-out",
+              position: "relative",
+              overflow: "hidden",
+            }}
           >
-            <i className={`fas fa-sync-alt ${isHovered ? "rotate" : ""}`}></i>
-            <span>Refresh</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="refresh-icon bi bi-arrow-repeat"
+              viewBox="0 0 16 16"
+              style={{
+                transition: "transform 0.6s ease-in-out", // Smooth rotation transition
+                transform: isHovered ? "rotate(360deg)" : "rotate(0deg)", // Rotate on hover
+              }}
+            >
+              <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
+              <path
+                fillRule="evenodd"
+                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+              ></path>
+            </svg>
           </button>
         </div>
       </div>
-
-      {/* Tickets Grid */}
-      <div className="tickets-grid">
+      {/* Refresh Button */}
+      <Row>
         {loading ? (
-          <div className="loading-container">
-            <Spinner animation="border" variant="primary" />
-          </div>
+          <Col className="text-center">
+            <Spinner
+              animation="border"
+              variant="primary"
+              style={{
+                width: "3rem",
+                height: "3rem",
+                marginTop: "2rem",
+              }}
+            />
+          </Col>
         ) : filteredTickets.length > 0 ? (
-          <Row>
-            {filteredTickets.map((ticket) => (
-              <Col lg={4} md={6} sm={12} key={ticket._id}>
-                <Card className="ticket-card mb-4">
-                  <Card.Header className="d-flex justify-content-between align-items-center">
-                    <div className="tracking-id">
-                      <i className="fas fa-ticket-alt"></i>
-                      {ticket.trackingId}
-                    </div>
+          filteredTickets.map((ticket) => (
+            <Col md={4} key={ticket._id} className="mb-4">
+              <Card
+                className="shadow-lg "
+                style={{
+                  width: "100%",
+
+                  borderLeft: `5px solid ${
+                    ticket.priority === "High"
+                      ? "red"
+                      : ticket.priority === "Normal"
+                      ? "orange"
+                      : "green"
+                  }`,
+                }}
+              >
+                <Card.Body>
+                  <p>{ticket.trackingId}</p>
+                  <hr />
+                  <Card.Text>
+                    <strong>Customer Name:</strong> {ticket.customerName}
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Description:</strong> {ticket.description}
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Priority:</strong>{" "}
                     <Badge
-                      className={`status-badge status-${ticket.status.toLowerCase()}`}
+                      bg={
+                        ticket.priority === "High"
+                          ? "danger"
+                          : ticket.priority === "Normal"
+                          ? "warning"
+                          : "success"
+                      }
                     >
-                      {ticket.status}
+                      {ticket.priority}
                     </Badge>
-                  </Card.Header>
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Type:</strong>{" "}
+                    <Badge
+                      bg={
+                        ticket.Type === "Repair"
+                          ? "primary" // Blue for "Repair"
+                          : ticket.Type === "Replacement"
+                          ? "info" // Light blue for "Replacement"
+                          : ticket.Type === "Received"
+                          ? "success" // Green for "Received"
+                          : "secondary" // Default badge color if none of the above"
+                      }
+                      style={{
+                        fontSize: "14px", // Slightly larger font for better readability
+                        padding: "5px 10px", // Add some padding for better styling
+                        borderRadius: "10px", // Rounded badge for modern look
+                        marginLeft: "10px", // Add space after "Status"
+                        textTransform: "capitalize", // Make the text properly cased
+                      }}
+                    >
+                      {ticket.Type}
+                    </Badge>
+                  </Card.Text>
+                  <Form.Group className="my-3">
+                    <Form.Label className="fw-bold">
+                      Select Call Type
+                    </Form.Label>
+                    <Form.Select
+                      className="custom-dropdown"
+                      aria-label="Update Call"
+                      onChange={(e) =>
+                        handleUpdateCall(ticket?._id, e.target.value)
+                      }
+                      value={ticket?.Type || ""}
+                      disabled={!ticket?._id} // Disable dropdown if there's no ticket._id
+                    >
+                      <option value="" disabled>
+                        -- Select Call Type --
+                      </option>
+                      <option value="Replacement">Replacement</option>
+                      <option value="Repair">Repair</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form
+                    onSubmit={(e) => {
+                      if (
+                        !ticketDetails[ticket._id]?.remarks ||
+                        ticketDetails[ticket._id]?.remarks.trim() === ""
+                      ) {
+                        e.preventDefault();
+                        toast.error(
+                          "Remarks are required when updating the status."
+                        );
+                        return;
+                      }
+                      handleUpdateTicket(e, ticket._id);
+                    }}
+                  >
+                    {/* Status Update Dropdown */}
+                    <Form.Select
+                      className="my-2"
+                      aria-label="Update Status"
+                      onChange={(e) =>
+                        handleInputChange(e, ticket._id, "status")
+                      }
+                      value={ticketDetails[ticket._id]?.status || ticket.status}
+                    >
+                      <option value="Open">Open</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Resolved">Resolved</option>
+                    </Form.Select>
 
-                  <Card.Body>
-                    <div className="ticket-details">
-                      <div className="detail-group">
-                        <div className="detail-item">
-                          <i className="fas fa-user"></i>
-                          <span className="detail-label">Customer:</span>
-                          <span className="detail-value">
-                            {ticket.customerName}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <i className="fas fa-box"></i>
-                          <span className="detail-label">Product:</span>
-                          <span className="detail-value">
-                            {ticket.productType}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <i className="fas fa-barcode"></i>
-                          <span className="detail-label">Serial No:</span>
-                          <span className="detail-value">
-                            {ticket.serialNumber || "N/A"}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <i className="fas fa-cog"></i>
-                          <span className="detail-label">Model:</span>
-                          <span className="detail-value">
-                            {ticket.modelType || "N/A"}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <i className="fas fa-tools"></i>
-                          <span className="detail-label">Part Name:</span>
-                          <span className="detail-value">
-                            {ticket.partName || "Not Specified"}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <i className="fas fa-phone-alt"></i>
-                          <span className="detail-label">Call Type:</span>
-                          <span className="detail-value">
-                            {ticket.call || "Not Specified"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <Form
-                        onSubmit={(e) => handleUpdateTicket(e, ticket._id)}
-                        className="mt-4"
+                    {/* Remarks and Status Form */}
+                    <div className="mb-3 my-3">
+                      <input
+                        type="text"
+                        className="form-control my-2"
+                        style={{
+                          margin: "0 auto",
+                          border: "1px solid #ddd",
+                          borderRadius: "5px",
+                        }}
+                        placeholder="Enter Remarks"
+                        value={ticketDetails[ticket._id]?.remarks || ""}
+                        onChange={(e) =>
+                          handleInputChange(e, ticket._id, "remarks")
+                        }
+                      />
+                    </div>
+                    {/* Part Name */}
+                    <Form.Group className="my-3">
+                      <Form.Label className="fw-bold">
+                        Select Part Name
+                      </Form.Label>
+                      <Form.Select
+                        className="custom-dropdown"
+                        aria-label="Select Part Name"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "Other") {
+                            // Show input field for custom part name
+                            handleInputChange(e, ticket._id, "isOther", true);
+                            handleInputChange(e, ticket._id, "partName", ""); // Reset partName
+                          } else {
+                            // Directly set the selected part name
+                            handleInputChange(e, ticket._id, "isOther", false);
+                            handleInputChange(e, ticket._id, "partName", value);
+                          }
+                        }}
+                        value={
+                          ticketDetails[ticket._id]?.isOther
+                            ? "Other"
+                            : ticketDetails[ticket._id]?.partName || ""
+                        }
+                        disabled={!ticket?._id} // Disable dropdown if there's no ticket._id
                       >
-                        <Row>
-                          <Col md={6}>
-                            <Form.Group className="mb-3">
-                              <Form.Label>
-                                <i className="fas fa-tasks me-2"></i>Status
-                              </Form.Label>
-                              <Form.Select
-                                value={
-                                  ticketDetails[ticket._id]?.status ||
-                                  ticket.status
-                                }
-                                onChange={(e) =>
-                                  handleInputChange(e, ticket._id, "status")
-                                }
-                                className="form-control-modern"
-                              >
-                                <option>Open</option>
-                                <option>In Progress</option>
-                                <option>Resolved</option>
-                                <option>Closed</option>
-                              </Form.Select>
-                            </Form.Group>
-                          </Col>
-                          <Col md={6}>
-                            <Form.Group className="mb-3">
-                              <Form.Label>
-                                <i className="fas fa-wrench me-2"></i>Service
-                                Type
-                              </Form.Label>
-                              <Form.Select
-                                value={
-                                  ticketDetails[ticket._id]?.Type ||
-                                  ticket.Type ||
-                                  ""
-                                }
-                                onChange={(e) =>
-                                  handleInputChange(e, ticket._id, "Type")
-                                }
-                                className="form-control-modern"
-                              >
-                                <option value="">Select Type</option>
-                                <option value="Repair">Repair</option>
-                                <option value="Replacement">Replacement</option>
-                              </Form.Select>
-                            </Form.Group>
-                          </Col>
-                        </Row>
+                        <option value="" disabled>
+                          -- Select Part Name --
+                        </option>
+                        <option value="CMOS Battery">CMOS Battery</option>
+                        <option value="DOC Board + LVDS Cable">
+                          DOC Board + LVDS Cable
+                        </option>
+                        <option value="MotherBoard">MotherBoard</option>
+                        <option value="OC Module">OC Module</option>
+                        <option value="OPS">OPS</option>
+                        <option value="Panel">Panel</option>
+                        <option value="Power Board">Power Board</option>
+                        <option value="Speaker">Speaker</option>
+                        <option value="T-CON Board + LVDS Cable">
+                          T-CON Board + LVDS Cable
+                        </option>
+                        <option value="Other">Other</option>
+                      </Form.Select>
 
-                        <Form.Group className="mb-3">
-                          <Form.Label>
-                            <i className="fas fa-comment-alt me-2"></i>Remarks
+                      {/* Conditionally render input field if "Other" is selected */}
+                      {ticketDetails[ticket._id]?.isOther && (
+                        <Form.Group className="my-3">
+                          <Form.Label className="fw-bold">
+                            Specify Other Part Name
                           </Form.Label>
                           <Form.Control
-                            as="textarea"
-                            rows={2}
-                            value={ticketDetails[ticket._id]?.remarks || ""}
+                            type="text"
+                            placeholder="Enter Part Name"
                             onChange={(e) =>
-                              handleInputChange(e, ticket._id, "remarks")
+                              handleInputChange(
+                                e,
+                                ticket._id,
+                                "partName",
+                                e.target.value
+                              )
                             }
-                            placeholder="Enter your remarks..."
-                            className="form-control-modern"
+                            value={ticketDetails[ticket._id]?.partName || ""}
                           />
                         </Form.Group>
+                      )}
+                    </Form.Group>
 
-                        <div className="button-group">
-                          <Button
-                            type="submit"
-                            className="update-button"
-                            disabled={updatingTickets[ticket._id]}
-                          >
-                            {updatingTickets[ticket._id] ? (
-                              <>
-                                <Spinner size="sm" /> Updating...
-                              </>
-                            ) : (
-                              <>
-                                <i className="fas fa-save me-2"></i>
-                                Update Ticket
-                              </>
-                            )}
-                          </Button>
-                          <Button
-                            variant="primary"
-                            className="details-button"
-                            onClick={() => handleShowDetails(ticket)}
-                          >
-                            <i className="fas fa-eye me-2"></i>
-                            View Details
-                          </Button>
-                        </div>
-                      </Form>
+                    {/* Buttons Section */}
+                    <div
+                      className="d-flex flex-column justify-content-center gap-1"
+                      style={{
+                        width: "100%",
+                        gap: "10px",
+                      }}
+                    >
+                      {/* Update Ticket Button */}
+                      <Button
+                        variant="info"
+                        type="submit"
+                        className="mt-2 "
+                        style={{
+                          width: "100%",
+                          backgroundColor: "lightgreen",
+                          border: "none",
+                          color: "black",
+                          borderRadius: "50px",
+                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                          transition: "all 0.3s ease", // Smooth transition for hover effect
+                        }}
+                        disabled={updatingTickets[ticket._id]} // Disable button if this ticket is being updated
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#66bb6a")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "lightgreen")
+                        }
+                      >
+                        {updatingTickets[ticket._id] ? (
+                          <Spinner animation="border" size="sm" />
+                        ) : (
+                          "Update Ticket"
+                        )}
+                      </Button>
+
+                      {/* View Details Button */}
+                      <Button
+                        variant="info"
+                        onClick={() => handleShowDetails(ticket)}
+                        className="w-100 my-2"
+                        style={{
+                          width: "100%",
+                          backgroundColor: "lightblue",
+                          border: "none",
+                          color: "black",
+                          borderRadius: "50px",
+                          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                          transition: "all 0.3s ease",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#81d4fa")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "lightblue")
+                        }
+                      >
+                        View Details
+                      </Button>
                     </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
         ) : (
-          <div className="no-tickets">
-            <i className="fas fa-ticket-alt fa-3x mb-3"></i>
-            <p>No tickets available</p>
-          </div>
+          <Col className="text-center">
+            <p>No tickets found.</p>
+          </Col>
         )}
-      </div>
-
+      </Row>
       {/* Ticket Details Modal */}
       <Modal
         show={showModal}
@@ -418,33 +564,24 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-user-circle me-2"></i>
                   Customer Information
                 </h5>
-                <div className="detail-group">
-                  <div className="detail-item">
-                    <i className="fas fa-user me-2"></i>
-                    <span className="detail-label">Customer:</span>
-                    <span className="detail-value">
-                      {selectedTicket.customerName}
-                    </span>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Customer Name:</span>
+                    <span className="value">{selectedTicket.customerName}</span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-phone me-2"></i>
-                    <span className="detail-label">Contact:</span>
-                    <span className="detail-value">
+                  <div className="info-item">
+                    <span className="label">Contact:</span>
+                    <span className="value">
                       {selectedTicket.contactNumber}
                     </span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-envelope me-2"></i>
-                    <span className="detail-label">Email:</span>
-                    <span className="detail-value">{selectedTicket.email}</span>
+                  <div className="info-item">
+                    <span className="label">Email:</span>
+                    <span className="value">{selectedTicket.email}</span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-building me-2"></i>
-                    <span className="detail-label">Organization:</span>
-                    <span className="detail-value">
+                  <div className="info-item">
+                    <span className="label">Organization:</span>
+                    <span className="value">
                       {selectedTicket.organization || "N/A"}
                     </span>
                   </div>
@@ -457,35 +594,28 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-box me-2"></i>
                   Product Details
                 </h5>
-                <div className="detail-group">
-                  <div className="detail-item">
-                    <i className="fas fa-box me-2"></i>
-                    <span className="detail-label">Product Type:</span>
-                    <span className="detail-value">
-                      {selectedTicket.productType}
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Product Type:</span>
+                    <span className="value">{selectedTicket.productType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Model Type:</span>
+                    <span className="value">{selectedTicket.modelType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Serial Number:</span>
+                    <span className="value">{selectedTicket.serialNumber}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Call Type:</span>
+                    <span className="value">
+                      {selectedTicket.call || "Not Specified"}
                     </span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-cog me-2"></i>
-                    <span className="detail-label">Model Type:</span>
-                    <span className="detail-value">
-                      {selectedTicket.modelType}
-                    </span>
-                  </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-barcode me-2"></i>
-                    <span className="detail-label">Serial Number:</span>
-                    <span className="detail-value">
-                      {selectedTicket.serialNumber}
-                    </span>
-                  </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-tools me-2"></i>
-                    <span className="detail-label">Part Name:</span>
-                    <span className="detail-value">
+                  <div className="info-item">
+                    <span className="label">Part Name:</span>
+                    <span className="value">
                       {selectedTicket.partName || "Not Available"}
                     </span>
                   </div>
@@ -498,25 +628,46 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-map-marker-alt me-2"></i>
                   Location Details
                 </h5>
-                <div className="detail-group">
-                  <div className="detail-item">
-                    <i className="fas fa-map-marker-alt me-2"></i>
-                    <span className="detail-label">Address:</span>
-                    <span className="detail-value">
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Address:</span>
+                    <span className="value address-value">
                       {selectedTicket.address}
                     </span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-city me-2"></i>
-                    <span className="detail-label">City:</span>
-                    <span className="detail-value">{selectedTicket.city}</span>
+                  <div className="info-item">
+                    <span className="label">City:</span>
+                    <span className="value">{selectedTicket.city}</span>
                   </div>
+                  <div className="info-item">
+                    <span className="label">State:</span>
+                    <span className="value">{selectedTicket.state}</span>
+                  </div>
+                </div>
+              </div>
 
-                  <div className="detail-item">
-                    <i className="fas fa-map me-2"></i>
-                    <span className="detail-label">State:</span>
-                    <span className="detail-value">{selectedTicket.state}</span>
+              {/* Bill Download Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-file-invoice me-2"></i>
+                  Bill Information
+                </h5>
+                <div className="bill-download-container">
+                  <div className="bill-info">
+                    <span className="bill-name">
+                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
+                    </span>
+                    <a
+                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                        /^uploads[\\/]/,
+                        ""
+                      )}`}
+                      download
+                      className="download-button"
+                    >
+                      <i className="fas fa-download me-2"></i>
+                      Download Bill
+                    </a>
                   </div>
                 </div>
               </div>
@@ -527,28 +678,25 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-cogs me-2"></i>
                   Service Details
                 </h5>
-                <div className="detail-group">
-                  <div className="detail-item">
-                    <i className="fas fa-wrench me-2"></i>
-                    <span className="detail-label">Service Type:</span>
-                    <span className="detail-value">
-                      {selectedTicket.Type || "Not Specified"}
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Service Type:</span>
+                    <span className="value">
+                      <Badge
+                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
+                      >
+                        {selectedTicket.Type || "Not Specified"}
+                      </Badge>
                     </span>
                   </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-exclamation-circle me-2"></i>
-                    <span className="detail-label">Priority:</span>
-                    <span className="detail-value">
-                      {selectedTicket.priority}
-                    </span>
-                  </div>
-
-                  <div className="detail-item">
-                    <i className="fas fa-phone-alt me-2"></i>
-                    <span className="detail-label">Call Type:</span>
-                    <span className="detail-value">
-                      {selectedTicket.call || "Not Specified"}
+                  <div className="info-item">
+                    <span className="label">Priority:</span>
+                    <span className="value">
+                      <Badge
+                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
+                      >
+                        {selectedTicket.priority || "Normal"}
+                      </Badge>
                     </span>
                   </div>
                 </div>
@@ -560,11 +708,48 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-comment-alt me-2"></i>
                   Issue Description
                 </h5>
-                <div className="detail-item description">
-                  <span className="detail-value">
-                    {selectedTicket.description}
-                  </span>
+                <div className="description-box">
+                  {selectedTicket.description}
                 </div>
+              </div>
+
+              {/* Feedback Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-star me-2"></i>
+                  Customer Feedback
+                </h5>
+                {selectedTicket.feedback ? (
+                  <div className="feedback-container">
+                    <div className="rating-display">
+                      <span className="rating-label">Rating:</span>
+                      <div className="stars-container">
+                        <ReactStars
+                          count={5}
+                          value={selectedTicket.feedback.rating}
+                          size={24}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
+                        <span className="rating-value">
+                          ({selectedTicket.feedback.rating}/5)
+                        </span>
+                      </div>
+                    </div>
+                    <div className="feedback-comment">
+                      <span className="comment-label">Comment:</span>
+                      <p className="comment-text">
+                        {selectedTicket.feedback.comment ||
+                          "No comments provided"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-feedback">
+                    <i className="fas fa-comment-alt"></i>
+                    <p>No feedback submitted yet</p>
+                  </div>
+                )}
               </div>
 
               {/* History Section */}
@@ -573,25 +758,29 @@ const ServiceAgentDashboard = () => {
                   <i className="fas fa-history me-2"></i>
                   Ticket History
                 </h5>
-                <div className="history-section">
+                <div className="history-timeline">
                   {selectedTicket.history.map((entry, index) => (
-                    <div key={index} className="history-item">
-                      <div className="history-status">
-                        <i className="fas fa-circle me-2"></i>
-                        {entry.status}
+                    <div key={index} className="timeline-item">
+                      <div className="timeline-icon">
+                        <i className="fas fa-circle"></i>
                       </div>
-                      <small className="text-muted">
-                        {new Date(entry.date).toLocaleString()}
-                      </small>
-                      <div className="history-details">
-                        <p>
-                          <strong>Updated By:</strong>{" "}
-                          {entry.username || "Service Agent"}
-                        </p>
-                        <p>
-                          <strong>Remarks:</strong>{" "}
-                          {entry.remarks || "No remarks provided"}
-                        </p>
+                      <div className="timeline-content">
+                        <div className="timeline-header">
+                          <span className="status">{entry.status}</span>
+                          <span className="date">
+                            {new Date(entry.date).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="timeline-body">
+                          <p className="mb-1">
+                            <strong>Updated By:</strong>{" "}
+                            {entry.username || "Service Agent"}
+                          </p>
+                          <p className="mb-0">
+                            <strong>Remarks:</strong>{" "}
+                            {entry.remarks || "No remarks provided"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}

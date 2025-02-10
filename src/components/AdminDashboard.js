@@ -22,6 +22,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { FaEye } from "react-icons/fa"; // Import icons
 import "../App.css";
 import { toast } from "react-toastify";
+import "../styles/TicketModal.css";
 // Register required chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 const AdminDashboard = () => {
@@ -1482,270 +1483,237 @@ const AdminDashboard = () => {
       </Card>
 
       {/* Modal for Viewing Ticket Details */}
-      <Modal show={showDetailsModal} onHide={() => setShowDetailsModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title
-            style={{ fontWeight: "bold", fontSize: "24px", color: "#007bff" }}
-          >
-            Ticket Details
+      <Modal
+        show={showDetailsModal}
+        onHide={() => setShowDetailsModal(false)}
+        size="lg"
+        centered
+        className="ticket-detail-modal"
+      >
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom">
+            <i className="fas fa-ticket-alt me-2"></i>
+            Ticket Information
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body-custom">
           {selectedTicket ? (
-            <div>
-              {/* Ticket Information */}
-              <div style={{ marginBottom: "20px" }}>
-                <p>
-                  <strong style={{ color: "green" }}>Tracking ID:</strong>{" "}
-                  {selectedTicket.trackingId}
-                </p>
-                <p>
-                  <strong>Created On:</strong>{" "}
-                  {new Date(selectedTicket.createdAt).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Customer Name:</strong> {selectedTicket.customerName}
-                </p>{" "}
-                <p>
-                  <strong>Organization:</strong> {selectedTicket.organization}
-                </p>
-                <p>
-                  <strong style={{ color: "red" }}>Customer Issue:</strong>{" "}
-                  {selectedTicket.description}
-                </p>
-                <p>
-                  <strong>Contact:</strong> {selectedTicket.contactNumber}
-                </p>
-                <p>
-                  <strong>Address:</strong> {selectedTicket.address}
-                </p>
-                <p>
-                  <strong>City:</strong> {selectedTicket.city}
-                </p>
-                <p>
-                  <strong>State:</strong> {selectedTicket.state}
-                </p>
-                <p>
-                  <strong>Product Type:</strong> {selectedTicket.productType}
-                </p>
-                <p>
-                  <strong>Model Type:</strong> {selectedTicket.modelType}
-                </p>
-                <p>
-                  <strong>Serial Number:</strong> {selectedTicket.serialNumber}
-                </p>
-                <p>
-                  <strong>Bill:</strong> {selectedTicket.billImage}
-                  <a
-                    href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
-                      /^uploads[\\/]/,
-                      ""
-                    )}`}
-                    download={selectedTicket.billImage.replace(
-                      /^uploads[\\/]/,
-                      ""
-                    )}
-                    className="enhanced-download-btn btn-sm mx-3"
-                    style={{
-                      background: "linear-gradient(135deg, #6a11cb, #2575fc)",
-                    }}
-                  >
-                    Download Bill
-                  </a>
-                </p>
-                <p>
-                  <strong>Call Type:</strong>{" "}
-                  {selectedTicket.callType || "Not specified"}
-                </p>
-                <p>
-                  <strong>Part name if changes:</strong>{" "}
-                  {selectedTicket.partName || "No part changes reported"}
-                </p>
-                <p>
-                  <strong>Type:</strong>{" "}
-                  {selectedTicket.Type || "Type not available"}
-                </p>
-                <p>
-                  <strong>Priority:</strong>{" "}
-                  <Badge
-                    bg={
-                      selectedTicket.priority === "High"
-                        ? "danger"
-                        : selectedTicket.priority === "Normal"
-                        ? "warning"
-                        : "success"
-                    }
-                    style={{ fontSize: "14px", padding: "5px 10px" }}
-                  >
-                    {selectedTicket.priority}
-                  </Badge>
-                </p>
-                <p>
-                  <strong>Remarks:</strong>{" "}
-                  {selectedTicket.remarks || "No remarks provided"}
-                </p>
-                <p>
-                  <strong>Assigned Agent:</strong>{" "}
-                  {selectedTicket.assignedTo || "Not Assigned"}
-                </p>
-              </div>
-              {/* Feedback Section */}
-              <div>
-                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
-                  Feedback
-                </h5>
-                {feedback ? (
-                  <div style={{ marginTop: "10px" }}>
-                    <p>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginBottom: "15px",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            margin: "0",
-                            color: "#333",
-                          }}
-                        >
-                          Rating:
-                        </p>
-                        <div style={{ marginLeft: "10px" }}>
-                          <ReactStars
-                            count={5}
-                            value={feedback.rating}
-                            size={24}
-                            edit={false}
-                            activeColor="#ffd700"
-                          />
-                        </div>
-                      </div>
-                      <p>
-                        <strong>Comment:</strong>{" "}
-                        {feedback.comments || "No comments provided"}
-                      </p>
-                    </p>
-                  </div>
-                ) : (
-                  <p>No feedback submitted yet.</p>
-                )}
+            <div className="ticket-detail-container">
+              {/* Tracking ID and Status Section */}
+              <div className="ticket-header-section">
+                <div className="tracking-id-container">
+                  <span className="label">Tracking ID:</span>
+                  <span className="value">{selectedTicket.trackingId}</span>
+                </div>
+                <Badge
+                  className={`status-badge-lg status-${selectedTicket.status
+                    .toLowerCase()
+                    .replace(" ", "-")}`}
+                >
+                  {selectedTicket.status}
+                </Badge>
               </div>
 
-              {/* Ticket History Section */}
-              <div style={{ marginBottom: "20px" }}>
-                <h5 style={{ fontWeight: "bold", color: "#007bff" }}>
+              {/* Customer Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-user-circle me-2"></i>
+                  Customer Information
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Customer Name:</span>
+                    <span className="value">{selectedTicket.customerName}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Contact:</span>
+                    <span className="value">
+                      {selectedTicket.contactNumber}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Email:</span>
+                    <span className="value">{selectedTicket.email}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Organization:</span>
+                    <span className="value">
+                      {selectedTicket.organization || "N/A"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-box me-2"></i>
+                  Product Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Product Type:</span>
+                    <span className="value">{selectedTicket.productType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Model Type:</span>
+                    <span className="value">{selectedTicket.modelType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Serial Number:</span>
+                    <span className="value">{selectedTicket.serialNumber}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Call Type:</span>
+                    <span className="value">
+                      {selectedTicket.call || "Not Specified"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Location Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-map-marker-alt me-2"></i>
+                  Location Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Address:</span>
+                    <span className="value address-value">
+                      {selectedTicket.address}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">City:</span>
+                    <span className="value">{selectedTicket.city}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">State:</span>
+                    <span className="value">{selectedTicket.state}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bill Download Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-file-invoice me-2"></i>
+                  Bill Information
+                </h5>
+                <div className="bill-download-container">
+                  <div className="bill-info">
+                    <span className="bill-name">
+                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
+                    </span>
+                    <a
+                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                        /^uploads[\\/]/,
+                        ""
+                      )}`}
+                      download
+                      className="download-button"
+                    >
+                      <i className="fas fa-download me-2"></i>
+                      Download Bill
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service Details Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-cogs me-2"></i>
+                  Service Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Service Type:</span>
+                    <span className="value">
+                      <Badge
+                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
+                      >
+                        {selectedTicket.Type || "Not Specified"}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Priority:</span>
+                    <span className="value">
+                      <Badge
+                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
+                      >
+                        {selectedTicket.priority}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Assigned To:</span>
+                    <span className="value">
+                      <Badge className="assigned-badge">
+                        <i className="fas fa-user-circle me-1"></i>
+                        {selectedTicket.assignedTo || "Not Assigned"}
+                      </Badge>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-comment-alt me-2"></i>
+                  Issue Description
+                </h5>
+                <div className="description-box">
+                  {selectedTicket.description}
+                </div>
+              </div>
+
+              {/* History Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-history me-2"></i>
                   Ticket History
                 </h5>
-                <button
-                  type="button"
-                  onClick={() => toggleHistory(selectedTicket._id)}
-                  className="button "
-                  style={{
-                    height: "40px",
-                    padding: "8px 20px",
-                    background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "50px",
-                    fontSize: "14px",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#0056b3")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#007bff")
-                  }
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-arrow-repeat"
-                    viewBox="0 0 16 16"
-                    style={{ marginRight: "8px" }}
-                  >
-                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
-                    <path
-                      fillRule="evenodd"
-                      d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
-                    ></path>
-                  </svg>
-                  {historyVisible[selectedTicket._id]
-                    ? "Hide History"
-                    : "Show History"}
-                </button>
-                {historyVisible[selectedTicket._id] && (
-                  <ul
-                    style={{
-                      marginTop: "10px",
-                      padding: "10px",
-                      backgroundColor: "#f8f9fa",
-                      borderRadius: "8px",
-                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    {selectedTicket.history.map((entry, index) => (
-                      <li
-                        key={index}
-                        style={{
-                          padding: "8px 12px",
-                          borderBottom: "1px solid #ddd",
-                          fontSize: "14px",
-                          color: "#333",
-                          lineHeight: "1.6",
-                          transition: "background-color 0.3s",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.target.style.backgroundColor = "#f1f1f1")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.target.style.backgroundColor = "#fff")
-                        }
-                      >
-                        <strong>Status:</strong> {entry.status} <br />
-                        <strong>Date:</strong>{" "}
-                        {new Date(entry.date).toLocaleDateString()}{" "}
-                        {new Date(entry.date).toLocaleTimeString()} <br />
-                        <strong>Updated By:</strong>{" "}
-                        {entry.username || "OPS Manager"} <br />
-                        <strong>Remarks:</strong>{" "}
-                        {entry.remarks || "No remarks provided"}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <div className="history-timeline">
+                  {selectedTicket.history.map((entry, index) => (
+                    <div key={index} className="timeline-item">
+                      <div className="timeline-icon">
+                        <i className="fas fa-circle"></i>
+                      </div>
+                      <div className="timeline-content">
+                        <div className="timeline-header">
+                          <span className="status">{entry.status}</span>
+                          <span className="date">
+                            {new Date(entry.date).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="timeline-body">
+                          <p className="mb-1">
+                            <strong>Updated By:</strong>{" "}
+                            {entry.username || "Admin"}
+                          </p>
+                          <p className="mb-0">
+                            <strong>Remarks:</strong>{" "}
+                            {entry.remarks || "No remarks provided"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
-            <p>No ticket selected.</p>
+            <div className="no-ticket-selected">
+              <i className="fas fa-ticket-alt"></i>
+              <p>No ticket selected</p>
+            </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowDetailsModal(false)}
-            style={{
-              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
-              border: "none", // Remove default border
-              borderRadius: "50px", // Rounded edges for a sleek look
-              color: "#fff", // White text for contrast
-              fontWeight: "bold", // Bold text
-              padding: "12px 30px", // Increase padding for a more prominent button
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
-              transition: "all 0.3s ease", // Smooth transition effect
-            }}
-            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
-            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
-          >
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
 
       {/* Modal for Editing Ticket */}

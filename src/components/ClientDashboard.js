@@ -1495,14 +1495,122 @@ const ClientDashboard = () => {
 
                         <Card.Body>
                           <div className="ticket-details">
-                            <div className="detail-item">
-                              <i className="fas fa-box me-2"></i>
-                              <span className="detail-label">Product:</span>
-                              <span className="detail-value">
-                                {ticket.productType}
-                              </span>
+                            <div className="detail-group">
+                              <div className="detail-item">
+                                <i className="fas fa-user me-2"></i>
+                                <span className="detail-label">Customer:</span>
+                                <span className="detail-value">
+                                  {ticket.customerName}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-building me-2"></i>
+                                <span className="detail-label">
+                                  Organization:
+                                </span>
+                                <span className="detail-value">
+                                  {ticket.organization || "N/A"}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-box me-2"></i>
+                                <span className="detail-label">
+                                  Product Type:
+                                </span>
+                                <span className="detail-value">
+                                  {ticket.productType}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-cog me-2"></i>
+                                <span className="detail-label">
+                                  Model Type:
+                                </span>
+                                <span className="detail-value">
+                                  {ticket.modelType}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-barcode me-2"></i>
+                                <span className="detail-label">
+                                  Serial Number:
+                                </span>
+                                <span className="detail-value">
+                                  {ticket.serialNumber || "N/A"}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-phone me-2"></i>
+                                <span className="detail-label">Contact:</span>
+                                <span className="detail-value">
+                                  {ticket.contactNumber}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-envelope me-2"></i>
+                                <span className="detail-label">Email:</span>
+                                <span className="detail-value">
+                                  {ticket.email}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-map-marker-alt me-2"></i>
+                                <span className="detail-label">Address:</span>
+                                <span className="detail-value">
+                                  {ticket.address}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-city me-2"></i>
+                                <span className="detail-label">City:</span>
+                                <span className="detail-value">
+                                  {ticket.city}
+                                </span>
+                              </div>
+
+                              <div className="detail-item">
+                                <i className="fas fa-map me-2"></i>
+                                <span className="detail-label">State:</span>
+                                <span className="detail-value">
+                                  {ticket.state}
+                                </span>
+                              </div>
+
+                              <div className="detail-item description">
+                                <i className="fas fa-comment-alt me-2"></i>
+                                <span className="detail-label">
+                                  Description:
+                                </span>
+                                <span className="detail-value">
+                                  {ticket.description}
+                                </span>
+                              </div>
+
+                              {ticket.billImage && (
+                                <div className="detail-item">
+                                  <i className="fas fa-file-invoice me-2"></i>
+                                  <span className="detail-label">
+                                    Bill Image:
+                                  </span>
+                                  <a
+                                    href={ticket.billImage}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bill-link"
+                                  >
+                                    View Bill
+                                  </a>
+                                </div>
+                              )}
                             </div>
-                            {/* Add other details similarly */}
                           </div>
 
                           <div className="ticket-actions mt-3">

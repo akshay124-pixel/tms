@@ -221,21 +221,105 @@
   font-weight: 600;
 }
 
-/* Ticket Details */
+/* Ticket Details Styling */
+.ticket-details {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.detail-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
 .detail-item {
-  margin-bottom: 8px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding: 8px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+  border-color: #6a11cb;
+  box-shadow: 0 2px 8px rgba(106, 17, 203, 0.1);
+}
+
+.detail-item i {
+  color: #6a11cb;
+  min-width: 20px;
+  margin-top: 3px;
 }
 
 .detail-label {
-  font-weight: 500;
+  font-weight: 600;
+  color: #495057;
   margin-right: 8px;
-  color: #6c757d;
+  min-width: 80px;
 }
 
 .detail-value {
   color: #212529;
+  word-break: break-word;
+}
+
+/* Description takes full width */
+.detail-item.description {
+  grid-column: 1 / -1;
+}
+
+/* Bill link styling */
+.bill-link {
+  color: #6a11cb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.bill-link:hover {
+  color: #2575fc;
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .detail-group {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-item {
+    padding: 6px;
+  }
+
+  .detail-label {
+    min-width: 70px;
+    font-size: 0.9rem;
+  }
+
+  .detail-value {
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for details */
+.ticket-details {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* History Section */
@@ -286,22 +370,6 @@
 .toggle-view-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate__fadeIn {
-  animation: fadeIn 0.5s ease-out;
 }
 
 /* No Tickets State */

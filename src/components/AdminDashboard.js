@@ -1622,54 +1622,43 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Service Details Section */}
+              {/* Feedback Section */}
               <div className="detail-section">
                 <h5 className="section-title">
-                  <i className="fas fa-cogs me-2"></i>
-                  Service Details
+                  <i className="fas fa-star me-2"></i>
+                  Customer Feedback
                 </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Service Type:</span>
-                    <span className="value">
-                      <Badge
-                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
-                      >
-                        {selectedTicket.Type || "Not Specified"}
-                      </Badge>
-                    </span>
+                {selectedTicket.feedback ? (
+                  <div className="feedback-container">
+                    <div className="rating-display">
+                      <span className="rating-label">Rating:</span>
+                      <div className="stars-container">
+                        <ReactStars
+                          count={5}
+                          value={selectedTicket.feedback.rating}
+                          size={24}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
+                        <span className="rating-value">
+                          ({selectedTicket.feedback.rating}/5)
+                        </span>
+                      </div>
+                    </div>
+                    <div className="feedback-comment">
+                      <span className="comment-label">Comment:</span>
+                      <p className="comment-text">
+                        {selectedTicket.feedback.comment ||
+                          "No comments provided"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="info-item">
-                    <span className="label">Priority:</span>
-                    <span className="value">
-                      <Badge
-                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
-                      >
-                        {selectedTicket.priority}
-                      </Badge>
-                    </span>
+                ) : (
+                  <div className="no-feedback">
+                    <i className="fas fa-comment-alt"></i>
+                    <p>No feedback submitted yet</p>
                   </div>
-                  <div className="info-item">
-                    <span className="label">Assigned To:</span>
-                    <span className="value">
-                      <Badge className="assigned-badge">
-                        <i className="fas fa-user-circle me-1"></i>
-                        {selectedTicket.assignedTo || "Not Assigned"}
-                      </Badge>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-comment-alt me-2"></i>
-                  Issue Description
-                </h5>
-                <div className="description-box">
-                  {selectedTicket.description}
-                </div>
+                )}
               </div>
 
               {/* History Section */}

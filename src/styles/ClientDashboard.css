@@ -1,0 +1,226 @@
+/* Dashboard Container */
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+/* Main Card */
+.main-card {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Styling */
+.form-control-modern {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.form-control-modern:focus {
+  border-color: #6a11cb;
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+}
+
+/* File Upload */
+.custom-file-upload {
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-file-upload input[type="file"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-upload-label {
+  display: block;
+  padding: 12px;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+  background: #e9ecef;
+  border-color: #6a11cb;
+}
+
+/* Submit Button */
+.submit-button {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
+}
+
+/* Ticket Cards */
+.ticket-card {
+  transition: transform 0.3s ease;
+  border-radius: 12px;
+}
+
+.ticket-card:hover {
+  transform: translateY(-5px);
+}
+
+.status-badge {
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.status-resolved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-closed {
+  background-color: #d6d8d9;
+  color: #1b1e21;
+}
+
+.tracking-id {
+  color: #6a11cb;
+  font-weight: 600;
+}
+
+/* Ticket Details */
+.detail-item {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-label {
+  font-weight: 500;
+  margin-right: 8px;
+  color: #6c757d;
+}
+
+.detail-value {
+  color: #212529;
+}
+
+/* History Section */
+.history-button {
+  width: 100%;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.history-item {
+  border-left: 3px solid #6a11cb;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+}
+
+/* Feedback Section */
+.feedback-section {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.feedback-textarea {
+  border-radius: 8px;
+  resize: none;
+  min-height: 100px;
+}
+
+.submit-feedback-btn {
+  background: linear-gradient(45deg, #11998e, #38ef7d);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 10px;
+}
+
+/* Toggle View Button */
+.toggle-view-button {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.toggle-view-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+  
+  .main-card {
+    margin: 10px;
+  }
+  
+  .ticket-card {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate__fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* No Tickets State */
+.no-tickets {
+  color: #6c757d;
+  padding: 40px;
+  text-align: center;
+}
+
+.no-tickets i {
+  color: #dee2e6;
+  margin-bottom: 15px;
+} 

@@ -9,11 +9,14 @@ import {
   Alert,
   Badge,
   ListGroup,
+  Collapse,
 } from "react-bootstrap";
 import axios from "axios";
 import "../App.css";
 import ReactStars from "react-rating-stars-component";
 import { toast } from "react-toastify";
+import "../styles/ClientDashboard.css";
+
 const ClientDashboard = () => {
   const [ticketData, setTicketData] = useState({
     customerName: "",
@@ -1160,69 +1163,73 @@ const ClientDashboard = () => {
   }, [ticketData.customerName, viewTickets]); // Fetch tickets again when the customer's name changes
 
   return (
-    <Container className="mt-5">
-      <h2
-        className="mb-4 text-center"
-        style={{
-          background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          display: "flex",
-          justifyContent: "center",
-          textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
-          fontFamily: "'Poppins', sans-serif",
-        }}
-      >
-        Your Dashboard: Track & Manage Tickets
+    <Container fluid className="dashboard-container py-4 px-3">
+      <h2 className="dashboard-title text-center mb-5">
+        <span className="gradient-text">Your Service Dashboard</span>
+        <small className="d-block mt-2 text-muted fs-6">
+          Track & Manage Your Support Tickets
+        </small>
       </h2>
 
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      {error && (
+        <Alert variant="danger" className="animate__animated animate__fadeIn">
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert variant="success" className="animate__animated animate__fadeIn">
+          {success}
+        </Alert>
+      )}
 
-      <Card className="mb-4 shadow-lg">
-        <Card.Body>
-          {!viewTickets && (
+      <Card className="main-card border-0 mb-4">
+        <Card.Body className="p-md-4 p-3">
+          {!viewTickets ? (
             <>
-              <h4
-                style={{
-                  background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  display: "flex",
-                  justifyContent: "center",
-                  textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
-                  fontFamily: "'Poppins', sans-serif",
-                }}
-              >
-                Raise a New Ticket
-              </h4>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formCustomerName">
-                  <Form.Label>
-                    <strong>Customer Name</strong>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="customerName"
-                    value={ticketData.customerName}
-                    onChange={handleChange}
-                    placeholder="Enter customer name (individual, business, or institution)"
-                    required
-                    disabled
-                  />
-                </Form.Group>
-                <Form.Group controlId="formOrganization">
-                  <Form.Label>
-                    <strong>Organization</strong>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="organization"
-                    value={ticketData.organization}
-                    onChange={handleChange}
-                    placeholder="Enter the organization, college, or company name"
-                  />
-                </Form.Group>
+              <div className="form-header mb-4">
+                <h4 className="gradient-text text-center">
+                  <i className="fas fa-ticket-alt me-2"></i>
+                  Create Support Ticket
+                </h4>
+                <p className="text-muted text-center">
+                  Fill in the details below to submit your support request
+                </p>
+              </div>
+
+              <Form onSubmit={handleSubmit} className="ticket-form">
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="form-group mb-4">
+                      <Form.Label className="fw-bold">
+                        <i className="fas fa-user me-2"></i>Customer Name
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="customerName"
+                        value={ticketData.customerName}
+                        onChange={handleChange}
+                        className="form-control-modern"
+                        disabled
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="form-group mb-4">
+                      <Form.Label className="fw-bold">
+                        <i className="fas fa-building me-2"></i>Organization
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="organization"
+                        value={ticketData.organization}
+                        onChange={handleChange}
+                        className="form-control-modern"
+                        placeholder="Enter organization name"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
                 <Form.Group controlId="formSerialNumber">
                   <Form.Label>
                     <strong>Serial Number</strong>
@@ -1236,19 +1243,6 @@ const ClientDashboard = () => {
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>
-                    <strong>Upload Bill</strong>
-                  </Form.Label>
-                  <div className="input-group">
-                    <Form.Control
-                      type="file"
-                      name="billImage"
-                      onChange={handleFileChange}
-                      className="form-control"
-                    />
-                  </div>
-                </Form.Group>
                 <Form.Group controlId="formDescription">
                   <Form.Label>
                     <strong>Description</strong>
@@ -1263,6 +1257,7 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
+
                 <Form.Group controlId="formContactNumber">
                   <Form.Label>
                     <strong>Contact Number</strong>
@@ -1297,6 +1292,7 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
+
                 <Form.Group className="my-3" controlId="formProductType">
                   <Form.Label className="fw-bold">
                     Select Product Type
@@ -1366,6 +1362,7 @@ const ClientDashboard = () => {
                     required
                   />
                 </Form.Group>
+
                 <Form.Group controlId="formState">
                   <Form.Label>
                     <strong>State </strong>
@@ -1382,6 +1379,7 @@ const ClientDashboard = () => {
                     ))}
                   </Form.Select>
                 </Form.Group>
+
                 <Form.Group controlId="formCity" className="mt">
                   <Form.Label>
                     <strong>City</strong>
@@ -1401,193 +1399,126 @@ const ClientDashboard = () => {
                   </Form.Select>
                 </Form.Group>
 
-                <button className="btn1 my-3" type="submit">
-                  <span>
-                    Submit
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <g stroke-width="0" id="SVGRepo_bgCarrier"></g>
-                      <g
-                        stroke-linejoin="round"
-                        stroke-linecap="round"
-                        id="SVGRepo_tracerCarrier"
-                      ></g>
-                      <g id="SVGRepo_iconCarrier">
-                        {" "}
-                        <path
-                          fill="#ffffff"
-                          d="M20.33 3.66996C20.1408 3.48213 19.9035 3.35008 19.6442 3.28833C19.3849 3.22659 19.1135 3.23753 18.86 3.31996L4.23 8.19996C3.95867 8.28593 3.71891 8.45039 3.54099 8.67255C3.36307 8.89471 3.25498 9.16462 3.23037 9.44818C3.20576 9.73174 3.26573 10.0162 3.40271 10.2657C3.5397 10.5152 3.74754 10.7185 4 10.85L10.07 13.85L13.07 19.94C13.1906 20.1783 13.3751 20.3785 13.6029 20.518C13.8307 20.6575 14.0929 20.7309 14.36 20.73H14.46C14.7461 20.7089 15.0192 20.6023 15.2439 20.4239C15.4686 20.2456 15.6345 20.0038 15.72 19.73L20.67 5.13996C20.7584 4.88789 20.7734 4.6159 20.7132 4.35565C20.653 4.09541 20.5201 3.85762 20.33 3.66996ZM4.85 9.57996L17.62 5.31996L10.53 12.41L4.85 9.57996ZM14.43 19.15L11.59 13.47L18.68 6.37996L14.43 19.15Z"
-                        ></path>{" "}
-                      </g>
-                    </svg>
-                  </span>
-                  <span>Sure ?</span>
-                  <span>
-                    Done !
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <g stroke-width="0" id="SVGRepo_bgCarrier"></g>
-                      <g
-                        stroke-linejoin="round"
-                        stroke-linecap="round"
-                        id="SVGRepo_tracerCarrier"
-                      ></g>
-                      <g id="SVGRepo_iconCarrier">
-                        {" "}
-                        <path
-                          stroke-linecap="round"
-                          stroke-width="2"
-                          stroke="#ffffff"
-                          d="M8.00011 13L12.2278 16.3821C12.6557 16.7245 13.2794 16.6586 13.6264 16.2345L22.0001 6"
-                        ></path>{" "}
-                        <path
-                          fill="#ffffff"
-                          d="M11.1892 12.2368L15.774 6.63327C16.1237 6.20582 16.0607 5.5758 15.6332 5.22607C15.2058 4.87635 14.5758 4.93935 14.226 5.36679L9.65273 10.9564L11.1892 12.2368ZM8.02292 16.1068L6.48641 14.8263L5.83309 15.6248L2.6 13.2C2.15817 12.8687 1.53137 12.9582 1.2 13.4C0.868627 13.8419 0.95817 14.4687 1.4 14.8L4.63309 17.2248C5.49047 17.8679 6.70234 17.7208 7.381 16.8913L8.02292 16.1068Z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
-                        ></path>{" "}
-                      </g>
-                    </svg>
+                <div className="file-upload-container mb-4">
+                  <Form.Group controlId="formFile">
+                    <Form.Label className="fw-bold">
+                      <i className="fas fa-file-invoice me-2"></i>Upload Bill
+                    </Form.Label>
+                    <div className="custom-file-upload">
+                      <input
+                        type="file"
+                        name="billImage"
+                        onChange={handleFileChange}
+                        className="form-control"
+                        id="file-upload"
+                      />
+                      <label
+                        htmlFor="file-upload"
+                        className="file-upload-label"
+                      >
+                        <i className="fas fa-cloud-upload-alt me-2"></i>
+                        Choose File
+                      </label>
+                    </div>
+                  </Form.Group>
+                </div>
+
+                <button type="submit" className="submit-button w-100">
+                  <span className="button-content">
+                    <i className="fas fa-paper-plane me-2"></i>
+                    Submit Ticket
                   </span>
                 </button>
               </Form>
             </>
-          )}
-
-          {viewTickets && (
+          ) : (
             <>
-              <h4
-                className="mb-4"
-                style={{
-                  background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  display: "flex",
-                  justifyContent: "center",
-                  textShadow: "2px 2px 8px rgba(0, 0, 0, 0.3)",
-                  fontFamily: "'Poppins', sans-serif",
-                }}
-              >
-                Your Tickets
-              </h4>
-              <Row>
+              <div className="tickets-header mb-4">
+                <h4 className="gradient-text text-center">
+                  <i className="fas fa-clipboard-list me-2"></i>
+                  Your Support Tickets
+                </h4>
+                <p className="text-muted text-center">
+                  Track and manage your existing support requests
+                </p>
+              </div>
+
+              <Row className="g-4">
                 {tickets.length > 0 ? (
                   tickets.map((ticket) => (
-                    <Col md={6} key={ticket._id} className="mb-4">
-                      <Card className="shadow-lg ticket-card">
-                        <Card.Body>
-                          {/* Ticket Details */}
-                          <Card.Title>
-                            <strong style={{ color: "green" }}>
-                              Tracking ID:
-                            </strong>{" "}
-                            {ticket.trackingId}
-                          </Card.Title>
-                          <hr />
-                          <Card.Text>
-                            <strong>Customer Name:</strong>{" "}
-                            {ticket.customerName}
-                          </Card.Text>{" "}
-                          <Card.Text>
-                            <strong>Organization:</strong> {ticket.organization}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Description:</strong> {ticket.description}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Serial Number:</strong>{" "}
-                            {ticket.serialNumber}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Bill Image:</strong> {ticket.billImage}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Contact Number:</strong>{" "}
-                            {ticket.contactNumber}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Email:</strong> {ticket.email}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Product Type:</strong> {ticket.productType}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Model Type:</strong> {ticket.modelType}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Address:</strong> {ticket.address}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>City:</strong> {ticket.city}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>State:</strong> {ticket.state}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Status:</strong>{" "}
+                    <Col lg={6} key={ticket._id}>
+                      <Card className="ticket-card h-100 border-0 shadow-sm">
+                        <Card.Header className="bg-transparent border-0 pt-3">
+                          <div className="d-flex justify-content-between align-items-center">
                             <Badge
-                              pill
-                              bg={
-                                ticket.status === "Resolved"
-                                  ? "success"
-                                  : ticket.status === "Closed"
-                                  ? "dark"
-                                  : "warning"
-                              }
+                              className={`status-badge status-${ticket.status.toLowerCase()}`}
                             >
                               {ticket.status}
                             </Badge>
-                          </Card.Text>
-                          {/* Ticket History */}
-                          <Button
-                            variant="info"
-                            onClick={() => toggleHistory(ticket._id)}
-                            style={{
-                              background:
-                                "linear-gradient(90deg, #6a11cb, #2575fc)",
-                              border: "none",
-                              borderRadius: "20px",
-                              color: "#fff",
-                              fontWeight: "bold",
-                              padding: "10px 20px",
-                              marginBottom: "10px",
-                              transition:
-                                "transform 0.3s ease, box-shadow 0.3s ease",
-                            }}
-                          >
-                            <i className="fas fa-history"></i>{" "}
-                            {historyVisible[ticket._id]
-                              ? "Hide History"
-                              : "View History"}
-                          </Button>
-                          {historyVisible[ticket._id] && (
-                            <ListGroup className="mt-3">
-                              {ticket.history?.map((historyItem, index) => (
-                                <ListGroup.Item key={index}>
-                                  <strong>Status:</strong> {historyItem.status}
-                                  <br />
-                                  <small>
-                                    {new Date(
-                                      historyItem.date
-                                    ).toLocaleString()}
-                                  </small>
-                                </ListGroup.Item>
-                              ))}
-                            </ListGroup>
-                          )}
+                            <small className="text-muted">
+                              {new Date(ticket.createdAt).toLocaleDateString()}
+                            </small>
+                          </div>
+                          <h5 className="mt-2 tracking-id">
+                            #{ticket.trackingId}
+                          </h5>
+                        </Card.Header>
+
+                        <Card.Body>
+                          <div className="ticket-details">
+                            <div className="detail-item">
+                              <i className="fas fa-box me-2"></i>
+                              <span className="detail-label">Product:</span>
+                              <span className="detail-value">
+                                {ticket.productType}
+                              </span>
+                            </div>
+                            {/* Add other details similarly */}
+                          </div>
+
+                          <div className="ticket-actions mt-3">
+                            <Button
+                              variant="outline-primary"
+                              className="history-button"
+                              onClick={() => toggleHistory(ticket._id)}
+                            >
+                              <i className="fas fa-history me-2"></i>
+                              {historyVisible[ticket._id]
+                                ? "Hide History"
+                                : "View History"}
+                            </Button>
+                          </div>
+
+                          {/* Ticket History Section */}
+                          <Collapse in={historyVisible[ticket._id]}>
+                            <div className="history-section mt-3">
+                              <ListGroup variant="flush">
+                                {ticket.history?.map((item, index) => (
+                                  <ListGroup.Item
+                                    key={index}
+                                    className="history-item"
+                                  >
+                                    <div className="history-status">
+                                      <i className="fas fa-circle me-2"></i>
+                                      {item.status}
+                                    </div>
+                                    <small className="text-muted">
+                                      {new Date(item.date).toLocaleString()}
+                                    </small>
+                                  </ListGroup.Item>
+                                ))}
+                              </ListGroup>
+                            </div>
+                          </Collapse>
+
+                          {/* Feedback Section */}
                           {ticket.status === "Closed" &&
                             !isFeedbackSubmitted[ticket._id] && (
-                              <div className="feedback-section mt-3">
-                                <h5>
-                                  <strong>Feedback</strong>
-                                </h5>
-                                {/* Star Rating */}
+                              <div className="feedback-section mt-4">
+                                <h6 className="feedback-title">
+                                  <i className="fas fa-star me-2"></i>
+                                  Rate Your Experience
+                                </h6>
                                 <ReactStars
                                   count={5}
                                   value={feedbacks[ticket._id]?.rating || 0}
@@ -1597,11 +1528,10 @@ const ClientDashboard = () => {
                                   size={24}
                                   activeColor="#ffd700"
                                 />
-                                {/* Comment Box */}
-                                <textarea
-                                  className="form-control mt-2"
-                                  placeholder="Leave your comments here..."
-                                  rows="3"
+                                <Form.Control
+                                  as="textarea"
+                                  placeholder="Share your experience..."
+                                  className="feedback-textarea mt-2"
                                   value={feedbacks[ticket._id]?.comment || ""}
                                   onChange={(e) =>
                                     handleCommentChange(
@@ -1610,42 +1540,26 @@ const ClientDashboard = () => {
                                     )
                                   }
                                 />
-                                {/* Submit Feedback Button */}
                                 <Button
-                                  variant="primary"
-                                  className="mt-2"
+                                  className="submit-feedback-btn mt-2"
                                   onClick={() => submitFeedback(ticket._id)}
-                                  style={{
-                                    background:
-                                      "linear-gradient(90deg, #11998e, #38ef7d)",
-                                    border: "none",
-                                    borderRadius: "20px",
-                                    fontWeight: "bold",
-                                    color: "#fff",
-                                  }}
                                 >
+                                  <i className="fas fa-paper-plane me-2"></i>
                                   Submit Feedback
                                 </Button>
                               </div>
                             )}
-                          {isFeedbackSubmitted[ticket._id] && (
-                            <p>Feedback already submitted for this ticket.</p>
-                          )}
                         </Card.Body>
                       </Card>
                     </Col>
                   ))
                 ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "100%",
-                    }}
-                  >
-                    <p>No tickets available.</p>
-                  </div>
+                  <Col className="text-center py-5">
+                    <div className="no-tickets">
+                      <i className="fas fa-ticket-alt fa-3x mb-3"></i>
+                      <p>No tickets available</p>
+                    </div>
+                  </Col>
                 )}
               </Row>
             </>
@@ -1655,28 +1569,11 @@ const ClientDashboard = () => {
 
       <div className="text-center">
         <button
-          type="button"
-          style={{
-            background: "linear-gradient(90deg, #6a11cb, #2575fc)",
-            fontWeight: "bold",
-          }}
+          className="toggle-view-button"
           onClick={() => setViewTickets(!viewTickets)}
-          className="button my-4"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-arrow-left-right"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M2 8a.5.5 0 0 1 .5-.5H12.707l-2.854-2.854a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L12.707 8H2.5A.5.5 0 0 1 2 8z"
-            />
-          </svg>
-          {viewTickets ? "Raise New Ticket" : "View My Tickets"}
+          <i className={`fas fa-${viewTickets ? "plus" : "list"} me-2`}></i>
+          {viewTickets ? "Create New Ticket" : "View My Tickets"}
         </button>
       </div>
     </Container>

@@ -15,6 +15,8 @@ import { useParams } from "react-router-dom";
 import debounce from "lodash.debounce";
 import "../App.css";
 import { toast } from "react-toastify";
+import ReactStars from "react-stars";
+import "../styles/TicketModal.css";
 // Adjust the path as needed
 
 const ServiceAgentDashboard = () => {
@@ -540,130 +542,273 @@ const ServiceAgentDashboard = () => {
         )}
       </Row>
       {/* Ticket Details Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Ticket Details</Modal.Title>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        size="lg"
+        centered
+        className="ticket-detail-modal"
+      >
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom">
+            <i className="fas fa-ticket-alt me-2"></i>
+            Ticket Information
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body-custom">
           {selectedTicket ? (
-            <>
-              <p>
-                <strong>Tracking ID:</strong> {selectedTicket.trackingId}
-              </p>
-              <p>
-                <strong>Created On:</strong>{" "}
-                {new Date(selectedTicket.createdAt).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedTicket.description}
-              </p>
-              <p>
-                <strong>Customer Name:</strong> {selectedTicket.customerName}
-              </p>{" "}
-              <p>
-                <strong>Organization:</strong> {selectedTicket.organization}
-              </p>
-              <p>
-                <strong>Contact:</strong> {selectedTicket.contactNumber}
-              </p>
-              <p>
-                <strong>Address:</strong> {selectedTicket.address}
-              </p>
-              <p>
-                <strong>Product Type:</strong> {selectedTicket.productType}
-              </p>
-              <p>
-                <strong>Model Type:</strong> {selectedTicket.modelType}
-              </p>
-              <p>
-                <strong>Part Name:</strong>{" "}
-                {selectedTicket.partName || "Not Available"}
-              </p>
-              <p>
-                <strong>Serial Number:</strong> {selectedTicket.serialNumber}
-              </p>
-              <p>
-                <strong>Call Type:</strong> {selectedTicket.call}
-              </p>
-              <p>
-                <strong>Type:</strong> {selectedTicket.Type || "Not  Available"}
-              </p>
-              <p>
-                <strong>Part Name:</strong>{" "}
-                {selectedTicket.partName || "Not Available"}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
+            <div className="ticket-detail-container">
+              {/* Tracking ID and Status Section */}
+              <div className="ticket-header-section">
+                <div className="tracking-id-container">
+                  <span className="label">Tracking ID:</span>
+                  <span className="value">{selectedTicket.trackingId}</span>
+                </div>
                 <Badge
-                  bg={
-                    selectedTicket.status === "Open"
-                      ? "primary"
-                      : selectedTicket.status === "In Progress"
-                      ? "warning"
-                      : selectedTicket.status === "Resolved"
-                      ? "success"
-                      : selectedTicket.status === "Closed"
-                      ? "secondary"
-                      : "dark" // Default color for unknown status
-                  }
-                  style={{
-                    fontSize: "14px",
-                    padding: "5px 10px",
-                    borderRadius: "12px",
-                    color: "#fff",
-                    textTransform: "capitalize", // Makes status text look uniform
-                  }}
+                  className={`status-badge-lg status-${selectedTicket.status
+                    .toLowerCase()
+                    .replace(" ", "-")}`}
                 >
                   {selectedTicket.status}
                 </Badge>
-              </p>
-              <p>
-                <strong>Priority:</strong>{" "}
-                <Badge
-                  bg={
-                    selectedTicket.priority === "High"
-                      ? "danger"
-                      : selectedTicket.priority === "Normal"
-                      ? "warning"
-                      : "success"
-                  }
-                >
-                  {selectedTicket.priority}
-                </Badge>
-              </p>
-              <p>
-                <strong>Assigned Agent:</strong>{" "}
-                {selectedTicket.assignedTo || "Not Assigned"}
-              </p>
-              <p>
-                <strong>Remarks:</strong>{" "}
-                {selectedTicket.remarks || "Not Available"}
-              </p>
-            </>
+              </div>
+
+              {/* Customer Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-user-circle me-2"></i>
+                  Customer Information
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Customer Name:</span>
+                    <span className="value">{selectedTicket.customerName}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Contact:</span>
+                    <span className="value">
+                      {selectedTicket.contactNumber}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Email:</span>
+                    <span className="value">{selectedTicket.email}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Organization:</span>
+                    <span className="value">
+                      {selectedTicket.organization || "N/A"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-box me-2"></i>
+                  Product Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Product Type:</span>
+                    <span className="value">{selectedTicket.productType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Model Type:</span>
+                    <span className="value">{selectedTicket.modelType}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Serial Number:</span>
+                    <span className="value">{selectedTicket.serialNumber}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Call Type:</span>
+                    <span className="value">
+                      {selectedTicket.call || "Not Specified"}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Part Name:</span>
+                    <span className="value">
+                      {selectedTicket.partName || "Not Available"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Location Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-map-marker-alt me-2"></i>
+                  Location Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Address:</span>
+                    <span className="value address-value">
+                      {selectedTicket.address}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">City:</span>
+                    <span className="value">{selectedTicket.city}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">State:</span>
+                    <span className="value">{selectedTicket.state}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bill Download Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-file-invoice me-2"></i>
+                  Bill Information
+                </h5>
+                <div className="bill-download-container">
+                  <div className="bill-info">
+                    <span className="bill-name">
+                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
+                    </span>
+                    <a
+                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                        /^uploads[\\/]/,
+                        ""
+                      )}`}
+                      download
+                      className="download-button"
+                    >
+                      <i className="fas fa-download me-2"></i>
+                      Download Bill
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service Details Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-cogs me-2"></i>
+                  Service Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Service Type:</span>
+                    <span className="value">
+                      <Badge
+                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
+                      >
+                        {selectedTicket.Type || "Not Specified"}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Priority:</span>
+                    <span className="value">
+                      <Badge
+                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
+                      >
+                        {selectedTicket.priority || "Normal"}
+                      </Badge>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-comment-alt me-2"></i>
+                  Issue Description
+                </h5>
+                <div className="description-box">
+                  {selectedTicket.description}
+                </div>
+              </div>
+
+              {/* Feedback Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-star me-2"></i>
+                  Customer Feedback
+                </h5>
+                {selectedTicket.feedback ? (
+                  <div className="feedback-container">
+                    <div className="rating-display">
+                      <span className="rating-label">Rating:</span>
+                      <div className="stars-container">
+                        <ReactStars
+                          count={5}
+                          value={selectedTicket.feedback.rating}
+                          size={24}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
+                        <span className="rating-value">
+                          ({selectedTicket.feedback.rating}/5)
+                        </span>
+                      </div>
+                    </div>
+                    <div className="feedback-comment">
+                      <span className="comment-label">Comment:</span>
+                      <p className="comment-text">
+                        {selectedTicket.feedback.comment ||
+                          "No comments provided"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-feedback">
+                    <i className="fas fa-comment-alt"></i>
+                    <p>No feedback submitted yet</p>
+                  </div>
+                )}
+              </div>
+
+              {/* History Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-history me-2"></i>
+                  Ticket History
+                </h5>
+                <div className="history-timeline">
+                  {selectedTicket.history.map((entry, index) => (
+                    <div key={index} className="timeline-item">
+                      <div className="timeline-icon">
+                        <i className="fas fa-circle"></i>
+                      </div>
+                      <div className="timeline-content">
+                        <div className="timeline-header">
+                          <span className="status">{entry.status}</span>
+                          <span className="date">
+                            {new Date(entry.date).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="timeline-body">
+                          <p className="mb-1">
+                            <strong>Updated By:</strong>{" "}
+                            {entry.username || "Service Agent"}
+                          </p>
+                          <p className="mb-0">
+                            <strong>Remarks:</strong>{" "}
+                            {entry.remarks || "No remarks provided"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           ) : (
-            <p>No ticket selected.</p>
+            <div className="no-ticket-selected">
+              <i className="fas fa-ticket-alt"></i>
+              <p>No ticket selected</p>
+            </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowModal(false)}
-            style={{
-              background: "linear-gradient(145deg, #6e7c7c, #4f5f5f)", // Gradient background
-              border: "none", // Remove default border
-              borderRadius: "50px", // Rounded edges for a sleek look
-              color: "#fff", // White text for contrast
-              fontWeight: "bold", // Bold text
-              padding: "12px 30px", // Increase padding for a more prominent button
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
-              transition: "all 0.3s ease", // Smooth transition effect
-            }}
-            onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Slight zoom effect on hover
-            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset zoom effect on hover out
-          >
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
     </Container>
   );

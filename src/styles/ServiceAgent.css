@@ -88,7 +88,7 @@
 }
 
 .tickets-grid {
-  margin: 0 -1rem;
+  margin-top: 2rem;
 }
 
 .ticket-col {
@@ -97,104 +97,98 @@
 
 .ticket-card {
   border: none;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 15px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  overflow: hidden;
 }
 
 .ticket-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(106, 17, 203, 0.15);
 }
 
-.ticket-header {
+.ticket-card .card-header {
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  padding: 1.5rem;
+  border: none;
+  border-radius: 15px 15px 0 0;
+  padding: 1rem;
   color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-.ticket-id {
+.tracking-id {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 600;
-  font-size: 1.1rem;
 }
 
 .status-badge {
   padding: 0.5rem 1rem;
-  border-radius: 30px;
+  border-radius: 20px;
   font-weight: 500;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.ticket-body {
-  padding: 1.5rem;
-}
-
-.customer-info {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
   margin-bottom: 1.5rem;
 }
 
-.info-item {
+.detail-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: #f8f9fa;
+  border-radius: 10px;
 }
 
-.info-item i {
+.detail-item i {
   color: #6a11cb;
 }
 
-.form-label {
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.status-select,
-.type-select,
-.part-select,
-.remarks-input {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 0.8rem;
-  transition: all 0.3s ease;
-}
-
-.button-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.update-button,
-.details-button {
-  border: none;
-  border-radius: 10px;
-  padding: 0.8rem;
+.detail-label {
+  color: #6c757d;
   font-weight: 500;
+  min-width: 80px;
+}
+
+.detail-value {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-control-modern {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.8rem;
   transition: all 0.3s ease;
+}
+
+.form-control-modern:focus {
+  border-color: #6a11cb;
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
 }
 
 .update-button {
   background: linear-gradient(135deg, #00b09b, #96c93d);
-  color: white;
+  border: none;
+  border-radius: 8px;
 }
 
-.details-button {
+.view-button {
   background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: white;
-}
-
-.loading-container {
-  text-align: center;
-  padding: 3rem;
+  border: none;
+  border-radius: 8px;
+  width: 45px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .no-tickets {
@@ -204,9 +198,14 @@
 }
 
 .no-tickets i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  color: #dee2e6;
 }
+
+/* Status badge colors */
+.status-open { background: linear-gradient(135deg, #007bff, #0056b3); }
+.status-in-progress { background: linear-gradient(135deg, #ffc107, #ff9800); }
+.status-resolved { background: linear-gradient(135deg, #28a745, #20c997); }
+.status-closed { background: linear-gradient(135deg, #6c757d, #495057); }
 
 /* Responsive Design */
 @media (max-width: 992px) {

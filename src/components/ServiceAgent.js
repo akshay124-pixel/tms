@@ -197,56 +197,130 @@ const ServiceAgentDashboard = () => {
       </div>
 
       {/* Tickets Grid */}
-      <div className="table-container">
-        <div className="table-wrapper">
-          <Table responsive striped bordered hover className="text-center">
-            <thead>
-              <tr>
-                <th>Tracking ID</th>
-                <th>Customer</th>
-                <th>Product</th>
-                <th>Status</th>
-                <th>Type</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTickets.map((ticket) => (
-                <tr key={ticket._id}>
-                  <td>{ticket.trackingId}</td>
-                  <td>{ticket.customerName}</td>
-                  <td>{ticket.productType}</td>
-                  <td>
+      <div className="tickets-grid">
+        {loading ? (
+          <div className="loading-container">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : filteredTickets.length > 0 ? (
+          <Row>
+            {filteredTickets.map((ticket) => (
+              <Col lg={4} md={6} sm={12} key={ticket._id}>
+                <Card className="ticket-card mb-4">
+                  <Card.Header className="d-flex justify-content-between align-items-center">
+                    <div className="tracking-id">
+                      <i className="fas fa-ticket-alt"></i>
+                      {ticket.trackingId}
+                    </div>
                     <Badge
                       className={`status-badge status-${ticket.status.toLowerCase()}`}
                     >
                       {ticket.status}
                     </Badge>
-                  </td>
-                  <td>{ticket.Type || "Not Specified"}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <Button
-                        variant="success"
-                        size="sm"
-                        onClick={(e) => handleUpdateTicket(e, ticket._id)}
+                  </Card.Header>
+
+                  <Card.Body>
+                    <div className="ticket-details">
+                      <div className="detail-group">
+                        <div className="detail-item">
+                          <i className="fas fa-user"></i>
+                          <span className="detail-label">Customer:</span>
+                          <span className="detail-value">
+                            {ticket.customerName}
+                          </span>
+                        </div>
+
+                        <div className="detail-item">
+                          <i className="fas fa-box"></i>
+                          <span className="detail-label">Product:</span>
+                          <span className="detail-value">
+                            {ticket.productType}
+                          </span>
+                        </div>
+
+                        <div className="detail-item">
+                          <i className="fas fa-tools"></i>
+                          <span className="detail-label">Type:</span>
+                          <span className="detail-value">
+                            {ticket.Type || "Not Specified"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <Form
+                        onSubmit={(e) => handleUpdateTicket(e, ticket._id)}
+                        className="mt-3"
                       >
-                        <i className="fas fa-edit"></i>
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={(e) => handleShowDetails(ticket)}
-                      >
-                        <i className="fas fa-eye"></i>
-                      </Button>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Update Status</Form.Label>
+                          <Form.Select
+                            value={
+                              ticketDetails[ticket._id]?.status || ticket.status
+                            }
+                            onChange={(e) =>
+                              handleInputChange(e, ticket._id, "status")
+                            }
+                            className="form-control-modern"
+                          >
+                            <option>Open</option>
+                            <option>In Progress</option>
+                            <option>Resolved</option>
+                            <option>Closed</option>
+                          </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Remarks</Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={2}
+                            value={ticketDetails[ticket._id]?.remarks || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, ticket._id, "remarks")
+                            }
+                            placeholder="Enter your remarks..."
+                            className="form-control-modern"
+                          />
+                        </Form.Group>
+
+                        <div className="d-flex gap-2">
+                          <Button
+                            type="submit"
+                            className="flex-grow-1 update-button"
+                            disabled={updatingTickets[ticket._id]}
+                          >
+                            {updatingTickets[ticket._id] ? (
+                              <>
+                                <Spinner size="sm" /> Updating...
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-save me-2"></i>
+                                Update
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            className="view-button"
+                            onClick={() => handleShowDetails(ticket)}
+                          >
+                            <i className="fas fa-eye"></i>
+                          </Button>
+                        </div>
+                      </Form>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <div className="no-tickets">
+            <i className="fas fa-ticket-alt fa-3x mb-3"></i>
+            <p>No tickets available</p>
+          </div>
+        )}
       </div>
 
       {/* Ticket Details Modal */}

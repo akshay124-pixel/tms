@@ -1297,70 +1297,115 @@ const AdminDashboard = () => {
             <strong>Export</strong>
           </div>
         </button>
-        <Card.Body style={{ height: "100%", padding: "0" }}>
-          <div className="table-responsive">
-            <Table>
-              <thead>
+        <Card.Body
+          style={{ height: "100%", overflowY: "auto", padding: "10px" }}
+        >
+          <Table responsive striped bordered hover className="text-center">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Tracking ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Age</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assigned</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
                 <tr>
-                  <th>Date</th>
-                  <th>Tracking ID</th>
-                  <th>Customer</th>
-                  <th>Product</th>
-                  <th>Age</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Assigned</th>
-                  <th>Actions</th>
+                  <td colSpan="9" className="text-center">
+                    <Spinner animation="border" variant="primary" />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="9" className="text-center">
-                      <Spinner animation="border" variant="primary" size="sm" />
+              ) : filterTickets().length > 0 ? (
+                filterTickets().map((ticket) => (
+                  <tr key={ticket._id}>
+                    <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                    <td>{ticket.trackingId}</td>
+                    <td>{ticket.customerName}</td>
+                    <td>{ticket.productType}</td>
+                    <td>{calculateTicketAge(ticket.createdAt)} Days</td>
+                    <td>
+                      <Badge
+                        pill
+                        bg={
+                          ticket.priority === "Low"
+                            ? "info"
+                            : ticket.priority === "Normal"
+                            ? "warning"
+                            : "danger"
+                        }
+                      >
+                        {ticket.priority}
+                      </Badge>
+                    </td>
+                    <td>
+                      <Badge
+                        bg={
+                          ticket.status === "Open"
+                            ? "primary"
+                            : ticket.status === "In Progress"
+                            ? "info"
+                            : ticket.status === "Resolved"
+                            ? "success"
+                            : ticket.status === "Closed"
+                            ? "secondary"
+                            : "dark"
+                        }
+                        style={{
+                          fontSize: "14px",
+                          padding: "5px 10px",
+                          borderRadius: "10px",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {ticket.status}
+                      </Badge>
+                    </td>
+                    <td>{ticket.assignedTo || "Not Assigned"}</td>
+                    <td>
+                      <Row>
+                        <Col className="d-flex justify-content-between">
+                          <Button
+                            variant="primary"
+                            className="mx-2"
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              borderRadius: "22px",
+                            }}
+                            onClick={() => handleViewDetails(ticket)}
+                          >
+                            <FaEye style={{ marginBottom: "3px" }} />
+                          </Button>
+                          <Button
+                            variant="danger"
+                            className="mx-2"
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              borderRadius: "22px",
+                            }}
+                            onClick={() => handleDelete(ticket._id)}
+                          >
+                            <i className="fas fa-trash"></i>
+                          </Button>
+                        </Col>
+                      </Row>
                     </td>
                   </tr>
-                ) : filterTickets().length > 0 ? (
-                  filterTickets().map((ticket) => (
-                    <tr key={ticket._id}>
-                      <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
-                      <td>{ticket.trackingId}</td>
-                      <td>{ticket.customerName}</td>
-                      <td>{ticket.productType}</td>
-                      <td>{calculateTicketAge(ticket.createdAt)} Days</td>
-                      <td>
-                        <Badge bg={ticket.priority === "Low" ? "info" : ticket.priority === "Normal" ? "warning" : "danger"}>
-                          {ticket.priority}
-                        </Badge>
-                      </td>
-                      <td>
-                        <Badge bg={
-                          ticket.status === "Open" ? "primary" :
-                          ticket.status === "In Progress" ? "warning" :
-                          ticket.status === "Resolved" ? "success" : "secondary"
-                        }>
-                          {ticket.status}
-                        </Badge>
-                      </td>
-                      <td>{ticket.assignedTo || "Not Assigned"}</td>
-                      <td>
-                        <Button className="action-btn action-btn-view" onClick={() => handleViewDetails(ticket)}>
-                          <FaEye size={14} />
-                        </Button>
-                        <Button className="action-btn action-btn-delete" onClick={() => handleDelete(ticket._id)}>
-                          <i className="fas fa-trash" style={{ fontSize: '14px' }}></i>
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" className="text-center">No tickets available.</td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9">No tickets available.</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
         </Card.Body>
       </Card>
 

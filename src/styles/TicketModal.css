@@ -200,6 +200,119 @@
   color: white;
 }
 
+/* Bill Download Section */
+.bill-download-container {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+.bill-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bill-name {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.download-button {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.2);
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.3);
+  color: white;
+  text-decoration: none;
+}
+
+/* Feedback Section */
+.feedback-container {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rating-label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 60px;
+}
+
+.stars-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-value {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.feedback-comment {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.comment-label {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.comment-text {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.no-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  color: #6c757d;
+}
+
+.no-feedback i {
+  font-size: 2rem;
+  color: #dee2e6;
+}
+
+.no-feedback p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .modal-body-custom {
@@ -222,6 +335,22 @@
 
   .timeline-header {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bill-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .download-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rating-display {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.5rem;
   }
 } 

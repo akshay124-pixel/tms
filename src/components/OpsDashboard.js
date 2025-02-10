@@ -1980,6 +1980,70 @@ const OpsManagerDashboard = () => {
                 </div>
               </div>
 
+              {/* Bill Download Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-file-invoice me-2"></i>
+                  Bill Information
+                </h5>
+                <div className="bill-download-container">
+                  <div className="bill-info">
+                    <span className="bill-name">
+                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
+                    </span>
+                    <a
+                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                        /^uploads[\\/]/,
+                        ""
+                      )}`}
+                      download
+                      className="download-button"
+                    >
+                      <i className="fas fa-download me-2"></i>
+                      Download Bill
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feedback Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-star me-2"></i>
+                  Customer Feedback
+                </h5>
+                {feedback ? (
+                  <div className="feedback-container">
+                    <div className="rating-display">
+                      <span className="rating-label">Rating:</span>
+                      <div className="stars-container">
+                        <ReactStars
+                          count={5}
+                          value={feedback.rating}
+                          size={24}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
+                        <span className="rating-value">
+                          ({feedback.rating}/5)
+                        </span>
+                      </div>
+                    </div>
+                    <div className="feedback-comment">
+                      <span className="comment-label">Comment:</span>
+                      <p className="comment-text">
+                        {feedback.comments || "No comments provided"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-feedback">
+                    <i className="fas fa-comment-alt"></i>
+                    <p>No feedback submitted yet</p>
+                  </div>
+                )}
+              </div>
+
               {/* Description Section */}
               <div className="detail-section">
                 <h5 className="section-title">

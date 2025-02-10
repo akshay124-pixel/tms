@@ -1,9 +1,8 @@
 .service-agent-dashboard {
   width: 80%;
   padding: 2rem;
-  
+  background: #f8f9fa;
   min-height: 100vh;
-  
 }
 
 .dashboard-header {

@@ -113,10 +113,10 @@
   }
 }
 
-/* Add these styles for fixed table header */
+/* Fixed table header styles */
 .table-container {
   position: relative;
-  max-height: calc(100vh - 250px); /* Adjust based on your header height */
+  max-height: calc(100vh - 250px);
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -163,7 +163,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-/* Custom scrollbar for the table */
+/* Custom scrollbar */
 .table-wrapper::-webkit-scrollbar {
   width: 8px;
 }

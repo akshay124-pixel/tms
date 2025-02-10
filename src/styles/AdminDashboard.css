@@ -1,0 +1,114 @@
+.admin-dashboard {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.tickets-grid {
+  margin: 0 -1rem;
+}
+
+.ticket-col {
+  padding: 1rem;
+}
+
+.ticket-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-header {
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-id {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.customer-info {
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-item i {
+  color: #6a11cb;
+  width: 20px;
+}
+
+.ticket-description {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.ticket-description p {
+  margin: 0;
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Status Badge Colors */
+.status-open { background: linear-gradient(135deg, #007bff, #0056b3); }
+.status-in-progress { background: linear-gradient(135deg, #ffc107, #ff9800); }
+.status-resolved { background: linear-gradient(135deg, #28a745, #20c997); }
+.status-closed { background: linear-gradient(135deg, #6c757d, #495057); }
+
+/* Priority Badge Colors */
+.priority-high { background: linear-gradient(135deg, #dc3545, #c82333); }
+.priority-normal { background: linear-gradient(135deg, #17a2b8, #138496); }
+.priority-low { background: linear-gradient(135deg, #28a745, #218838); }
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .button-group {
+    grid-template-columns: 1fr;
+  }
+} 

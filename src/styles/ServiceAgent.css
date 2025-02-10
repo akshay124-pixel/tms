@@ -1,7 +1,7 @@
 .service-agent-dashboard {
   width: 80%;
   padding: 2rem;
- 
+  
   min-height: 100vh;
   
 }
@@ -124,17 +124,12 @@
 }
 
 .status-badge {
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-
-/* Status colors */
-.status-open { background: linear-gradient(135deg, #007bff, #0056b3); }
-.status-in-progress { background: linear-gradient(135deg, #ffc107, #ff9800); }
-.status-resolved { background: linear-gradient(135deg, #28a745, #20c997); }
-.status-closed { background: linear-gradient(135deg, #6c757d, #495057); }
 
 .ticket-body {
   padding: 1.5rem;
@@ -243,24 +238,4 @@
     gap: 1rem;
     text-align: center;
   }
-}
-
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.action-buttons button {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.action-buttons button:hover {
-  transform: translateY(-2px);
 } 

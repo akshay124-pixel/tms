@@ -1,3 +1,4 @@
+/* Original styles */
 .admin-dashboard {
   padding: 2rem;
   background: #f8f9fa;
@@ -25,101 +26,11 @@
   opacity: 0.9;
 }
 
-.tickets-grid {
-  margin: 0 -1rem;
-}
-
-.ticket-col {
-  padding: 1rem;
-}
-
-.ticket-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.ticket-header {
-  padding: 1.5rem;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.ticket-id {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.customer-info {
-  margin-bottom: 1.5rem;
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 0.5rem;
-}
-
-.info-item i {
-  color: #6a11cb;
-  width: 20px;
-}
-
-.ticket-description {
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
-}
-
-.ticket-description p {
-  margin: 0;
-  color: #2c3e50;
-  line-height: 1.5;
-}
-
-.button-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-/* Status Badge Colors */
-.status-open { background: linear-gradient(135deg, #007bff, #0056b3); }
-.status-in-progress { background: linear-gradient(135deg, #ffc107, #ff9800); }
-.status-resolved { background: linear-gradient(135deg, #28a745, #20c997); }
-.status-closed { background: linear-gradient(135deg, #6c757d, #495057); }
-
-/* Priority Badge Colors */
-.priority-high { background: linear-gradient(135deg, #dc3545, #c82333); }
-.priority-normal { background: linear-gradient(135deg, #17a2b8, #138496); }
-.priority-low { background: linear-gradient(135deg, #28a745, #218838); }
-
-@media (max-width: 768px) {
-  .admin-dashboard {
-    padding: 1rem;
-  }
-
-  .dashboard-title {
-    font-size: 2rem;
-  }
-
-  .button-group {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Fixed table header styles */
+/* Only these new styles for fixed table header */
 .table-container {
   position: relative;
   max-height: calc(100vh - 250px);
   overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .table-wrapper {
@@ -127,40 +38,11 @@
   max-height: inherit;
 }
 
-.custom-table {
-  position: relative;
-  width: 100%;
-  background: white;
-  border-collapse: collapse;
-}
-
 .custom-table thead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-}
-
-.custom-table th {
-  padding: 1rem;
-  color: white;
-  font-weight: 600;
-  text-align: left;
-  border: none;
-  white-space: nowrap;
-}
-
-.custom-table tbody tr {
-  transition: all 0.3s ease;
-}
-
-.custom-table tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.custom-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  background: #212529;
 }
 
 /* Custom scrollbar */
@@ -170,14 +52,13 @@
 
 .table-wrapper::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 4px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: #888;
   border-radius: 4px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5810a5, #1e5fd8);
+  background: #555;
 } 

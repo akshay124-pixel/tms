@@ -17,6 +17,15 @@
   background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* Form Container */
+.ticket-form {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px 0;
 }
 
 /* Form Styling */
@@ -135,6 +144,28 @@
   .selected-file {
     font-size: 0.8rem;
     padding: 6px 10px;
+  }
+
+  .main-card {
+    max-width: 100%;
+    margin: 10px;
+  }
+  
+  .ticket-form {
+    max-width: 100%;
+    padding: 10px 0;
+  }
+  
+  .dashboard-container {
+    padding: 10px;
+  }
+  
+  .ticket-card {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
   }
 }
 
@@ -255,25 +286,6 @@
 .toggle-view-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .dashboard-container {
-    padding: 10px;
-  }
-  
-  .main-card {
-    margin: 10px;
-  }
-  
-  .ticket-card {
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
 }
 
 /* Animations */

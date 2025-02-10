@@ -1593,23 +1593,6 @@ const ClientDashboard = () => {
                                   {ticket.description}
                                 </span>
                               </div>
-
-                              {ticket.billImage && (
-                                <div className="detail-item">
-                                  <i className="fas fa-file-invoice me-2"></i>
-                                  <span className="detail-label">
-                                    Bill Image:
-                                  </span>
-                                  <a
-                                    href={ticket.billImage}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="bill-link"
-                                  >
-                                    View Bill
-                                  </a>
-                                </div>
-                              )}
                             </div>
                           </div>
 

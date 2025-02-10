@@ -23,7 +23,6 @@ import { FaEye } from "react-icons/fa"; // Import icons
 import "../App.css";
 import { toast } from "react-toastify";
 import "../styles/TicketModal.css";
-import React from "react";
 // Register required chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 const AdminDashboard = () => {

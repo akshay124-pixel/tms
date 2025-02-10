@@ -194,6 +194,8 @@
   border: none !important;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
   position: relative;
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
 }
 
 .ticket-card:hover {
@@ -203,7 +205,7 @@
 
 .ticket-card .card-header {
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  padding: 1.5rem;
+  padding: 1rem 1.2rem;
   border: none;
   position: relative;
   overflow: hidden;
@@ -220,11 +222,15 @@
   transform: translate(30%, -30%);
 }
 
+.ticket-card .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
 .tracking-id {
   color: white;
   font-weight: 700;
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
+  font-size: 1rem;
+  margin: 0.3rem 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -237,10 +243,10 @@
 
 /* Status Badge */
 .status-badge {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 30px;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -275,28 +281,29 @@
 
 /* Ticket Details */
 .ticket-details {
-  padding: 1.5rem;
+  padding: 1rem;
   background: #ffffff;
   border-radius: 12px;
-  margin: 1rem;
+  margin: 0.5rem;
 }
 
 .detail-group {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.8rem;
 }
 
 .detail-item {
   display: flex;
   align-items: flex-start;
-  padding: 1.2rem;
+  padding: 0.8rem;
   background: #f8f9fa;
   border-radius: 12px;
   border: 1px solid #e9ecef;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  min-height: 45px;
 }
 
 .detail-item::after {
@@ -349,7 +356,7 @@
   grid-column: 1 / -1;
   background: white;
   border: 1px solid #e9ecef;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .description .detail-value {
@@ -362,15 +369,16 @@
 .history-button {
   width: 100%;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 0.8rem;
   background: white;
   border: 2px solid #6a11cb !important;
   color: #6a11cb !important;
   font-weight: 600;
   transition: all 0.3s ease;
-  margin: 1rem;
+  margin: 0.5rem 1rem;
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .history-button::before {
@@ -391,28 +399,31 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
+.history-button i,
 .history-button span {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  transition: color 0.3s ease;
 }
 
-.history-button:hover {
+.history-button:hover i,
+.history-button:hover span {
   color: white !important;
 }
 
 /* History Section */
 .history-section {
-  margin: 1rem;
+  margin: 0.5rem 1rem;
   background: #f8f9fa;
   border-radius: 12px;
-  padding: 1.2rem;
+  padding: 1rem;
 }
 
 .history-item {
   background: white;
   border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
   border-left: 4px solid #6a11cb;
   display: flex;
   justify-content: space-between;
@@ -442,20 +453,19 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .ticket-card {
-    margin: 1rem 0;
+    margin: 0.8rem auto;
   }
 
   .ticket-card .card-header {
-    padding: 1.2rem;
+    padding: 0.8rem 1rem;
   }
 
   .detail-group {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   .detail-item {
-    padding: 1rem;
+    padding: 0.8rem;
   }
 
   .detail-label {
@@ -483,6 +493,16 @@
   .status-badge {
     padding: 6px 12px;
     font-size: 0.7rem;
+  }
+
+  .history-button {
+    margin: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  .history-section {
+    margin: 0.5rem;
+    padding: 0.8rem;
   }
 }
 

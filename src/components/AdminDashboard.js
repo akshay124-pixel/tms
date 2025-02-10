@@ -23,6 +23,7 @@ import { FaEye } from "react-icons/fa"; // Import icons
 import "../App.css";
 import { toast } from "react-toastify";
 import "../styles/TicketModal.css";
+import React from "react";
 // Register required chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 const AdminDashboard = () => {
@@ -1618,6 +1619,56 @@ const AdminDashboard = () => {
                       <i className="fas fa-download me-2"></i>
                       Download Bill
                     </a>
+                  </div>
+                </div>
+              </div>
+              {/* Service Details Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-cogs me-2"></i>
+                  Service Details
+                </h5>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Service Type:</span>
+                    <span className="value">
+                      <Badge
+                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
+                      >
+                        {selectedTicket.Type || "Not Specified"}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Call Type:</span>
+                    <span className="value">
+                      <Badge
+                        className={`call-badge call-${selectedTicket.call
+                          ?.toLowerCase()
+                          .replace(" ", "-")}`}
+                      >
+                        {selectedTicket.call || "Not Specified"}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Priority:</span>
+                    <span className="value">
+                      <Badge
+                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
+                      >
+                        {selectedTicket.priority}
+                      </Badge>
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Assigned To:</span>
+                    <span className="value">
+                      <Badge className="assigned-badge">
+                        <i className="fas fa-user-circle me-1"></i>
+                        {selectedTicket.assignedTo || "Not Assigned"}
+                      </Badge>
+                    </span>
                   </div>
                 </div>
               </div>

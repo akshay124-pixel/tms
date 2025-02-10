@@ -41,6 +41,7 @@ const ClientDashboard = () => {
   const [selectedState, setSelectedState] = useState(ticketData.state || "");
   const [selectedCity, setSelectedCity] = useState(ticketData.city || "");
   const [billImage, setBillImage] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
   // Get the logged-in user's ID (assuming it's stored in localStorage)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -73,7 +74,16 @@ const ClientDashboard = () => {
     setTicketData({ ...ticketData, [e.target.name]: e.target.value });
   };
   const handleFileChange = (e) => {
-    setBillImage(e.target.files[0]); // Update billImage state with the selected file
+    const file = e.target.files[0];
+    if (file) {
+      setBillImage(file);
+      setSelectedFileName(file.name);
+      // Show success toast
+      toast.success("Bill uploaded successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   // Handle form submission
@@ -1411,14 +1421,33 @@ const ClientDashboard = () => {
                         onChange={handleFileChange}
                         className="form-control"
                         id="file-upload"
+                        accept=".jpg,.jpeg,.png,.pdf"
                       />
                       <label
                         htmlFor="file-upload"
                         className="file-upload-label"
                       >
                         <i className="fas fa-cloud-upload-alt me-2"></i>
-                        Choose File
+                        {selectedFileName || "Choose File"}
                       </label>
+                      {selectedFileName && (
+                        <div className="file-info mt-2">
+                          <div className="selected-file">
+                            <i className="fas fa-file-alt me-2"></i>
+                            {selectedFileName}
+                            <button
+                              type="button"
+                              className="remove-file-btn"
+                              onClick={() => {
+                                setBillImage(null);
+                                setSelectedFileName("");
+                              }}
+                            >
+                              <i className="fas fa-times"></i>
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </Form.Group>
                 </div>

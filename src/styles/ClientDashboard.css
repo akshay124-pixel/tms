@@ -52,11 +52,90 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: #6c757d;
 }
 
 .file-upload-label:hover {
   background: #e9ecef;
   border-color: #6a11cb;
+  color: #6a11cb;
+}
+
+.file-info {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.selected-file i {
+  color: #6a11cb;
+}
+
+.remove-file-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  background: #ffebee;
+}
+
+/* Add animation for file upload */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.file-info {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* File upload states */
+.file-upload-label.has-file {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.file-upload-label.drag-over {
+  border-color: #6a11cb;
+  background: #f3f0ff;
+}
+
+/* Mobile responsiveness for file upload */
+@media (max-width: 768px) {
+  .file-upload-label {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .selected-file {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
 }
 
 /* Submit Button */

@@ -17,13 +17,13 @@
   background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  max-width: 60%;
+  max-width: 70%;
   margin: 0 auto;
 }
 
 /* Form Container */
 .ticket-form {
-  max-width: 60%;
+  max-width: 70%;
   margin: 0 auto;
   padding: 20px 0;
 }

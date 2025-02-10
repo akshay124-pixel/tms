@@ -133,11 +133,16 @@ const DashboardNavbar = () => {
       <Container>
         <Navbar.Brand className="font-weight-bold">
           <img
-            src="logo2.png"
-            alt="logo    "
+            src="/logo2.png"
+            alt="TMS Logo"
             width="120"
             height="42"
             className="d-inline-block align-top"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = process.env.PUBLIC_URL + "/logo2.png";
+              console.log("Logo load error, trying fallback path");
+            }}
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

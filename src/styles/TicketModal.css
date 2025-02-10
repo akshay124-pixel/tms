@@ -63,6 +63,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-align: center;
 }
 
 /* Detail Sections */
@@ -87,6 +88,7 @@
   margin-bottom: 1.2rem;
   display: flex;
   align-items: center;
+  text-align: left;
 }
 
 .section-title i {
@@ -97,24 +99,28 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
+  text-align: left;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  text-align: left;
 }
 
 .info-item .label {
   font-size: 0.9rem;
   color: #6c757d;
   font-weight: 500;
+  text-align: left;
 }
 
 .info-item .value {
   font-size: 1rem;
   color: #2c3e50;
   font-weight: 500;
+  text-align: left;
 }
 
 /* Description Box */
@@ -124,6 +130,7 @@
   border-radius: 10px;
   color: #2c3e50;
   line-height: 1.6;
+  text-align: left;
 }
 
 /* Timeline Styling */
@@ -164,6 +171,7 @@
   border-radius: 10px;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: left;
 }
 
 .timeline-header {
@@ -171,6 +179,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .timeline-header .status {
@@ -220,12 +229,14 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  text-align: left;
 }
 
 .bill-name {
   color: #2c3e50;
   font-weight: 500;
   font-size: 0.95rem;
+  text-align: left;
 }
 
 .download-button {
@@ -254,6 +265,7 @@
   background: #f8f9fa;
   border-radius: 10px;
   padding: 1.2rem;
+  text-align: left;
 }
 
 .rating-display {
@@ -284,6 +296,7 @@
   border-top: 1px solid #dee2e6;
   padding-top: 1rem;
   margin-top: 1rem;
+  text-align: left;
 }
 
 .comment-label {
@@ -291,6 +304,7 @@
   font-weight: 600;
   color: #2c3e50;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .comment-text {
@@ -298,6 +312,7 @@
   line-height: 1.6;
   margin: 0;
   font-size: 0.95rem;
+  text-align: left;
 }
 
 .no-feedback {
@@ -435,6 +450,7 @@
 
   .timeline-header {
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.5rem;
   }
 

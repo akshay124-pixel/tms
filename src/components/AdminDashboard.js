@@ -1297,9 +1297,9 @@ const AdminDashboard = () => {
             <strong>Export</strong>
           </div>
         </button>
-        <Card.Body style={{ height: "100%", padding: "10px" }}>
+        <Card.Body style={{ height: "100%", padding: "0" }}>
           <div className="table-responsive">
-            <Table className="table">
+            <Table>
               <thead>
                 <tr>
                   <th>Date</th>
@@ -1317,7 +1317,7 @@ const AdminDashboard = () => {
                 {loading ? (
                   <tr>
                     <td colSpan="9" className="text-center">
-                      <Spinner animation="border" variant="primary" />
+                      <Spinner animation="border" variant="primary" size="sm" />
                     </td>
                   </tr>
                 ) : filterTickets().length > 0 ? (
@@ -1329,56 +1329,33 @@ const AdminDashboard = () => {
                       <td>{ticket.productType}</td>
                       <td>{calculateTicketAge(ticket.createdAt)} Days</td>
                       <td>
-                        <Badge
-                          bg={
-                            ticket.priority === "Low"
-                              ? "info"
-                              : ticket.priority === "Normal"
-                              ? "warning"
-                              : "danger"
-                          }
-                        >
+                        <Badge bg={ticket.priority === "Low" ? "info" : ticket.priority === "Normal" ? "warning" : "danger"}>
                           {ticket.priority}
                         </Badge>
                       </td>
                       <td>
-                        <Badge
-                          bg={
-                            ticket.status === "Open"
-                              ? "primary"
-                              : ticket.status === "In Progress"
-                              ? "warning"
-                              : ticket.status === "Resolved"
-                              ? "success"
-                              : "secondary"
-                          }
-                        >
+                        <Badge bg={
+                          ticket.status === "Open" ? "primary" :
+                          ticket.status === "In Progress" ? "warning" :
+                          ticket.status === "Resolved" ? "success" : "secondary"
+                        }>
                           {ticket.status}
                         </Badge>
                       </td>
                       <td>{ticket.assignedTo || "Not Assigned"}</td>
                       <td>
-                        <Button
-                          className="action-btn action-btn-view"
-                          onClick={() => handleViewDetails(ticket)}
-                        >
-                          <FaEye />
+                        <Button className="action-btn action-btn-view" onClick={() => handleViewDetails(ticket)}>
+                          <FaEye size={14} />
                         </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDelete(ticket._id)}
-                        >
-                          <i className="fas fa-trash"></i>
+                        <Button className="action-btn action-btn-delete" onClick={() => handleDelete(ticket._id)}>
+                          <i className="fas fa-trash" style={{ fontSize: '14px' }}></i>
                         </Button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">
-                      No tickets available.
-                    </td>
+                    <td colSpan="9" className="text-center">No tickets available.</td>
                   </tr>
                 )}
               </tbody>

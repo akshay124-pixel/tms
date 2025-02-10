@@ -2100,6 +2100,7 @@ const OpsManagerDashboard = () => {
                           )}`}
                           download
                           className="download-link"
+                          style={{ marginLeft: "100px" }}
                         >
                           <i className="fas fa-download me-2"></i>
                           Download

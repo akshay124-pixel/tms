@@ -196,177 +196,56 @@ const ServiceAgentDashboard = () => {
       </div>
 
       {/* Tickets Grid */}
-      <div className="tickets-container">
-        {loading ? (
-          <div className="loading-container">
-            <div className="loader">
-              <Spinner animation="border" variant="primary" />
-            </div>
-            <p>Loading tickets...</p>
-          </div>
-        ) : (
-          <Row className="tickets-grid">
-            {filteredTickets.length > 0 ? (
-              filteredTickets.map((ticket) => (
-                <Col
-                  lg={4}
-                  md={6}
-                  sm={12}
-                  key={ticket._id}
-                  className="ticket-col"
-                >
-                  <Card className="ticket-card">
-                    <div className="ticket-header">
-                      <div className="ticket-id">#{ticket.trackingId}</div>
-                      <Badge
-                        className={`status-badge status-${ticket.status.toLowerCase()}`}
+      <div className="table-container">
+        <div className="table-wrapper">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th>Tracking ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTickets.map((ticket) => (
+                <tr key={ticket._id}>
+                  <td>{ticket.trackingId}</td>
+                  <td>{ticket.customerName}</td>
+                  <td>{ticket.productType}</td>
+                  <td>
+                    <Badge
+                      className={`status-badge status-${ticket.status.toLowerCase()}`}
+                    >
+                      {ticket.status}
+                    </Badge>
+                  </td>
+                  <td>{ticket.Type || "Not Specified"}</td>
+                  <td>
+                    <div className="action-buttons">
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={(e) => handleUpdateTicket(e, ticket._id)}
                       >
-                        {ticket.status}
-                      </Badge>
+                        <i className="fas fa-edit"></i>
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={(e) => handleShowDetails(ticket)}
+                      >
+                        <i className="fas fa-eye"></i>
+                      </Button>
                     </div>
-
-                    <Card.Body className="ticket-body">
-                      <div className="customer-info">
-                        <div className="info-item">
-                          <i className="fas fa-user"></i>
-                          <span>{ticket.customerName}</span>
-                        </div>
-                        <div className="info-item">
-                          <i className="fas fa-box"></i>
-                          <span>{ticket.productType}</span>
-                        </div>
-                      </div>
-
-                      <div className="ticket-description">
-                        <p>{ticket.description}</p>
-                      </div>
-
-                      <Form
-                        onSubmit={(e) => handleUpdateTicket(e, ticket._id)}
-                        className="update-form"
-                      >
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Update Status
-                          </Form.Label>
-                          <Form.Select
-                            className="status-select"
-                            onChange={(e) =>
-                              handleInputChange(e, ticket._id, "status")
-                            }
-                            value={
-                              ticketDetails[ticket._id]?.status || ticket.status
-                            }
-                          >
-                            <option value="Open">Open</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Resolved">Resolved</option>
-                          </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Service Type
-                          </Form.Label>
-                          <Form.Select
-                            className="type-select"
-                            onChange={(e) =>
-                              handleUpdateCall(ticket._id, e.target.value)
-                            }
-                            value={ticket?.Type || ""}
-                          >
-                            <option value="" disabled>
-                              Select Service Type
-                            </option>
-                            <option value="Replacement">Replacement</option>
-                            <option value="Repair">Repair</option>
-                          </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Part Name
-                          </Form.Label>
-                          <Form.Select
-                            className="part-select"
-                            onChange={(e) =>
-                              handleInputChange(e, ticket._id, "partName")
-                            }
-                            value={ticketDetails[ticket._id]?.partName || ""}
-                          >
-                            <option value="">Select Part</option>
-                            <option value="CMOS Battery">CMOS Battery</option>
-                            <option value="DOC Board + LVDS Cable">
-                              DOC Board + LVDS Cable
-                            </option>
-                            <option value="MotherBoard">MotherBoard</option>
-                            <option value="OC Module">OC Module</option>
-                            <option value="OPS">OPS</option>
-                            <option value="Panel">Panel</option>
-                            <option value="Power Board">Power Board</option>
-                            <option value="Speaker">Speaker</option>
-                            <option value="T-CON Board + LVDS Cable">
-                              T-CON Board + LVDS Cable
-                            </option>
-                            <option value="Other">Other</option>
-                          </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                          <Form.Label className="form-label">
-                            Remarks
-                          </Form.Label>
-                          <Form.Control
-                            as="textarea"
-                            rows={2}
-                            placeholder="Enter your remarks..."
-                            value={ticketDetails[ticket._id]?.remarks || ""}
-                            onChange={(e) =>
-                              handleInputChange(e, ticket._id, "remarks")
-                            }
-                            className="remarks-input"
-                          />
-                        </Form.Group>
-
-                        <div className="button-group">
-                          <Button
-                            type="submit"
-                            className="update-button"
-                            disabled={updatingTickets[ticket._id]}
-                          >
-                            {updatingTickets[ticket._id] ? (
-                              <>
-                                <Spinner size="sm" /> Updating...
-                              </>
-                            ) : (
-                              <>
-                                <i className="fas fa-save me-2"></i>
-                                Update Ticket
-                              </>
-                            )}
-                          </Button>
-
-                          <Button
-                            className="details-button"
-                            onClick={() => handleShowDetails(ticket)}
-                          >
-                            <i className="fas fa-eye me-2"></i>
-                            View Details
-                          </Button>
-                        </div>
-                      </Form>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))
-            ) : (
-              <div className="no-tickets">
-                <i className="fas fa-ticket-alt"></i>
-                <p>No tickets found</p>
-              </div>
-            )}
-          </Row>
-        )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Ticket Details Modal */}

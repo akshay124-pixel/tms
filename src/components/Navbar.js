@@ -4,7 +4,6 @@ import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import "../App.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/Navbar.css";
 
 const DashboardNavbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

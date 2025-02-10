@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 import debounce from "lodash.debounce";
 import "../App.css";
 import { toast } from "react-toastify";
-import ReactStars from "react-stars";
+import ReactStars from "react-rating-stars-component";
 import "../styles/TicketModal.css";
 // Adjust the path as needed
 

@@ -23,7 +23,7 @@ const ServiceAgentDashboard = () => {
   const { agentId: paramAgentId } = useParams();
   const [tickets, setTickets] = useState([]);
   const [ticketDetails, setTicketDetails] = useState({});
-  const [selectedTicket, setSelectedTicket] = useState({});
+  const [selectedTicket, setSelectedTicket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   // const [message, setMessage] = useState({ content: null, variant: null });
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,6 @@ const ServiceAgentDashboard = () => {
       const agentId = localStorage.getItem("agentId") || paramAgentId;
       if (!agentId) {
         toast.error("User not logged in or session expired.");
-
         return;
       }
 
@@ -49,7 +48,7 @@ const ServiceAgentDashboard = () => {
       );
       setTickets(response.data || []);
     } catch (error) {
-      // toast.error("Failed to fetch tickets. Please try again.");
+      toast.error("Failed to fetch tickets. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,9 +66,7 @@ const ServiceAgentDashboard = () => {
     try {
       await axios.put(
         `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
-        {
-          Type,
-        }
+        { Type }
       );
       setTickets((prevTickets) =>
         prevTickets.map((ticket) =>
@@ -84,28 +81,22 @@ const ServiceAgentDashboard = () => {
 
   const handleUpdateTicket = async (e, ticketId) => {
     e.preventDefault();
-
-    // Set the ticket as updating
     setUpdatingTickets((prev) => ({ ...prev, [ticketId]: true }));
 
     const updatedTicketDetails = ticketDetails[ticketId];
-
     try {
-      // Prepare payload
       const payload = {
-        status: updatedTicketDetails.status || "Open", // Default to "Open" if no status is selected
-        remarks: updatedTicketDetails.remarks,
-        partName: updatedTicketDetails.partName,
+        status: updatedTicketDetails?.status || "Open",
+        remarks: updatedTicketDetails?.remarks,
+        partName: updatedTicketDetails?.partName,
       };
 
-      // API call to update ticket
       const response = await axios.put(
         `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
         payload
       );
 
       if (response.status === 200) {
-        // Update the tickets state with new remarks and status
         setTickets((prevTickets) =>
           prevTickets.map((ticket) =>
             ticket._id === ticketId
@@ -119,19 +110,14 @@ const ServiceAgentDashboard = () => {
           )
         );
         toast.success("Ticket updated successfully!");
-
-        // Reset the ticket details state after update
         setTicketDetails((prevState) => ({
           ...prevState,
-          [ticketId]: { status: payload.status, remarks: "", partName: "" }, // Reset remarks field
+          [ticketId]: { status: payload.status, remarks: "", partName: "" },
         }));
-      } else {
-        toast.error("Failed to update Ticket. Please try again.");
       }
     } catch (error) {
-      toast.error("Failed to update Ticket. Please try again.");
+      toast.error("Failed to update ticket. Please try again.");
     } finally {
-      // Set the ticket as not updating after the operation
       setUpdatingTickets((prev) => ({ ...prev, [ticketId]: false }));
     }
   };
@@ -149,18 +135,17 @@ const ServiceAgentDashboard = () => {
   };
 
   // Filter tickets based on search term
-
   const filteredTickets = tickets.filter(
     (ticket) =>
-      ticket.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.priority.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.trackingId.toLowerCase().includes(searchTerm.toLowerCase())
+      ticket.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.priority?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.trackingId?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSearch = debounce((term) => {
     setSearchTerm(term);
-  }, 300); // Debounce search term updates with 300ms delay
+  }, 300);
 
   const handleShowDetails = (ticket) => {
     setSelectedTicket(ticket);

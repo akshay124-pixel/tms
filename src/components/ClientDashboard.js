@@ -1318,6 +1318,7 @@ const ClientDashboard = () => {
                     <option value="Audio Podium">Audio Podium</option>
                     <option value="Digital Podium">Digital Podium</option>
                     <option value="IFPD">IFPD</option>
+                    <option value="Kiosk">Kiosk</option>
                     <option value="Mike">Mike</option>
                     <option value="OPS">OPS</option>
                     <option value="PTZ Camera">PTZ Camera</option>

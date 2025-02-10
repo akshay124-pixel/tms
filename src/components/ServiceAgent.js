@@ -9,6 +9,7 @@ import {
   Modal,
   Spinner,
   Badge,
+  Table,
 } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -198,7 +199,7 @@ const ServiceAgentDashboard = () => {
       {/* Tickets Grid */}
       <div className="table-container">
         <div className="table-wrapper">
-          <table className="custom-table">
+          <Table responsive striped bordered hover className="text-center">
             <thead>
               <tr>
                 <th>Tracking ID</th>
@@ -244,7 +245,7 @@ const ServiceAgentDashboard = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       </div>
 

@@ -1622,7 +1622,10 @@ const ClientDashboard = () => {
                                       <i className="fas fa-circle me-2"></i>
                                       {item.status}
                                     </div>
-                                    <small className="text-muted">
+                                    <small
+                                      className="text-muted"
+                                      style={{ color: "black" }}
+                                    >
                                       {new Date(item.date).toLocaleString()}
                                     </small>
                                   </ListGroup.Item>

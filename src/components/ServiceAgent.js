@@ -386,7 +386,7 @@ const ServiceAgentDashboard = () => {
         <Modal.Body className="modal-body-custom">
           {selectedTicket ? (
             <div className="ticket-detail-container">
-              {/* Header with Tracking ID and Status */}
+              {/* Tracking ID and Status Section */}
               <div className="ticket-header-section">
                 <div className="tracking-id-container">
                   <span className="label">Tracking ID:</span>
@@ -401,197 +401,189 @@ const ServiceAgentDashboard = () => {
                 </Badge>
               </div>
 
-              {/* Main Details Grid */}
-              <div className="details-grid">
-                {/* Customer Information */}
-                <div className="detail-section">
-                  <h5 className="section-title">
-                    <i className="fas fa-user-circle me-2"></i>
-                    Customer Information
-                  </h5>
-                  <div className="info-grid">
-                    <div className="info-item">
-                      <span className="label">Name:</span>
-                      <span className="value">
-                        {selectedTicket.customerName}
-                      </span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Contact:</span>
-                      <span className="value">
-                        {selectedTicket.contactNumber}
-                      </span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Email:</span>
-                      <span className="value">{selectedTicket.email}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Organization:</span>
-                      <span className="value">
-                        {selectedTicket.organization || "N/A"}
-                      </span>
-                    </div>
+              {/* Customer Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-user-circle me-2"></i>
+                  Customer Information
+                </h5>
+                <div className="detail-group">
+                  <div className="detail-item">
+                    <i className="fas fa-user me-2"></i>
+                    <span className="detail-label">Customer:</span>
+                    <span className="detail-value">
+                      {selectedTicket.customerName}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-phone me-2"></i>
+                    <span className="detail-label">Contact:</span>
+                    <span className="detail-value">
+                      {selectedTicket.contactNumber}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-envelope me-2"></i>
+                    <span className="detail-label">Email:</span>
+                    <span className="detail-value">{selectedTicket.email}</span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-building me-2"></i>
+                    <span className="detail-label">Organization:</span>
+                    <span className="detail-value">
+                      {selectedTicket.organization || "N/A"}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                {/* Product Information */}
-                <div className="detail-section">
-                  <h5 className="section-title">
+              {/* Product Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-box me-2"></i>
+                  Product Details
+                </h5>
+                <div className="detail-group">
+                  <div className="detail-item">
                     <i className="fas fa-box me-2"></i>
-                    Product Details
-                  </h5>
-                  <div className="info-grid">
-                    <div className="info-item">
-                      <span className="label">Product Type:</span>
-                      <span className="value">
-                        {selectedTicket.productType}
-                      </span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Model Type:</span>
-                      <span className="value">{selectedTicket.modelType}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Serial Number:</span>
-                      <span className="value">
-                        {selectedTicket.serialNumber}
-                      </span>
-                    </div>
+                    <span className="detail-label">Product Type:</span>
+                    <span className="detail-value">
+                      {selectedTicket.productType}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-cog me-2"></i>
+                    <span className="detail-label">Model Type:</span>
+                    <span className="detail-value">
+                      {selectedTicket.modelType}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-barcode me-2"></i>
+                    <span className="detail-label">Serial Number:</span>
+                    <span className="detail-value">
+                      {selectedTicket.serialNumber}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-tools me-2"></i>
+                    <span className="detail-label">Part Name:</span>
+                    <span className="detail-value">
+                      {selectedTicket.partName || "Not Available"}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                {/* Location Information */}
-                <div className="detail-section">
-                  <h5 className="section-title">
+              {/* Location Information Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-map-marker-alt me-2"></i>
+                  Location Details
+                </h5>
+                <div className="detail-group">
+                  <div className="detail-item">
                     <i className="fas fa-map-marker-alt me-2"></i>
-                    Location Details
-                  </h5>
-                  <div className="info-grid">
-                    <div className="info-item">
-                      <span className="label">Address:</span>
-                      <span className="value">{selectedTicket.address}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">City:</span>
-                      <span className="value">{selectedTicket.city}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">State:</span>
-                      <span className="value">{selectedTicket.state}</span>
-                    </div>
+                    <span className="detail-label">Address:</span>
+                    <span className="detail-value">
+                      {selectedTicket.address}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-city me-2"></i>
+                    <span className="detail-label">City:</span>
+                    <span className="detail-value">{selectedTicket.city}</span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-map me-2"></i>
+                    <span className="detail-label">State:</span>
+                    <span className="detail-value">{selectedTicket.state}</span>
                   </div>
                 </div>
+              </div>
 
-                {/* Service Details */}
-                <div className="detail-section">
-                  <h5 className="section-title">
-                    <i className="fas fa-cogs me-2"></i>
-                    Service Details
-                  </h5>
-                  <div className="info-grid">
-                    <div className="info-item">
-                      <span className="label">Service Type:</span>
-                      <span className="value">
-                        {selectedTicket.Type || "Not Specified"}
-                      </span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Priority:</span>
-                      <span className="value">{selectedTicket.priority}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="label">Part Name:</span>
-                      <span className="value">
-                        {selectedTicket.partName || "Not Available"}
-                      </span>
-                    </div>
+              {/* Service Details Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-cogs me-2"></i>
+                  Service Details
+                </h5>
+                <div className="detail-group">
+                  <div className="detail-item">
+                    <i className="fas fa-wrench me-2"></i>
+                    <span className="detail-label">Service Type:</span>
+                    <span className="detail-value">
+                      {selectedTicket.Type || "Not Specified"}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-exclamation-circle me-2"></i>
+                    <span className="detail-label">Priority:</span>
+                    <span className="detail-value">
+                      {selectedTicket.priority}
+                    </span>
+                  </div>
+
+                  <div className="detail-item">
+                    <i className="fas fa-phone-alt me-2"></i>
+                    <span className="detail-label">Call Type:</span>
+                    <span className="detail-value">
+                      {selectedTicket.call || "Not Specified"}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                {/* Description Section - Full Width */}
-                <div className="detail-section description-section">
-                  <h5 className="section-title">
-                    <i className="fas fa-comment-alt me-2"></i>
-                    Issue Description
-                  </h5>
-                  <div className="description-box">
+              {/* Description Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-comment-alt me-2"></i>
+                  Issue Description
+                </h5>
+                <div className="detail-item description">
+                  <span className="detail-value">
                     {selectedTicket.description}
-                  </div>
+                  </span>
                 </div>
+              </div>
 
-                {/* Feedback Section */}
-                <div className="detail-section">
-                  <h5 className="section-title">
-                    <i className="fas fa-star me-2"></i>
-                    Customer Feedback
-                  </h5>
-                  {selectedTicket.feedback ? (
-                    <div className="feedback-container">
-                      <div className="rating-display">
-                        <span className="rating-label">Rating:</span>
-                        <div className="stars-container">
-                          <ReactStars
-                            count={5}
-                            value={selectedTicket.feedback.rating}
-                            size={24}
-                            edit={false}
-                            activeColor="#ffd700"
-                          />
-                          <span className="rating-value">
-                            ({selectedTicket.feedback.rating}/5)
-                          </span>
-                        </div>
+              {/* History Section */}
+              <div className="detail-section">
+                <h5 className="section-title">
+                  <i className="fas fa-history me-2"></i>
+                  Ticket History
+                </h5>
+                <div className="history-section">
+                  {selectedTicket.history.map((entry, index) => (
+                    <div key={index} className="history-item">
+                      <div className="history-status">
+                        <i className="fas fa-circle me-2"></i>
+                        {entry.status}
                       </div>
-                      <div className="feedback-comment">
-                        <span className="comment-label">Comment:</span>
-                        <p className="comment-text">
-                          {selectedTicket.feedback.comment ||
-                            "No comments provided"}
+                      <small className="text-muted">
+                        {new Date(entry.date).toLocaleString()}
+                      </small>
+                      <div className="history-details">
+                        <p>
+                          <strong>Updated By:</strong>{" "}
+                          {entry.username || "Service Agent"}
+                        </p>
+                        <p>
+                          <strong>Remarks:</strong>{" "}
+                          {entry.remarks || "No remarks provided"}
                         </p>
                       </div>
                     </div>
-                  ) : (
-                    <div className="no-feedback">
-                      <i className="fas fa-comment-alt"></i>
-                      <p>No feedback submitted yet</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* History Section */}
-                <div className="detail-section">
-                  <h5 className="section-title">
-                    <i className="fas fa-history me-2"></i>
-                    Ticket History
-                  </h5>
-                  <div className="history-timeline">
-                    {selectedTicket.history.map((entry, index) => (
-                      <div key={index} className="timeline-item">
-                        <div className="timeline-icon">
-                          <i className="fas fa-circle"></i>
-                        </div>
-                        <div className="timeline-content">
-                          <div className="timeline-header">
-                            <span className="status">{entry.status}</span>
-                            <span className="date">
-                              {new Date(entry.date).toLocaleString()}
-                            </span>
-                          </div>
-                          <div className="timeline-body">
-                            <p className="mb-1">
-                              <strong>Updated By:</strong>{" "}
-                              {entry.username || "Service Agent"}
-                            </p>
-                            <p className="mb-0">
-                              <strong>Remarks:</strong>{" "}
-                              {entry.remarks || "No remarks provided"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>

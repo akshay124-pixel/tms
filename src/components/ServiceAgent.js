@@ -239,38 +239,94 @@ const ServiceAgentDashboard = () => {
                         </div>
 
                         <div className="detail-item">
-                          <i className="fas fa-tools"></i>
-                          <span className="detail-label">Type:</span>
+                          <i className="fas fa-barcode"></i>
+                          <span className="detail-label">Serial No:</span>
                           <span className="detail-value">
-                            {ticket.Type || "Not Specified"}
+                            {ticket.serialNumber || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="detail-item">
+                          <i className="fas fa-cog"></i>
+                          <span className="detail-label">Model:</span>
+                          <span className="detail-value">
+                            {ticket.modelType || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="detail-item">
+                          <i className="fas fa-tools"></i>
+                          <span className="detail-label">Part Name:</span>
+                          <span className="detail-value">
+                            {ticket.partName || "Not Specified"}
+                          </span>
+                        </div>
+
+                        <div className="detail-item">
+                          <i className="fas fa-phone-alt"></i>
+                          <span className="detail-label">Call Type:</span>
+                          <span className="detail-value">
+                            {ticket.call || "Not Specified"}
                           </span>
                         </div>
                       </div>
 
                       <Form
                         onSubmit={(e) => handleUpdateTicket(e, ticket._id)}
-                        className="mt-3"
+                        className="mt-4"
                       >
-                        <Form.Group className="mb-3">
-                          <Form.Label>Update Status</Form.Label>
-                          <Form.Select
-                            value={
-                              ticketDetails[ticket._id]?.status || ticket.status
-                            }
-                            onChange={(e) =>
-                              handleInputChange(e, ticket._id, "status")
-                            }
-                            className="form-control-modern"
-                          >
-                            <option>Open</option>
-                            <option>In Progress</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
-                          </Form.Select>
-                        </Form.Group>
+                        <Row>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>
+                                <i className="fas fa-tasks me-2"></i>Status
+                              </Form.Label>
+                              <Form.Select
+                                value={
+                                  ticketDetails[ticket._id]?.status ||
+                                  ticket.status
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(e, ticket._id, "status")
+                                }
+                                className="form-control-modern"
+                              >
+                                <option>Open</option>
+                                <option>In Progress</option>
+                                <option>Resolved</option>
+                                <option>Closed</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>
+                                <i className="fas fa-wrench me-2"></i>Service
+                                Type
+                              </Form.Label>
+                              <Form.Select
+                                value={
+                                  ticketDetails[ticket._id]?.Type ||
+                                  ticket.Type ||
+                                  ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(e, ticket._id, "Type")
+                                }
+                                className="form-control-modern"
+                              >
+                                <option value="">Select Type</option>
+                                <option value="Repair">Repair</option>
+                                <option value="Replacement">Replacement</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+                        </Row>
 
                         <Form.Group className="mb-3">
-                          <Form.Label>Remarks</Form.Label>
+                          <Form.Label>
+                            <i className="fas fa-comment-alt me-2"></i>Remarks
+                          </Form.Label>
                           <Form.Control
                             as="textarea"
                             rows={2}
@@ -283,10 +339,10 @@ const ServiceAgentDashboard = () => {
                           />
                         </Form.Group>
 
-                        <div className="d-flex gap-2">
+                        <div className="button-group">
                           <Button
                             type="submit"
-                            className="flex-grow-1 update-button"
+                            className="update-button"
                             disabled={updatingTickets[ticket._id]}
                           >
                             {updatingTickets[ticket._id] ? (
@@ -296,16 +352,17 @@ const ServiceAgentDashboard = () => {
                             ) : (
                               <>
                                 <i className="fas fa-save me-2"></i>
-                                Update
+                                Update Ticket
                               </>
                             )}
                           </Button>
                           <Button
                             variant="primary"
-                            className="view-button"
+                            className="details-button"
                             onClick={() => handleShowDetails(ticket)}
                           >
-                            <i className="fas fa-eye"></i>
+                            <i className="fas fa-eye me-2"></i>
+                            View Details
                           </Button>
                         </div>
                       </Form>

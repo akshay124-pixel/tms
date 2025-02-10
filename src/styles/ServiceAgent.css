@@ -1,7 +1,7 @@
 .service-agent-dashboard {
   width: 80%;
   padding: 2rem;
-  background: #f8f9fa;
+
   min-height: 100vh;
 }
 
@@ -98,8 +98,9 @@
 .ticket-card {
   border: none;
   border-radius: 15px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  background: white;
 }
 
 .ticket-card:hover {
@@ -111,7 +112,7 @@
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   border: none;
   border-radius: 15px 15px 0 0;
-  padding: 1rem;
+  padding: 1.2rem;
   color: white;
 }
 
@@ -132,10 +133,10 @@
 }
 
 .detail-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .detail-item {
@@ -145,21 +146,30 @@
   padding: 0.8rem;
   background: #f8f9fa;
   border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+  background: #f0f0f0;
+  transform: translateX(5px);
 }
 
 .detail-item i {
   color: #6a11cb;
+  width: 20px;
+  text-align: center;
 }
 
 .detail-label {
   color: #6c757d;
-  font-weight: 500;
-  min-width: 80px;
+  font-weight: 600;
+  min-width: 85px;
 }
 
 .detail-value {
   color: #2c3e50;
   font-weight: 500;
+  flex: 1;
 }
 
 .form-control-modern {
@@ -174,21 +184,38 @@
   box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
 }
 
-.update-button {
-  background: linear-gradient(135deg, #00b09b, #96c93d);
-  border: none;
-  border-radius: 8px;
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.view-button {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+.update-button, .details-button {
+  padding: 0.8rem;
   border: none;
   border-radius: 8px;
-  width: 45px;
-  height: 38px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.update-button {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+  color: white;
+}
+
+.details-button {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+}
+
+.update-button:hover, .details-button:hover {
+  transform: translateY(-2px);
+  color: white;
 }
 
 .no-tickets {
@@ -235,5 +262,13 @@
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+  }
+
+  .detail-group {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    grid-template-columns: 1fr;
   }
 } 

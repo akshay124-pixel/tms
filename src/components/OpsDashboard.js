@@ -1894,190 +1894,246 @@ const OpsManagerDashboard = () => {
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
-        size="lg"
+        size="xl" // Changed to xl for more space
         centered
         className="ticket-detail-modal"
       >
         <Modal.Header closeButton className="modal-header-custom">
           <Modal.Title className="modal-title-custom">
             <i className="fas fa-ticket-alt me-2"></i>
-            Ticket Information
+            Ticket #{selectedTicket?.trackingId}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-body-custom">
           {selectedTicket ? (
             <div className="ticket-detail-container">
-              {/* Tracking ID and Status Section */}
-              <div className="ticket-header-section">
-                <div className="tracking-id-container">
-                  <span className="label">Tracking ID:</span>
-                  <span className="value">{selectedTicket.trackingId}</span>
+              {/* Top Summary Section */}
+              <div className="ticket-summary-bar">
+                <div className="summary-item">
+                  <span className="summary-label">Status</span>
+                  <Badge
+                    className={`status-badge status-${selectedTicket.status?.toLowerCase()}`}
+                  >
+                    {selectedTicket.status}
+                  </Badge>
                 </div>
-                <Badge
-                  className={`status-badge-lg status-${selectedTicket.status
-                    .toLowerCase()
-                    .replace(" ", "-")}`}
-                >
-                  {selectedTicket.status}
-                </Badge>
-              </div>
-
-              {/* Customer Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-user-circle me-2"></i>
-                  Customer Information
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Customer Name:</span>
-                    <span className="value">{selectedTicket.customerName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Contact:</span>
-                    <span className="value">
-                      {selectedTicket.contactNumber}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Email:</span>
-                    <span className="value">{selectedTicket.email}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Organization:</span>
-                    <span className="value">
-                      {selectedTicket.organization || "N/A"}
-                    </span>
-                  </div>
+                <div className="summary-item">
+                  <span className="summary-label">Priority</span>
+                  <Badge
+                    className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
+                  >
+                    {selectedTicket.priority}
+                  </Badge>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-label">Age</span>
+                  <span className="summary-value">
+                    {calculateTicketAge(selectedTicket.createdAt)} days
+                  </span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-label">Created</span>
+                  <span className="summary-value">
+                    {new Date(selectedTicket.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
 
-              {/* Product Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-box me-2"></i>
-                  Product Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Product Type:</span>
-                    <span className="value">{selectedTicket.productType}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Model Type:</span>
-                    <span className="value">{selectedTicket.modelType}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Serial Number:</span>
-                    <span className="value">{selectedTicket.serialNumber}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Call Type:</span>
-                    <span className="value">
-                      {selectedTicket.call || "Not Specified"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bill Download Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-file-invoice me-2"></i>
-                  Bill Information
-                </h5>
-                <div className="bill-download-container">
-                  <div className="bill-info">
-                    <span className="bill-name">
-                      {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
-                    </span>
-                    <a
-                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
-                        /^uploads[\\/]/,
-                        ""
-                      )}`}
-                      download
-                      className="download-button"
-                    >
-                      <i className="fas fa-download me-2"></i>
-                      Download Bill
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feedback Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-star me-2"></i>
-                  Customer Feedback
-                </h5>
-                {feedback ? (
-                  <div className="feedback-container">
-                    <div className="rating-display">
-                      <span className="rating-label">Rating:</span>
-                      <div className="stars-container">
-                        <ReactStars
-                          count={5}
-                          value={feedback.rating}
-                          size={24}
-                          edit={false}
-                          activeColor="#ffd700"
-                        />
-                        <span className="rating-value">
-                          ({feedback.rating}/5)
-                        </span>
+              {/* Main Content Grid */}
+              <div className="ticket-details-grid">
+                {/* Left Column */}
+                <div className="details-column">
+                  {/* Customer Information */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-user me-2"></i>Customer Details
+                    </h6>
+                    <div className="detail-card-content">
+                      <div className="info-row">
+                        <div className="info-group">
+                          <label>Name</label>
+                          <span>{selectedTicket.customerName}</span>
+                        </div>
+                        <div className="info-group">
+                          <label>Contact</label>
+                          <span>{selectedTicket.contactNumber}</span>
+                        </div>
+                      </div>
+                      <div className="info-row">
+                        <div className="info-group">
+                          <label>Email</label>
+                          <span>{selectedTicket.email}</span>
+                        </div>
+                        <div className="info-group">
+                          <label>Organization</label>
+                          <span>{selectedTicket.organization || "N/A"}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="feedback-comment">
-                      <span className="comment-label">Comment:</span>
-                      <p className="comment-text">
-                        {feedback.comments || "No comments provided"}
+                  </div>
+
+                  {/* Product Information */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-box me-2"></i>Product Information
+                    </h6>
+                    <div className="detail-card-content">
+                      <div className="info-row">
+                        <div className="info-group">
+                          <label>Product Type</label>
+                          <span>{selectedTicket.productType}</span>
+                        </div>
+                        <div className="info-group">
+                          <label>Model</label>
+                          <span>{selectedTicket.modelType}</span>
+                        </div>
+                      </div>
+                      <div className="info-row">
+                        <div className="info-group">
+                          <label>Serial Number</label>
+                          <span>{selectedTicket.serialNumber}</span>
+                        </div>
+                        <div className="info-group">
+                          <label>Call Type</label>
+                          <Badge
+                            className={`call-type-badge ${selectedTicket.call?.toLowerCase()}`}
+                          >
+                            {selectedTicket.call || "Not Specified"}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Location Information */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-map-marker-alt me-2"></i>Location
+                      Details
+                    </h6>
+                    <div className="detail-card-content">
+                      <div className="info-row full-width">
+                        <div className="info-group">
+                          <label>Address</label>
+                          <span>{selectedTicket.address}</span>
+                        </div>
+                      </div>
+                      <div className="info-row">
+                        <div className="info-group">
+                          <label>City</label>
+                          <span>{selectedTicket.city}</span>
+                        </div>
+                        <div className="info-group">
+                          <label>State</label>
+                          <span>{selectedTicket.state}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="details-column">
+                  {/* Issue Description */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-comment-alt me-2"></i>Issue
+                      Description
+                    </h6>
+                    <div className="detail-card-content">
+                      <p className="description-text">
+                        {selectedTicket.description}
                       </p>
                     </div>
                   </div>
-                ) : (
-                  <div className="no-feedback">
-                    <i className="fas fa-comment-alt"></i>
-                    <p>No feedback submitted yet</p>
-                  </div>
-                )}
-              </div>
 
-              {/* Description Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-comment-alt me-2"></i>
-                  Issue Description
-                </h5>
-                <div className="description-box">
-                  {selectedTicket.description}
+                  {/* Feedback Section */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-star me-2"></i>Customer Feedback
+                    </h6>
+                    <div className="detail-card-content">
+                      {feedback ? (
+                        <>
+                          <div className="feedback-rating">
+                            <ReactStars
+                              count={5}
+                              value={feedback.rating}
+                              size={24}
+                              edit={false}
+                              activeColor="#ffd700"
+                            />
+                            <span className="rating-text">
+                              ({feedback.rating}/5)
+                            </span>
+                          </div>
+                          <div className="feedback-comment">
+                            <p>{feedback.comments || "No comments provided"}</p>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="no-feedback">
+                          <p>No feedback submitted yet</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Bill Information */}
+                  <div className="detail-card">
+                    <h6 className="detail-card-title">
+                      <i className="fas fa-file-invoice me-2"></i>Bill
+                      Information
+                    </h6>
+                    <div className="detail-card-content">
+                      <div className="bill-container">
+                        <span className="bill-name">
+                          {selectedTicket.billImage.replace(
+                            /^uploads[\\/]/,
+                            ""
+                          )}
+                        </span>
+                        <a
+                          href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                            /^uploads[\\/]/,
+                            ""
+                          )}`}
+                          download
+                          className="download-link"
+                        >
+                          <i className="fas fa-download me-2"></i>
+                          Download
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* History Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-history me-2"></i>
-                  Ticket History
-                </h5>
+              {/* History Timeline (Full Width) */}
+              <div className="detail-card history-section">
+                <h6 className="detail-card-title">
+                  <i className="fas fa-history me-2"></i>Ticket History
+                </h6>
                 <div className="history-timeline">
                   {selectedTicket.history.map((entry, index) => (
                     <div key={index} className="timeline-item">
-                      <div className="timeline-icon">
-                        <i className="fas fa-circle"></i>
-                      </div>
+                      <div className="timeline-marker"></div>
                       <div className="timeline-content">
                         <div className="timeline-header">
-                          <span className="status">{entry.status}</span>
-                          <span className="date">
+                          <Badge
+                            className={`status-badge status-${entry.status?.toLowerCase()}`}
+                          >
+                            {entry.status}
+                          </Badge>
+                          <span className="timeline-date">
                             {new Date(entry.date).toLocaleString()}
                           </span>
                         </div>
                         <div className="timeline-body">
                           <p className="mb-1">
                             <strong>Updated By:</strong>{" "}
-                            {entry.username || "OPS Manager"}
+                            {entry.username || "System"}
                           </p>
                           <p className="mb-0">
                             <strong>Remarks:</strong>{" "}
@@ -2087,109 +2143,6 @@ const OpsManagerDashboard = () => {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Location Information Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-map-marker-alt me-2"></i>
-                  Location Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Address:</span>
-                    <span className="value address-value">
-                      {selectedTicket.address}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">City:</span>
-                    <span className="value">{selectedTicket.city}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">State:</span>
-                    <span className="value">{selectedTicket.state}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Service Details Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-cogs me-2"></i>
-                  Service Details
-                </h5>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="label">Service Type:</span>
-                    <span className="value">
-                      <Badge
-                        className={`type-badge type-${selectedTicket.Type?.toLowerCase()}`}
-                      >
-                        {selectedTicket.Type || "Not Specified"}
-                      </Badge>
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Call Type:</span>
-                    <span className="value">
-                      <Badge
-                        className={`call-badge call-${selectedTicket.call
-                          ?.toLowerCase()
-                          .replace(" ", "-")}`}
-                      >
-                        {selectedTicket.call || "Not Specified"}
-                      </Badge>
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Priority:</span>
-                    <span className="value">
-                      <Badge
-                        className={`priority-badge priority-${selectedTicket.priority?.toLowerCase()}`}
-                      >
-                        {selectedTicket.priority}
-                      </Badge>
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Assigned To:</span>
-                    <span className="value">
-                      <Badge className="assigned-badge">
-                        <i className="fas fa-user-circle me-1"></i>
-                        {selectedTicket.assignedTo || "Not Assigned"}
-                      </Badge>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Ticket Timeline Section */}
-              <div className="detail-section">
-                <h5 className="section-title">
-                  <i className="fas fa-clock me-2"></i>
-                  Ticket Timeline
-                </h5>
-                <div className="timeline-info-grid">
-                  <div className="info-item">
-                    <span className="label">Created On:</span>
-                    <span className="value">
-                      {new Date(selectedTicket.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Last Updated:</span>
-                    <span className="value">
-                      {new Date(selectedTicket.updatedAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="label">Age:</span>
-                    <span className="value">
-                      {calculateTicketAge(selectedTicket.createdAt)} days
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>

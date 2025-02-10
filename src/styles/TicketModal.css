@@ -71,6 +71,14 @@
   border-radius: 15px;
   padding: 1.5rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(106, 17, 203, 0.1);
+  transition: all 0.3s ease;
+}
+
+.detail-section:hover {
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.1);
+  transform: translateY(-2px);
 }
 
 .section-title {
@@ -313,6 +321,98 @@
   font-size: 0.95rem;
 }
 
+/* Address Value Styling */
+.address-value {
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
+/* Badge Styling */
+.type-badge,
+.call-badge,
+.priority-badge,
+.assigned-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: capitalize;
+}
+
+/* Type Badge Colors */
+.type-repair {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+  color: white;
+}
+
+.type-replacement {
+  background: linear-gradient(135deg, #5f2c82, #49a09d);
+  color: white;
+}
+
+.type-received {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+}
+
+.type-not-received {
+  background: linear-gradient(135deg, #eb3349, #f45c43);
+  color: white;
+}
+
+/* Call Badge Colors */
+.call-hardware-call {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  color: white;
+}
+
+.call-software-call {
+  background: linear-gradient(135deg, #fc4a1a, #f7b733);
+  color: white;
+}
+
+/* Priority Badge Colors */
+.priority-high {
+  background: linear-gradient(135deg, #cb2d3e, #ef473a);
+  color: white;
+}
+
+.priority-normal {
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+  color: white;
+}
+
+.priority-low {
+  background: linear-gradient(135deg, #56ab2f, #a8e063);
+  color: white;
+}
+
+/* Assigned Badge */
+.assigned-badge {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+}
+
+/* Timeline Info Grid */
+.timeline-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.timeline-info-grid .info-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .modal-body-custom {
@@ -353,4 +453,41 @@
     align-items: flex-start;
     gap: 0.5rem;
   }
+
+  .detail-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .timeline-info-grid {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
+  .type-badge,
+  .call-badge,
+  .priority-badge,
+  .assigned-badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Scrollbar Styling */
+.modal-body-custom::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body-custom::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-body-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border-radius: 4px;
+}
+
+.modal-body-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5810a5, #1e5fd8);
 } 

@@ -1297,87 +1297,92 @@ const AdminDashboard = () => {
             <strong>Export</strong>
           </div>
         </button>
-        <Card.Body
-          style={{ height: "100%", overflowY: "auto", padding: "10px" }}
-        >
-          <div className="table-container">
-            <div className="table-wrapper">
-              <table className="custom-table">
-                <thead>
+        <Card.Body style={{ height: "100%", padding: "10px" }}>
+          <div className="table-responsive">
+            <Table className="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Tracking ID</th>
+                  <th>Customer</th>
+                  <th>Product</th>
+                  <th>Age</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
                   <tr>
-                    <th>Date</th>
-                    <th>Tracking ID</th>
-                    <th>Customer</th>
-                    <th>Product</th>
-                    <th>Age</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Assigned</th>
-                    <th>Actions</th>
+                    <td colSpan="9" className="text-center">
+                      <Spinner animation="border" variant="primary" />
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan="9" className="text-center">
-                        <Spinner animation="border" variant="primary" />
+                ) : filterTickets().length > 0 ? (
+                  filterTickets().map((ticket) => (
+                    <tr key={ticket._id}>
+                      <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                      <td>{ticket.trackingId}</td>
+                      <td>{ticket.customerName}</td>
+                      <td>{ticket.productType}</td>
+                      <td>{calculateTicketAge(ticket.createdAt)} Days</td>
+                      <td>
+                        <Badge
+                          bg={
+                            ticket.priority === "Low"
+                              ? "info"
+                              : ticket.priority === "Normal"
+                              ? "warning"
+                              : "danger"
+                          }
+                        >
+                          {ticket.priority}
+                        </Badge>
+                      </td>
+                      <td>
+                        <Badge
+                          bg={
+                            ticket.status === "Open"
+                              ? "primary"
+                              : ticket.status === "In Progress"
+                              ? "warning"
+                              : ticket.status === "Resolved"
+                              ? "success"
+                              : "secondary"
+                          }
+                        >
+                          {ticket.status}
+                        </Badge>
+                      </td>
+                      <td>{ticket.assignedTo || "Not Assigned"}</td>
+                      <td>
+                        <Button
+                          className="action-btn action-btn-view"
+                          onClick={() => handleViewDetails(ticket)}
+                        >
+                          <FaEye />
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleDelete(ticket._id)}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </Button>
                       </td>
                     </tr>
-                  ) : filterTickets().length > 0 ? (
-                    filterTickets().map((ticket) => (
-                      <tr key={ticket._id}>
-                        <td>
-                          {new Date(ticket.createdAt).toLocaleDateString()}
-                        </td>
-                        <td>{ticket.trackingId}</td>
-                        <td>{ticket.customerName}</td>
-                        <td>{ticket.productType}</td>
-                        <td>{calculateTicketAge(ticket.createdAt)} Days</td>
-                        <td>
-                          <Badge
-                            className={`priority-badge priority-${ticket.priority.toLowerCase()}`}
-                          >
-                            {ticket.priority}
-                          </Badge>
-                        </td>
-                        <td>
-                          <Badge
-                            className={`status-badge status-${ticket.status.toLowerCase()}`}
-                          >
-                            {ticket.status}
-                          </Badge>
-                        </td>
-                        <td>{ticket.assignedTo || "Not Assigned"}</td>
-                        <td>
-                          <div className="action-buttons">
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleViewDetails(ticket)}
-                            >
-                              <i className="fas fa-eye"></i>
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => handleDelete(ticket._id)}
-                            >
-                              <i className="fas fa-trash"></i>
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="9" className="text-center">
-                        No tickets available.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center">
+                      No tickets available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
           </div>
         </Card.Body>
       </Card>

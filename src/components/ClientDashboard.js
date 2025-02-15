@@ -1464,10 +1464,7 @@ const ClientDashboard = () => {
             </>
           ) : (
             <>
-              <div
-                className="tickets-header mb-4"
-                style={{ backgroundColor: "transparent" }}
-              >
+              <div className="tickets-header mb-4">
                 <h4 className="gradient-text text-center">
                   <i className="fas fa-clipboard-list me-2"></i>
                   Your Support Tickets

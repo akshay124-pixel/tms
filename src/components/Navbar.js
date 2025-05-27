@@ -133,7 +133,7 @@ const DashboardNavbar = () => {
       <Container>
         <Navbar.Brand className="font-weight-bold">
           <img
-            src="/logo2.png"
+            src="/logo.png"
             alt="TMS Logo"
             width="120"
             height="42"

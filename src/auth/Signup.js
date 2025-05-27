@@ -94,7 +94,7 @@ function Signup() {
         height: "100vh",
       }}
     >
-      <div className="form-box">
+      <div className="form-box" style={{ width: "400px" }}>
         <form className="form" onSubmit={handleSubmit}>
           <span className="title">Sign Up</span>
           <span className="subtitle">

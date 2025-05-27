@@ -13,7 +13,7 @@ function Signup() {
     role: "",
   });
   const [error, setError] = useState(null); // To store any error messages
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleInput = (e) => {
     const { name, value } = e.target;
     setFormData((prevForm) => ({ ...prevForm, [name]: value }));
@@ -120,16 +120,39 @@ function Signup() {
               value={form.email}
               onChange={handleInput}
               required
-            />
-            <input
-              type="password"
-              className="input"
-              placeholder="Password"
-              name="password"
-              value={form.password}
-              onChange={handleInput}
-              required
-            />
+            />{" "}
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                style={{ backgroundColor: "white", width: "110%" }}
+                className="input"
+                placeholder="Password"
+                name="password"
+                value={form.password}
+                onChange={handleInput}
+                required
+              />{" "}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "#333",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  padding: "0",
+                  zIndex: 1,
+                }}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
             <select
               name="role"
               value={form.role}

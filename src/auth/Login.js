@@ -11,6 +11,7 @@ function Login() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   // Handle input changes
@@ -133,18 +134,40 @@ function Login() {
               required
               aria-label="Email Address"
             />
-            <input
-              className="input"
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInput}
-              required
-              aria-label="Password"
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                className="input"
+                style={{ backgroundColor: "white" }}
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleInput}
+                required
+                aria-label="Password"
+              />{" "}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "#333",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  padding: "0",
+                  zIndex: 1,
+                }}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
-
           <button
             type="submit"
             className="button1"

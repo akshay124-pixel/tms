@@ -42,7 +42,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "https://tms-server-saeo.onrender.com/auth/login",
+        "https://tmsserver.onrender.com/auth/login",
         formData
       );
 

@@ -44,7 +44,7 @@ const ServiceAgentDashboard = () => {
       }
 
       const response = await axios.get(
-        `https://tms-server-saeo.onrender.com/tickets/assigned/${agentId}`,
+        `https://tmsserver.onrender.com/tickets/assigned/${agentId}`,
         { withCredentials: true }
       );
       setTickets(response.data || []);
@@ -66,7 +66,7 @@ const ServiceAgentDashboard = () => {
   const handleUpdateCall = async (ticketId, Type) => {
     try {
       await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        `https://tmsserver.onrender.com/tickets/update/${ticketId}`,
         { Type }
       );
       setTickets((prevTickets) =>
@@ -93,7 +93,7 @@ const ServiceAgentDashboard = () => {
       };
 
       const response = await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        `https://tmsserver.onrender.com/tickets/update/${ticketId}`,
         payload
       );
 

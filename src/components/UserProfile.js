@@ -25,7 +25,7 @@ const UserProfile = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/user/profile",
+        "https://tmsserver.onrender.com/user/profile",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

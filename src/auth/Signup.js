@@ -24,7 +24,7 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        "https://tms-server-saeo.onrender.com/user/signup",
+        "https://tmsserver.onrender.com/user/signup",
         form
       );
 

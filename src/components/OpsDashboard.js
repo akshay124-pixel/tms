@@ -139,7 +139,7 @@ const OpsManagerDashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/ticket",
+        "https://tmsserver.onrender.com/tickets/ticket",
         {
           params: { opsManagerId: "ops@gmail.com" },
         }
@@ -156,7 +156,7 @@ const OpsManagerDashboard = () => {
   const fetchServiceAgents = async () => {
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/role/serviceAgent",
+        "https://tmsserver.onrender.com/tickets/role/serviceAgent",
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -171,7 +171,7 @@ const OpsManagerDashboard = () => {
   const updateTicketAssignment = async (ticketId, userId = null) => {
     try {
       await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        `https://tmsserver.onrender.com/tickets/update/${ticketId}`,
         {
           assignedTo: userId,
         }
@@ -211,7 +211,7 @@ const OpsManagerDashboard = () => {
   // const handleDelete = async (ticketId) => {
   //   try {
   //     await axios.delete(
-  //       `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+  //       `https://tmsserver.onrender.com/tickets/delete/${ticketId}`
   //     );
   //     setTickets((prevTickets) =>
   //       prevTickets.filter((ticket) => ticket._id !== ticketId)
@@ -234,7 +234,7 @@ const OpsManagerDashboard = () => {
     try {
       // Send request using Axios
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/export",
+        "https://tmsserver.onrender.com/tickets/export",
         {
           responseType: "text", // Ensure we get the CSV as text
         }
@@ -291,7 +291,7 @@ const OpsManagerDashboard = () => {
     if (selectedTicket && selectedTicket._id) {
       axios
         .get(
-          `https://tms-server-saeo.onrender.com/tickets/${selectedTicket._id}/feedback`
+          `https://tmsserver.onrender.com/tickets/${selectedTicket._id}/feedback`
         )
         .then((res) => setFeedback(res.data))
         .catch((err) => {
@@ -333,7 +333,7 @@ const OpsManagerDashboard = () => {
 
       // API call to update ticket
       const response = await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`,
+        `https://tmsserver.onrender.com/tickets/update/${ticketId}`,
         payload
       );
 
@@ -1992,7 +1992,7 @@ const OpsManagerDashboard = () => {
                       {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
                     </span>
                     <a
-                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                      href={`https://tmsserver.onrender.com/tickets/download/${selectedTicket.billImage.replace(
                         /^uploads[\\/]/,
                         ""
                       )}`}

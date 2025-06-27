@@ -20,7 +20,7 @@ const ViewMyTickets = () => {
   const fetchMyTickets = async () => {
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/ticket"
+        "https://tmsserver.onrender.com/tickets/ticket"
       );
       setTickets(response.data);
       setError(null);
@@ -98,7 +98,7 @@ const ViewMyTickets = () => {
                   </Card.Text>
                   {ticket.serialNumberImage && (
                     <img
-                      src={`https://tms-server-saeo.onrender.com/uploads/${ticket.serialNumberImage}`}
+                      src={`https://tmsserver.onrender.com/uploads/${ticket.serialNumberImage}`}
                       alt="Serial Number"
                       style={{
                         maxWidth: "100%",

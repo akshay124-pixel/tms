@@ -95,7 +95,7 @@ const AdminDashboard = () => {
   const fetchTickets = async () => {
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/ticket"
+        "https://tmsserver.onrender.com/tickets/ticket"
       );
       setTickets(response.data);
     } catch (error) {
@@ -135,7 +135,7 @@ const AdminDashboard = () => {
   const handleDelete = async (ticketId) => {
     try {
       await axios.delete(
-        `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+        `https://tmsserver.onrender.com/tickets/delete/${ticketId}`
       );
       toast.success("Ticket deleted successfully!");
 
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
     if (!selectedTicket) return;
     try {
       await axios.put(
-        `https://tms-server-saeo.onrender.com/tickets/update/${selectedTicket._id}`,
+        `https://tmsserver.onrender.com/tickets/update/${selectedTicket._id}`,
         {
           status,
           assignedTo: opsManager,
@@ -302,7 +302,7 @@ const AdminDashboard = () => {
   // // Handle ticket closure
   // const handleCloseTicket = async (ticketId) => {
   //   try {
-  //     await axios.put(`https://tms-server-saeo.onrender.com/tickets/update/${ticketId}`, {
+  //     await axios.put(`https://tmsserver.onrender.com/tickets/update/${ticketId}`, {
   //       status: "Closed",
   //       assignedTo: "",
   //     });
@@ -317,7 +317,7 @@ const AdminDashboard = () => {
     try {
       // Send request using Axios
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/export",
+        "https://tmsserver.onrender.com/tickets/export",
         {
           responseType: "text", // Ensure we get the CSV as text
         }
@@ -375,7 +375,7 @@ const AdminDashboard = () => {
     if (selectedTicket && selectedTicket._id) {
       axios
         .get(
-          `https://tms-server-saeo.onrender.com/tickets/${selectedTicket._id}/feedback`
+          `https://tmsserver.onrender.com/tickets/${selectedTicket._id}/feedback`
         )
         .then((res) => setFeedback(res.data))
         .catch((err) => {
@@ -1608,7 +1608,7 @@ const AdminDashboard = () => {
                       {selectedTicket.billImage.replace(/^uploads[\\/]/, "")}
                     </span>
                     <a
-                      href={`https://tms-server-saeo.onrender.com/tickets/download/${selectedTicket.billImage.replace(
+                      href={`https://tmsserver.onrender.com/tickets/download/${selectedTicket.billImage.replace(
                         /^uploads[\\/]/,
                         ""
                       )}`}

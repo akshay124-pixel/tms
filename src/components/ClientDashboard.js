@@ -116,7 +116,7 @@ const ClientDashboard = () => {
     try {
       // Send the form data to the backend
       const response = await axios.post(
-        "https://tms-server-saeo.onrender.com/tickets/create",
+        "https://tmsserver.onrender.com/tickets/create",
         data,
         {
           headers: {
@@ -209,7 +209,7 @@ const ClientDashboard = () => {
   const fetchTickets = async () => {
     try {
       const response = await axios.get(
-        "https://tms-server-saeo.onrender.com/tickets/ticket"
+        "https://tmsserver.onrender.com/tickets/ticket"
       );
       // Filter tickets to only show the ones raised by the logged-in customer
       const customerTickets = response.data.filter(
@@ -228,7 +228,7 @@ const ClientDashboard = () => {
   //   try {
   //     // Send delete request
   //     const response = await axios.delete(
-  //       `https://tms-server-saeo.onrender.com/tickets/delete/${ticketId}`
+  //       `https://tmsserver.onrender.com/tickets/delete/${ticketId}`
   //     );
 
   //     // Check if deletion was successful
@@ -316,7 +316,7 @@ const ClientDashboard = () => {
       };
 
       const response = await axios.post(
-        `https://tms-server-saeo.onrender.com/tickets/${ticketId}/feedback`, // Make sure this URL matches
+        `https://tmsserver.onrender.com/tickets/${ticketId}/feedback`, // Make sure this URL matches
         feedbackData
       );
 
